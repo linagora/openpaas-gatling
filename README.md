@@ -6,15 +6,13 @@ It aims to provide building blocks, specific OpenPaaS APIs steps as well as more
 
 ## Configuration
 
-Gating uses configured pateform admin credentials to provision a domain and users required for load testing.
+File path: `src/test/scala/com/linagora/openpaas/gatling/Configuration.scala`
 
-You can edit the `plateformAdminLogin` and `plateformAdminPassword` credential in the `Configuration.scala` file.
-
-Furthermore, one can configure the scenari duration:
-
-```
-  val duration = 3 hours
-```
+Available settings:
+ - User count for scenari
+ - Scenari duration
+ - OpenPaaS platform admin credentials for user provisionning
+ - Base for OpenPaaS endpoints
 
 ## Scenari availables
 
