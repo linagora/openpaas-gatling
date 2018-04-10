@@ -17,4 +17,11 @@ Available settings:
 
 ## Scenari availables
 
-No scenari is available yet, but it will soon change!
+### Provisioning demo
+
+This scenario create users that then read their profile. To run it:
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.ProvisioningScenario
+```
