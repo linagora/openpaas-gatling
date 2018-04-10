@@ -13,6 +13,7 @@ Available settings:
  - Scenari duration
  - OpenPaaS platform admin credentials for user provisionning
  - Base for OpenPaaS endpoints
+ - Domain used for load testing (id and name)
 
 ## Scenari availables
 

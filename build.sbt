@@ -5,6 +5,8 @@ version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.11.12"
 
+enablePlugins(GatlingPlugin)
+
 libraryDependencies += "io.gatling" % "gatling-test-framework" % "2.2.2"
 libraryDependencies += "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.2"
 
