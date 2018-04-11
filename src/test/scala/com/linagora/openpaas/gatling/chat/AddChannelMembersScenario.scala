@@ -5,6 +5,7 @@ import com.linagora.openpaas.gatling.chat.ChannelsSteps._
 import com.linagora.openpaas.gatling.core.UsersSteps.findUserIdByUsername
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
 import com.linagora.openpaas.gatling.provisionning.RandomFeeder
+import com.linagora.openpaas.gatling.core.UserSteps._
 import io.gatling.core.Predef._
 
 import scala.concurrent.duration.DurationInt
@@ -21,16 +22,14 @@ class AddChannelMembersScenario extends Simulation {
     .pause(1 second)
     .exec(listChannels())
     .pause(1 second)
+    .exec(getProfile())
+    .pause(1 second)
     .during(ScenarioDuration) {
       exec(feeder.selectUsernameStep())
         .exec(findUserIdByUsername)
-        .pause(1 second)
-        .exec(listChannels())
         .exec(pickOneChannel)
         .pause(1 second)
         .exec(addChannelMember)
-        .pause(1 second)
-        .exec(getChannelMembers)
         .pause(1 second)
     }
 

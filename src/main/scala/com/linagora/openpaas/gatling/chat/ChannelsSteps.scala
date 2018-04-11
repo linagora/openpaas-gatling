@@ -50,7 +50,7 @@ object ChannelsSteps {
 
   def addChannelMember =
       withAuth(http("addChannelMembers")
-        .put(s"/api/collaborations/chat.conversation/$${$channelId}/members/$${$otherUserId}"))
+        .put(s"/api/collaborations/chat.conversation/$${$channelId}/members/$${$userId}"))
         .check(status in(201, 204))
 
   def getChannelMessages =
