@@ -44,6 +44,11 @@ object ChannelsSteps {
         .get(s"/chat/api/conversations/$${$channelId}"))
         .check(status in(200, 304))
 
+  def getChannelMembers =
+      withAuth(http("getChannelMembers")
+        .get(s"/api/collaborations/chat.conversation/$${$channelId}/members/"))
+        .check(status in(200, 304))
+
   def getChannelMessages =
       withAuth(http("getChannelMessages")
         .get(s"/chat/api/conversations/$${$channelId}/messages"))
