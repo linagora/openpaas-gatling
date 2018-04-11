@@ -4,4 +4,5 @@ object SessionKeys {
   val UsernameSessionParam = "username"
   val PasswordSessionParam = "password"
   val otherUsername = "otherUsername"
+  val otherUserId = "otherUserId"
 }
