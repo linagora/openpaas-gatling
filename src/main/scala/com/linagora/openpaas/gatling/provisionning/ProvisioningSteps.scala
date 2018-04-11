@@ -1,7 +1,7 @@
 package com.linagora.openpaas.gatling.provisionning
 
-import com.linagora.openpaas.gatling.provisionning.Authentication._
 import com.linagora.openpaas.gatling.Configuration._
+import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 

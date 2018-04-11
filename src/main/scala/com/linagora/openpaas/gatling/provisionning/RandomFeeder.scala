@@ -1,15 +1,11 @@
 package com.linagora.openpaas.gatling.provisionning
 
 import com.linagora.openpaas.gatling.Configuration._
-import com.linagora.openpaas.gatling.provisionning.Authentication._
+import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.utils.RandomStringGenerator.randomString
 import io.gatling.core.Predef._
 
 import scala.util.Random
-
-object SessionKeys {
-  val otherUsername = "otherUsername"
-}
 
 class RandomFeeder(userCount: Int) {
   type UserFeeder = Array[Map[String, String]]

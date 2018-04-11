@@ -1,19 +1,17 @@
 package com.linagora.openpaas.gatling.chat
 
-import com.linagora.openpaas.gatling.utils.RandomStringGenerator.randomString
 import com.linagora.openpaas.gatling.Configuration._
+import com.linagora.openpaas.gatling.chat.SessionKeys._
 import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
+import com.linagora.openpaas.gatling.utils.RandomStringGenerator.randomString
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 
 import scala.util.Random
 
-object ChannelsSteps {
 
-  val channelIds = "channelIds"
-  val channelId = "channelId"
-  val subscribedChannelIds = "subscribedChannelIds"
+object ChannelsSteps {
 
   def createChannel(): HttpRequestBuilder =
     withAuth(http("createChannel")
@@ -46,6 +44,11 @@ object ChannelsSteps {
 
   def getChannelMembers =
       withAuth(http("getChannelMembers")
+        .get(s"/api/collaborations/chat.conversation/$${$channelId}/members/"))
+        .check(status in(200, 304))
+
+  def addChannelMember =
+      withAuth(http("addChannelMembers")
         .get(s"/api/collaborations/chat.conversation/$${$channelId}/members/"))
         .check(status in(200, 304))
 
