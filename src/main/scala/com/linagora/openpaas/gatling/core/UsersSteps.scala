@@ -4,14 +4,9 @@ import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.http.check.HttpCheck
-import io.gatling.http.response.Response
 
 object UsersSteps {
   val statusCode = "statusCode"
-
-  def checkIfOk(check: HttpCheck): HttpCheck =
-    checkIf((r: Response, s: Session) => r.statusCode.contains(200)){check}
 
   def findUserIdByUsername =
     withAuth(
