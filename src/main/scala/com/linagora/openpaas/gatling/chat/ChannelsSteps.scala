@@ -2,6 +2,7 @@ package com.linagora.openpaas.gatling.chat
 
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.chat.SessionKeys._
+import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
 import com.linagora.openpaas.gatling.utils.RandomStringGenerator.randomString
 import io.gatling.core.Predef._
@@ -49,8 +50,8 @@ object ChannelsSteps {
 
   def addChannelMember =
       withAuth(http("addChannelMembers")
-        .get(s"/api/collaborations/chat.conversation/$${$channelId}/members/"))
-        .check(status in(200, 304))
+        .put(s"/api/collaborations/chat.conversation/$${$channelId}/members/$${$otherUserId}"))
+        .check(status in(201, 204))
 
   def getChannelMessages =
       withAuth(http("getChannelMessages")
