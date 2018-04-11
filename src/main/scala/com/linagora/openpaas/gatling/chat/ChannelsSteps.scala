@@ -44,6 +44,11 @@ object ChannelsSteps {
         .get(s"/chat/api/conversations/$${$channelId}"))
         .check(status in(200, 304))
 
+  def getChannelMessages =
+      withAuth(http("getChannelMessages")
+        .get(s"/chat/api/conversations/$${$channelId}/messages"))
+        .check(status in(200, 304))
+
   def pickOneChannel =
     exec((session: Session) => session.set(channelId,
       Random.shuffle(session.get(channelIds).as[Vector[String]])
