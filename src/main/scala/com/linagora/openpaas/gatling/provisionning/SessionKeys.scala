@@ -6,4 +6,5 @@ object SessionKeys {
   val otherUsername = "otherUsername"
   val otherUserId = "otherUserId"
   val userId = "userId"
+  val token = "token"
 }
