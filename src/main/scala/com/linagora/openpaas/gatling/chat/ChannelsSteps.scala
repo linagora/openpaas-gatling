@@ -63,4 +63,15 @@ object ChannelsSteps {
       Random.shuffle(session.get(channelIds).as[Vector[String]])
         .head))
 
+  def createPrivateChannel(): HttpRequestBuilder =
+    withAuth(http("createPrivateChannels")
+      .post("/chat/api/conversations"))
+      .body(StringBody(s"""
+{
+  "type": "directmessage",
+  "domain": "$DomainId",
+  "members": ["$${$otherUserId}"],
+  "mode": "channel"
+}"""))
+      .check(status is 201)
 }
