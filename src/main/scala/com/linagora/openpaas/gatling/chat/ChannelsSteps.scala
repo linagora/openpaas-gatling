@@ -30,37 +30,37 @@ object ChannelsSteps {
     withAuth(http("listChannels")
       .get("/chat/api/conversations"))
       .check(status in(200, 304))
-      .check(jsonPath("$[*]._id").findAll.saveAs(channelIds))
+      .check(jsonPath("$[*]._id").findAll.saveAs(ChannelIds))
 
   def listChannelsForUser(): HttpRequestBuilder =
     withAuth(http("listUserChannels")
       .get("/chat/api/user/conversations"))
       .check(status in(200, 304))
-      .check(jsonPath("$[*]._id").findAll.saveAs(subscribedChannelIds))
+      .check(jsonPath("$[*]._id").findAll.saveAs(SubscribedChannelIds))
 
   def getChannelDetails =
       withAuth(http("getChannelDetails")
-        .get(s"/chat/api/conversations/$${$channelId}"))
+        .get(s"/chat/api/conversations/$${$ChannelId}"))
         .check(status in(200, 304))
 
   def getChannelMembers =
       withAuth(http("getChannelMembers")
-        .get(s"/api/collaborations/chat.conversation/$${$channelId}/members/"))
+        .get(s"/api/collaborations/chat.conversation/$${$ChannelId}/members/"))
         .check(status in(200, 304))
 
   def addChannelMember =
       withAuth(http("addChannelMembers")
-        .put(s"/api/collaborations/chat.conversation/$${$channelId}/members/$${$userId}"))
+        .put(s"/api/collaborations/chat.conversation/$${$ChannelId}/members/$${$UserId}"))
         .check(status in(201, 204))
 
   def getChannelMessages =
       withAuth(http("getChannelMessages")
-        .get(s"/chat/api/conversations/$${$channelId}/messages"))
+        .get(s"/chat/api/conversations/$${$ChannelId}/messages"))
         .check(status in(200, 304))
 
   def pickOneChannel =
-    exec((session: Session) => session.set(channelId,
-      Random.shuffle(session.get(channelIds).as[Vector[String]])
+    exec((session: Session) => session.set(ChannelId,
+      Random.shuffle(session.get(ChannelIds).as[Vector[String]])
         .head))
 
   def createPrivateChannel(): HttpRequestBuilder =
@@ -70,7 +70,7 @@ object ChannelsSteps {
 {
   "type": "directmessage",
   "domain": "$DomainId",
-  "members": ["$${$otherUserId}"],
+  "members": ["$${$OtherUserId}"],
   "mode": "channel"
 }"""))
       .check(status is 201)

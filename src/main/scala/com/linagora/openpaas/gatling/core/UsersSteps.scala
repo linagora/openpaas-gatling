@@ -12,14 +12,14 @@ object UsersSteps {
     withAuth(
       http("findUserIdByUsername")
         .get(s"/api/users"))
-        .queryParam("email", s"$${$otherUsername}")
+        .queryParam("email", s"$${$OtherUsername}")
         .check(status.in(200, 304).saveAs(statusCode))
-        .check(jsonPath("$[0]._id").saveAs(otherUserId))
+        .check(jsonPath("$[0]._id").saveAs(OtherUserId))
 
   def getOtherUserProfile =
     withAuth(
       http("getUser")
-          .get(s"/api/users/$${$otherUserId}"))
+          .get(s"/api/users/$${$OtherUserId}"))
         .check(status in (200, 304))
 }
 

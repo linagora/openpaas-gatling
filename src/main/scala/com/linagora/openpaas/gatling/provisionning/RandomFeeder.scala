@@ -21,7 +21,7 @@ class RandomFeeder(userCount: Int) {
       .toArray
 
   def selectUsernameStep() =
-    exec((session: Session) => session.set(SessionKeys.otherUsername, Random.shuffle(userList).head.username.username))
+    exec((session: Session) => session.set(SessionKeys.OtherUsername, Random.shuffle(userList).head.username.username))
 }
 
 case class Username(username: String)

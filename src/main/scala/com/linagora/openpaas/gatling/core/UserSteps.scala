@@ -11,5 +11,5 @@ object UserSteps {
       http("Get profile")
         .get("/api/user"))
       .check(status.in(200, 304))
-      .check(jsonPath("$._id").saveAs(userId))
+      .check(jsonPath("$._id").saveAs(UserId))
 }

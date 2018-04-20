@@ -13,7 +13,7 @@ import scala.concurrent.duration.DurationInt
 class WebSocketScenario extends Simulation {
   val feeder = new RandomFeeder(UserCount)
 
-  val scn = scenario("Testing OpenPaaS token retrieaval")
+  val scn = scenario("Testing OpenPaaS token retrieval")
     .feed(feeder.asFeeder())
     .pause(1 second)
     .exec(provision())

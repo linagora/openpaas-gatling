@@ -10,5 +10,5 @@ object TokenSteps {
     withAuth(http("getToken")
       .get("/api/authenticationtoken"))
       .check(status in (200, 304))
-      .check(jsonPath("$.token").saveAs(token))
+      .check(jsonPath("$.token").saveAs(Token))
 }
