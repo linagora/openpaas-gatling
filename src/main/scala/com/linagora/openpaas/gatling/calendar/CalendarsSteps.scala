@@ -14,7 +14,7 @@ object CalendarsSteps {
     var calId = randomUuidString
 
     withAuth(http("createCalendar")
-      .post(s"/dav/api/calendars/$${$userId}"))
+      .post(s"/dav/api/calendars/$${$UserId}"))
       .body(StringBody(s"""
 {
 "id":"$calId",
@@ -32,7 +32,7 @@ object CalendarsSteps {
     exec(_.set(SessionKeys.EventUuid, eventUuid))
 
     withAuth(http("createEventOnDefaultCalendar")
-      .put(s"/dav/api/calendars/$${$userId}/$${$userId}/$eventUuid.ics"))
+      .put(s"/dav/api/calendars/$${$UserId}/$${$UserId}/$eventUuid.ics"))
       .body(StringBody(s"""
 [
   "vcalendar",
@@ -58,6 +58,6 @@ object CalendarsSteps {
 
   def listCalendarsForUser(): HttpRequestBuilder =
     withAuth(http("listCalendars")
-      .get(s"/dav/api/calendars/$${$userId}.json"))
+      .get(s"/dav/api/calendars/$${$UserId}.json"))
       .check(status in(200, 304))
 }
