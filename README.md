@@ -1,6 +1,6 @@
 # Gatling OpenPaaS
 
-This project enables to proceed to OpenPaaS load testing using [Gatling]() technology.
+This project enables to proceed to OpenPaaS load testing using [Gatling](https://gatling.io/) technology.
 
 It aims to provide building blocks, specific OpenPaaS APIs steps as well as more complex scenari.
 
@@ -9,17 +9,37 @@ It aims to provide building blocks, specific OpenPaaS APIs steps as well as more
 File path: `src/test/scala/com/linagora/openpaas/gatling/Configuration.scala`
 
 Available settings:
- - User count for scenari
- - Scenari duration
- - OpenPaaS platform admin credentials for user provisionning
+ - User count for scenario
+ - Scenario duration
+ - OpenPaaS platform admin credentials for user provisioning
  - Base for OpenPaaS endpoints
- - Domain used for load testing (id and name)
+ - Domain used for load testing
+ - Domain admin credentials
+ 
+## Gatling Recorder
 
-## Scenari availables
+The Gatling Recorder helps you to quickly generate scenarios, by either acting as a HTTP proxy between the 
+browser and the HTTP server or converting HAR (Http ARchive) files. Either way, the Recorder generates a 
+simple simulation that mimics your recorded navigation.
 
-### Provisioning demo
+All the instructions to install and use are available at this [documentation](https://gatling.io/docs/current/http/recorder/?highlight=proxy)
 
-This scenario create users that then read their profile. To run it:
+### Run scenario
+
+You can run all the scenario via sbt :
+
+```bash
+$ sbt
+ > gatling:test
+```
+
+Run a specific scenario via sbt :
+```bash
+$ sbt
+ > gatling:testOnly SCENARIO_FQDN
+```
+
+For example: this scenario create users that then read their profile. To run it:
 
 ```
 $ sbt
