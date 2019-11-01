@@ -11,7 +11,7 @@ class RandomFeeder(userCount: Int) {
   type UserFeeder = Array[Map[String, String]]
 
   val userList: List[User] = (0 until userCount)
-    .map(_ => User(Username(s"$randomString@$DomainName"), Password(randomString)))
+    .map(_ => User(Username(s"$randomString@${DomainName}"), Password(randomString)))
     .toList
 
   def asFeeder(): UserFeeder =

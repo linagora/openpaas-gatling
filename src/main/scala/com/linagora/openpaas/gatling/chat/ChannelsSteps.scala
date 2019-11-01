@@ -20,7 +20,7 @@ object ChannelsSteps {
       .body(StringBody(s"""
 {
   "type": "open",
-  "domain": "$DomainId",
+  "domain": "$${$DomainId}",
   "name": "$randomString",
   "mode": "channel"
 }"""))
@@ -69,7 +69,7 @@ object ChannelsSteps {
       .body(StringBody(s"""
 {
   "type": "directmessage",
-  "domain": "$DomainId",
+  "domain": "$${$DomainId}",
   "members": ["$${$OtherUserId}"],
   "mode": "channel"
 }"""))

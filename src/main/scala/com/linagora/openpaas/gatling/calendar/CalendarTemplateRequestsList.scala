@@ -1,6 +1,6 @@
 package com.linagora.openpaas.gatling.calendar
 
-import com.linagora.openpaas.gatling.Configuration._
+import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 
 object CalendarTemplateRequestsList {
   val redirectToCalendarPageAfterLogin = Array(
@@ -244,7 +244,6 @@ object CalendarTemplateRequestsList {
     "/views/commons/loading.html",
     "/api/user/notifications/unread",
     "/api/user?_=1572340249751",
-    s"/api/domains/$DomainId",
     "/api/authenticationtoken",
     "/components/roboto-fontface/fonts/Roboto-Regular.woff2",
     "/api/user/notifications/unread",
@@ -299,7 +298,6 @@ object CalendarTemplateRequestsList {
     "/calendar/app/components/calendars-list/items/item/configuration/configuration-list.html",
     "/calendar/app/planning/calendar-planning.html",
     "/components/mdi/fonts/materialdesignicons-webfont.woff2?v=2.0.46",
-    s"/api/themes/$DomainId/logo",
     "/components/roboto-fontface/fonts/Roboto-RegularItalic.woff2",
     "/images/logo-tiny.png",
     "/images/white-logo.svg",
