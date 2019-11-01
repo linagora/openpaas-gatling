@@ -10,22 +10,22 @@ object ProvisioningSteps {
   def provision() =
     exec(
       http("provisionning")
-        .post(s"/api/domains/$DomainId/members")
-        .basicAuth(PlatformAdminLogin, PlatformAdminPassword)
+        .post(s"/api/domains/$${$DomainId}/members")
+        .basicAuth(DomainAdminEmail, DomainAdminPassword)
         .body(StringBody(
           s"""
-{
-  "password": "$${$PasswordSessionParam}",
-  "accounts": [
-    {
-      "type": "email",
-      "preferredEmailIndex": 0,
-      "emails": [ "$${$UsernameSessionParam}"],
-      "hosted": false
-    }
-  ],
-  "domains": [ {"domain_id": "$DomainId"} ]
-}
+          {
+            "password": "$${$PasswordSessionParam}",
+            "accounts": [
+              {
+                "type": "email",
+                "preferredEmailIndex": 0,
+                "emails": [ "$${$UsernameSessionParam}"],
+                "hosted": false
+              }
+            ],
+            "domains": [ {"domain_id": "$${$DomainId}"} ]
+          }
           """))
         .check(status.is(201)))
 

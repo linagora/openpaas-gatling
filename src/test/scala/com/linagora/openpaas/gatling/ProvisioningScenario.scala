@@ -1,6 +1,7 @@
 package com.linagora.openpaas.gatling
 
 import com.linagora.openpaas.gatling.Configuration._
+import com.linagora.openpaas.gatling.core.DomainSteps.createGatlingTestDomainIfNotExist
 import com.linagora.openpaas.gatling.core.UserSteps._
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
 import com.linagora.openpaas.gatling.provisionning.RandomFeeder
@@ -12,6 +13,7 @@ class ProvisioningScenario extends Simulation {
   val feeder = new RandomFeeder(UserCount)
 
   val scn = scenario("Testing OpenPaaS provisioning")
+    .exec(createGatlingTestDomainIfNotExist)
     .feed(feeder.asFeeder())
     .pause(1 second)
     .exec(provision())

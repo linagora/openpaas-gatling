@@ -21,6 +21,8 @@ object Configuration {
 
   val PlatformAdminLogin = "admin@open-paas.org"
   val PlatformAdminPassword = "secret"
-  val DomainId = "5acc3648aa0fd100429ec2a3"
-  val DomainName = "open-paas.org"
+
+  val DomainName = "gatling-openpaas.org"
+  val DomainAdminEmail = s"admin@${DomainName}"
+  val DomainAdminPassword = "secret"
 }
