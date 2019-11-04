@@ -11,10 +11,10 @@ object Configuration {
   val BaseOpenPaaSUrl = s"http://$ServerHostName:$Port"
 
   val httpProtocol = http
-    .baseURL(Configuration.BaseOpenPaaSUrl)
+    .baseUrl(Configuration.BaseOpenPaaSUrl)
     .acceptHeader("application/json")
     .contentTypeHeader("application/json; charset=UTF-8")
-      .wsBaseURL(s"ws://$ServerHostName:$Port/socket.io")
+      .wsBaseUrl(s"ws://$ServerHostName:$Port/socket.io")
 
   val ScenarioDuration = 10 second
   val UserCount = 1

@@ -7,7 +7,7 @@ import io.gatling.http.Predef._
 object WebSocketSteps {
   def openChatConnection =
     ws("WsOpen")
-      .open("/chat")
+      .connect("/chat")
       .queryParam("token", s"$${$Token}")
       .queryParam("EIO", "3")
       .queryParam("transport", "websocket")

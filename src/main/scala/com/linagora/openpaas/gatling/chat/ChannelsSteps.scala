@@ -60,7 +60,7 @@ object ChannelsSteps {
 
   def pickOneChannel =
     exec((session: Session) => session.set(ChannelId,
-      Random.shuffle(session.get(ChannelIds).as[Vector[String]])
+      Random.shuffle(session(ChannelIds).as[Vector[String]])
         .head))
 
   def createPrivateChannel(): HttpRequestBuilder =

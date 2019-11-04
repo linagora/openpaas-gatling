@@ -4,7 +4,7 @@ import io.gatling.core.Predef._
 
 object Debug {
   def printSessionVariable(key: String) = exec(session => {
-    println(s"$key = ${session.get(key).as[String]}")
+    println(s"$key = ${session(key).as[String]}")
     session
   })
 }
