@@ -136,8 +136,12 @@ object CalendarsSteps {
   def provisionEvents: ChainBuilder = {
     val eventUuidFeeder = Iterator.continually(Map("eventUuid" -> randomUuidString))
 
-    feed(eventUuidFeeder)
-      .exec(createEventOnDefaultCalendar())
-      .pause(1 second)
+    group("Provision calendar events") {
+      repeat(20) {
+        feed(eventUuidFeeder)
+          .exec(createEventOnDefaultCalendar())
+          .pause(1 second)
+      }
+    }
   }
 }
