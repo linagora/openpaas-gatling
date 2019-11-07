@@ -64,6 +64,8 @@ class SearchEventsScenario extends  Simulation{
     .pause(1 second)
     .exec(listUsableCalendarsForUser())
     .pause(1 second)
+    .exec(logout)
+    .pause(1 second)
 
     setUp(
       scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
