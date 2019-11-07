@@ -9,4 +9,5 @@ object SessionKeys {
   val DomainId = "domainId"
   val UserId = "userId"
   val Token = "token"
+  val JwtToken = "jwtToken"
 }

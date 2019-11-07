@@ -29,4 +29,9 @@ object LoginSteps {
     .body(StringBody(s"""{"username":"$${$UsernameSessionParam}","password":"$${$PasswordSessionParam}","rememberme":false,"recaptcha":{"needed":false,"data":null}}"""))
       .check(status.is(200))
       .check(jsonPath("$._id").saveAs(UserId))
+
+  def logout: HttpRequestBuilder =
+    http("Logout")
+      .get("/logout")
+      .check(status in(200, 302))
 }

@@ -16,6 +16,10 @@ object Configuration {
     .contentTypeHeader("application/json; charset=UTF-8")
       .wsBaseUrl(s"ws://$ServerHostName:$Port/socket.io")
 
+  val JmapHostName = "127.0.0.1"
+  val JmapPort = 1080
+  val JmapBaseUrl = s"http://$JmapHostName:$JmapPort"
+
   val ScenarioDuration = 10 second
   val UserCount = 1
 
