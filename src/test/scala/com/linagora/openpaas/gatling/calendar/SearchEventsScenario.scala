@@ -54,7 +54,7 @@ class SearchEventsScenario extends  Simulation{
       foreach("${calendarLinks}", s"${CalendarLink}") {
         exec(session => {
           val calendarFullLink = session(s"${CalendarLink}").as[String]
-          val calendarLink = calendarFullLink.dropRight(5) // remove ".json" extension
+          val calendarLink = calendarFullLink.dropRight(".json".length) // remove ".json" extension
           session.set(s"${CalendarLink}", calendarLink)
         })
           .exec(searchEvents()).pause(1 second)
