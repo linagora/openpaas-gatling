@@ -1,13 +1,13 @@
-package com.linagora.openpaas.gatling.chat
+package com.linagora.openpaas.gatling.core
 
 import com.linagora.openpaas.gatling.provisionning.SessionKeys.{Token, UserId}
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
 object WebSocketSteps {
-  def openChatConnection =
+  def openConnection =
     ws("WsOpen")
-      .connect("/chat")
+      .connect("/")
       .queryParam("token", s"$${$Token}")
       .queryParam("EIO", "3")
       .queryParam("transport", "websocket")
