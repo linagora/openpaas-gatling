@@ -14,7 +14,8 @@ object Configuration {
     .baseUrl(Configuration.BaseOpenPaaSUrl)
     .acceptHeader("application/json")
     .contentTypeHeader("application/json; charset=UTF-8")
-      .wsBaseUrl(s"ws://$ServerHostName:$Port/socket.io")
+    .userAgentHeader("Gatling")
+    .wsBaseUrl(s"ws://$ServerHostName:$Port/socket.io")
 
   val JmapHostName = "127.0.0.1"
   val JmapPort = 1080
