@@ -8,11 +8,15 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 
 object TokenSteps {
-  def retrieveToken =
-    withAuth(http("getToken")
-      .get("/api/authenticationtoken"))
+
+  def retrieveAuthenticationToken =
+    http("Get Authentication Token")
+      .get("/api/authenticationtoken")
       .check(status in (200, 304))
       .check(jsonPath("$.token").saveAs(Token))
+
+  def retrieveTokenWithAuth =
+    withAuth(retrieveAuthenticationToken)
 
   def generateJwtToken: ChainBuilder =
     exec(http("Generate jwt token")
