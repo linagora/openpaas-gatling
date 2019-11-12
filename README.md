@@ -2,7 +2,7 @@
 
 This project enables to proceed to OpenPaaS load testing using [Gatling](https://gatling.io/) technology.
 
-It aims to provide building blocks, specific OpenPaaS APIs steps as well as more complex scenari.
+It aims to provide building blocks, specific OpenPaaS APIs steps as well as more complex scenario.
 
 ## Configuration
 
@@ -11,10 +11,11 @@ File path: `src/test/scala/com/linagora/openpaas/gatling/Configuration.scala`
 Available settings:
  - User count for scenario
  - Scenario duration
- - OpenPaaS platform admin credentials for user provisioning
- - Base for OpenPaaS endpoints
+ - OpenPaaS platform admin credentials for domain provisioning
+ - Base URL for OpenPaaS endpoints
  - Domain used for load testing
  - Domain admin credentials
+ - Base URL for Jmap server
  
 ## Gatling Recorder
 
@@ -39,9 +40,9 @@ $ sbt
  > gatling:testOnly SCENARIO_FQDN
 ```
 
-For example: this scenario create users that then read their profile. To run it:
+For example: this scenario to search and open a calendar event. To run it:
 
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.ProvisioningScenario
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.SearchEventsScenario
 ```
