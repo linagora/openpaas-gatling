@@ -1,6 +1,5 @@
 package com.linagora.openpaas.gatling.chat
 
-import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.chat.SessionKeys._
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
@@ -18,12 +17,13 @@ object ChannelsSteps {
     withAuth(http("createChannel")
       .post("/chat/api/conversations"))
       .body(StringBody(s"""
-{
-  "type": "open",
-  "domain": "$${$DomainId}",
-  "name": "$randomString",
-  "mode": "channel"
-}"""))
+        {
+          "type": "open",
+          "domain": "$${$DomainId}",
+          "name": "$randomString",
+          "mode": "channel"
+        }""")
+      )
       .check(status is 201)
 
   def listChannels(): HttpRequestBuilder =
@@ -67,11 +67,12 @@ object ChannelsSteps {
     withAuth(http("createPrivateChannels")
       .post("/chat/api/conversations"))
       .body(StringBody(s"""
-{
-  "type": "directmessage",
-  "domain": "$${$DomainId}",
-  "members": ["$${$OtherUserId}"],
-  "mode": "channel"
-}"""))
+        {
+          "type": "directmessage",
+          "domain": "$${$DomainId}",
+          "members": ["$${$OtherUserId}"],
+          "mode": "channel"
+        }""")
+      )
       .check(status is 201)
 }
