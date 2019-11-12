@@ -22,9 +22,9 @@ class WebSocketScenario extends Simulation {
     .pause(1 second)
     .exec(getProfile)
     .pause(1 second)
-    .exec(retrieveToken)
+    .exec(retrieveTokenWithAuth)
     .pause(1 second)
-    .exec(openConnection)
+    .exec(openConnection())
 
   setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
 }
