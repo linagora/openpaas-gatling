@@ -19,7 +19,7 @@ class TokenScenario extends Simulation {
     .exec(provision())
     .pause(1 second)
     .during(ScenarioDuration) {
-      exec(retrieveToken)
+      exec(retrieveTokenWithAuth)
         .pause(1 second)
     }
 

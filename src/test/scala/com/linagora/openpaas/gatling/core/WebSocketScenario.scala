@@ -1,7 +1,7 @@
 package com.linagora.openpaas.gatling.core
 
 import com.linagora.openpaas.gatling.Configuration._
-import com.linagora.openpaas.gatling.chat.WebSocketSteps._
+import WebSocketSteps._
 import com.linagora.openpaas.gatling.core.DomainSteps.createGatlingTestDomainIfNotExist
 import com.linagora.openpaas.gatling.core.TokenSteps._
 import com.linagora.openpaas.gatling.core.UserSteps._
@@ -22,9 +22,9 @@ class WebSocketScenario extends Simulation {
     .pause(1 second)
     .exec(getProfile)
     .pause(1 second)
-    .exec(retrieveToken)
+    .exec(retrieveTokenWithAuth)
     .pause(1 second)
-    .exec(openChatConnection)
+    .exec(openConnection())
 
   setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
 }
