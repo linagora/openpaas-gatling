@@ -4,4 +4,5 @@ object SessionKeys {
   val ChannelIds = "channelIds"
   val ChannelId = "channelId"
   val SubscribedChannelIds = "subscribedChannelIds"
+  val SubscribedChannelNames = "subscribedChannelNames"
 }
