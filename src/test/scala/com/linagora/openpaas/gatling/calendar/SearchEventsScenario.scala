@@ -24,32 +24,22 @@ class SearchEventsScenario extends  Simulation{
     .exec(provision())
     .pause(1 second)
     .exec(loadLoginTemplates)
-    .pause(1 second)
     .exec(login())
-    .pause(1 second)
     .exec(provisionEvents)
     .pause(1 second)
     .exec(loadTemplatesForRedirectingToCalendarPageAfterLogin)
-    .pause(1)
     .exec(getDomain)
-    .pause(1 second)
     .exec(getLogoForDomain)
-    .pause(1 second)
     .exec(getCalendarConfiguration)
-    .pause(1)
     .exec(getDefaultCalendar)
-    .pause(1 second)
     .exec(listUsableCalendarsForUser())
-    .pause(1 second)
     .group("List events from usable calendars") {
       foreach("${calendarLinks}", s"${CalendarLink}") {
-        exec(listEvents()).pause(1 second)
+        exec(listEvents())
       }
     }
     .exec(loadSearchResultPageTemplates)
-    .pause(1 second)
     .exec(listUsableCalendarsForUser())
-    .pause(1 second)
     .group("Search events from usable calendars") {
       foreach("${calendarLinks}", s"${CalendarLink}") {
         exec(session => {
@@ -57,15 +47,12 @@ class SearchEventsScenario extends  Simulation{
           val calendarLink = calendarFullLink.dropRight(".json".length) // remove ".json" extension
           session.set(s"${CalendarLink}", calendarLink)
         })
-          .exec(searchEvents()).pause(1 second)
+          .exec(searchEvents())
       }
     }
     .exec(loadOpeningEventTemplates)
-    .pause(1 second)
     .exec(listUsableCalendarsForUser())
-    .pause(1 second)
     .exec(logout)
-    .pause(1 second)
 
     setUp(
       scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
