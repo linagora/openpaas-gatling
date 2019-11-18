@@ -3,8 +3,8 @@ package com.linagora.openpaas.gatling.core
 import com.linagora.openpaas.gatling.Configuration._
 import WebSocketSteps._
 import com.linagora.openpaas.gatling.core.DomainSteps.createGatlingTestDomainIfNotExist
+import com.linagora.openpaas.gatling.core.LoginSteps.login
 import com.linagora.openpaas.gatling.core.TokenSteps._
-import com.linagora.openpaas.gatling.core.UserSteps._
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
 import com.linagora.openpaas.gatling.provisionning.RandomFeeder
 import io.gatling.core.Predef._
@@ -20,10 +20,12 @@ class WebSocketScenario extends Simulation {
     .pause(1 second)
     .exec(provision())
     .pause(1 second)
-    .exec(getProfile)
+    .exec(login())
     .pause(1 second)
-    .exec(retrieveTokenWithAuth)
+    .exec(retrieveAuthenticationToken)
     .pause(1 second)
+    .exec(getSocketId)
+    .exec(registerSocketNamespaces)
     .exec(openConnection())
 
   setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)

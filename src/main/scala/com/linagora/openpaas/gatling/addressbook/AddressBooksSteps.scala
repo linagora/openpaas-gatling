@@ -8,6 +8,8 @@ import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
+import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
+import com.linagora.openpaas.gatling.Configuration.ContactCount
 
 import scala.concurrent.duration.DurationInt
 
@@ -30,13 +32,13 @@ object AddressBooksSteps {
       .check(status is 201)
   }
 
-  def provisionContacts: ChainBuilder = {
+  def provisionContacts = {
     val contactUuidFeeder = Iterator.continually(Map("contactUuid" -> randomUuidString))
 
     group("Provision contacts") {
-      repeat(20) {
+      repeat(ContactCount) {
         feed(contactUuidFeeder)
-          .exec(createContactOnDefaultAddressBook)
+          .exec(withAuth(createContactOnDefaultAddressBook))
           .pause(1 second)
       }
     }
