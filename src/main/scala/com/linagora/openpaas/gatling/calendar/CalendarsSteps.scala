@@ -139,7 +139,7 @@ object CalendarsSteps {
     group("Provision calendar events") {
       repeat(20) {
         feed(eventUuidFeeder)
-          .exec(createEventOnDefaultCalendar())
+          .exec(withAuth(createEventOnDefaultCalendar()))
           .pause(1 second)
       }
     }
