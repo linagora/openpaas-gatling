@@ -27,6 +27,7 @@ object ProvisioningSteps {
             "domains": [ {"domain_id": "$${$DomainId}"} ]
           }
           """))
-        .check(status.is(201)))
+        .check(status.is(201))
+        .check(jsonPath("$._id").saveAs("userId")))
 
 }
