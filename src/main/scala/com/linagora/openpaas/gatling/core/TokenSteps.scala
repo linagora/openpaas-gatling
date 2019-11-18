@@ -1,11 +1,9 @@
 package com.linagora.openpaas.gatling.core
 
-import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.HttpRequestBuilder
 
 object TokenSteps {
 
@@ -14,9 +12,6 @@ object TokenSteps {
       .get("/api/authenticationtoken")
       .check(status in (200, 304))
       .check(jsonPath("$.token").saveAs(Token))
-
-  def retrieveTokenWithAuth =
-    withAuth(retrieveAuthenticationToken)
 
   def generateJwtToken: ChainBuilder =
     exec(http("Generate jwt token")

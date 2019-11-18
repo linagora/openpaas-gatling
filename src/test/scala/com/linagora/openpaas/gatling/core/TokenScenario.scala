@@ -2,6 +2,7 @@ package com.linagora.openpaas.gatling.core
 
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.DomainSteps.createGatlingTestDomainIfNotExist
+import com.linagora.openpaas.gatling.core.LoginSteps.login
 import com.linagora.openpaas.gatling.core.TokenSteps._
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
 import com.linagora.openpaas.gatling.provisionning.RandomFeeder
@@ -19,7 +20,8 @@ class TokenScenario extends Simulation {
     .exec(provision())
     .pause(1 second)
     .during(ScenarioDuration) {
-      exec(retrieveTokenWithAuth)
+      exec(login())
+      .exec(retrieveAuthenticationToken)
         .pause(1 second)
     }
 
