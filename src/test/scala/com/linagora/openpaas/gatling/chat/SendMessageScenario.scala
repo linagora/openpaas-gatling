@@ -15,7 +15,6 @@ import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
 import com.linagora.openpaas.gatling.provisionning.RandomFeeder
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import com.linagora.openpaas.gatling.utils.Debug._
 
 import scala.concurrent.duration.DurationInt
 
@@ -60,7 +59,7 @@ class SendMessageScenario extends Simulation {
       ws.checkTextMessage("check text subscribe")
     })
     .exec(ws("Send user_typing message").sendText(s"""42/chat,["message",{"text":"Hello","creator":"$${$UserId}","type":"user_typing","channel":"$${$ChannelId}"}]""").await(5 second) {
-      ws.checkTextMessage("check user_typing subscribe")
+      ws.checkTextMessage("check text user_typing")
     })
     .exec(ws("Send text message").sendText(s"""42/chat,["message",{"text":"Hello","creator":"$${$UserId}","type":"text","channel":"$${$ChannelId}"}]""").await(5 second) {
       ws.checkTextMessage("check text send message")
