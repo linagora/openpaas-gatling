@@ -89,7 +89,7 @@ object JmapSteps {
                   "type": "text/plain",
                   "name": "attachment_200kb.txt",
                   "size": 204800,
-                  "url": "${BaseOpenPaaSUrl}/download/$${$BlobId}/attachment_200kb.txt",
+                  "url": "${JmapBaseUrl}/download/$${$BlobId}/attachment_200kb.txt",
                   "isInline": false
                 }]
               }

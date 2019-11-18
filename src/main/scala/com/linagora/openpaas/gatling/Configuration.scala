@@ -4,22 +4,30 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
 import scala.concurrent.duration._
+import scala.util.Properties
 
 object Configuration {
-  val ServerHostName = "127.0.0.1"
-  val Port = 8080
-  val BaseOpenPaaSUrl = s"http://$ServerHostName:$Port"
+  val OpenPaaSHostName = Properties.envOrElse("OPENPAAS_HOSTNAME", "localhost")
+  val OpenPaaSPort = Properties.envOrElse("OPENPAAS_PORT", "8080").toInt
+  val OpenPaaSProtocol = Properties.envOrElse("OPENPAAS_PROTOCOL", "http")
+  val OpenPaaSBaseUrl = s"$OpenPaaSProtocol://$OpenPaaSHostName:$OpenPaaSPort"
+
+  val WebSocketHostName = Properties.envOrElse("WEBSOCKET_HOSTNAME", OpenPaaSHostName)
+  val WebSocketPort = Properties.envOrElse("WEBSOCKET_PORT", s"${OpenPaaSPort}").toInt
+  val WebSocketProtocol = Properties.envOrElse("WEBSOCKET_PROTOCOL", "ws")
+  val WebSocketBaseUrl = s"$WebSocketProtocol://$WebSocketHostName:$WebSocketPort/socket.io"
+
+  val JmapHostName = Properties.envOrElse("JMAP_HOSTNAME", OpenPaaSHostName)
+  val JmapPort = Properties.envOrElse("JMAP_PORT", "1080").toInt
+  val JmapProtocol = Properties.envOrElse("JMAP_PROTOCOL", OpenPaaSProtocol)
+  val JmapBaseUrl = s"$JmapProtocol://$JmapHostName:$JmapPort"
 
   val httpProtocol = http
-    .baseUrl(Configuration.BaseOpenPaaSUrl)
+    .baseUrl(OpenPaaSBaseUrl)
     .acceptHeader("application/json")
     .contentTypeHeader("application/json; charset=UTF-8")
     .userAgentHeader("Gatling")
-    .wsBaseUrl(s"ws://$ServerHostName:$Port/socket.io")
-
-  val JmapHostName = "127.0.0.1"
-  val JmapPort = 1080
-  val JmapBaseUrl = s"http://$JmapHostName:$JmapPort"
+    .wsBaseUrl(WebSocketBaseUrl)
 
   val ScenarioDuration = 10 second
   val UserCount = 1
