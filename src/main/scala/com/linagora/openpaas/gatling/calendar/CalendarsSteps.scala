@@ -10,7 +10,7 @@ import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import com.linagora.openpaas.gatling.calendar.CalendarTemplateRequestsList._
 import io.gatling.core.structure.ChainBuilder
 import scala.concurrent.duration.DurationInt
-
+import com.linagora.openpaas.gatling.Configuration.EventCount
 
 object CalendarsSteps {
   def createCalendar(): HttpRequestBuilder = {
@@ -137,7 +137,7 @@ object CalendarsSteps {
     val eventUuidFeeder = Iterator.continually(Map("eventUuid" -> randomUuidString))
 
     group("Provision calendar events") {
-      repeat(20) {
+      repeat(EventCount) {
         feed(eventUuidFeeder)
           .exec(withAuth(createEventOnDefaultCalendar()))
           .pause(1 second)

@@ -113,7 +113,7 @@ object JmapSteps {
       exec(generateJwtToken)
         .pause(1 second)
         .exec(getMailboxes)
-        .repeat(20) {
+        .repeat(EmailCount) {
           feed(messageUuidFeeder)
             .exec(sendMessages)
         }

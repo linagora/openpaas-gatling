@@ -31,6 +31,9 @@ object Configuration {
 
   val ScenarioDuration = 10 second
   val UserCount = 1
+  val ContactCount = 20
+  val EventCount = 20
+  val EmailCount = 20
 
   val PlatformAdminLogin = "admin@open-paas.org"
   val PlatformAdminPassword = "secret"
