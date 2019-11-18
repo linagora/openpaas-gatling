@@ -9,6 +9,8 @@ import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import com.linagora.openpaas.gatling.core.DomainSteps._
 import io.gatling.core.Predef._
 import com.linagora.openpaas.gatling.core.LoginSteps._
+import com.linagora.openpaas.gatling.core.TokenSteps.retrieveAuthenticationToken
+import com.linagora.openpaas.gatling.core.WebSocketSteps._
 
 import scala.concurrent.duration.DurationInt
 
@@ -25,6 +27,10 @@ class SearchEventsScenario extends  Simulation{
     .pause(1 second)
     .exec(loadLoginTemplates)
     .exec(login())
+    .exec(retrieveAuthenticationToken)
+    .exec(getSocketId)
+    .exec(registerSocketNamespaces)
+    .exec(openConnection())
     .exec(provisionEvents)
     .pause(1 second)
     .exec(loadTemplatesForRedirectingToCalendarPageAfterLogin)

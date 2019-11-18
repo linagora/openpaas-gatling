@@ -4,6 +4,8 @@ import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.addressbook.AddressBooksSteps._
 import com.linagora.openpaas.gatling.core.DomainSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
+import com.linagora.openpaas.gatling.core.TokenSteps.retrieveAuthenticationToken
+import com.linagora.openpaas.gatling.core.WebSocketSteps._
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
 import com.linagora.openpaas.gatling.provisionning.RandomFeeder
 import io.gatling.core.Predef._
@@ -26,6 +28,10 @@ class OpenContactScenario extends Simulation{
     .pause(1 second)
     .exec(login())
     .pause(1 second)
+    .exec(retrieveAuthenticationToken)
+    .exec(getSocketId)
+    .exec(registerSocketNamespaces)
+    .exec(openConnection())
     .exec(loadTemplatesForRedirectingToContactPageAfterLogin)
     .exec(getDomain)
     .exec(getLogoForDomain)

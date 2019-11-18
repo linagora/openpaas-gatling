@@ -48,7 +48,7 @@ class SendMessageScenario extends Simulation {
     .exec(getLogoForDomain)
     .exec(getSocketId)
     .exec(registerSocketNamespaces)
-    .exec(openConnection("/", "websocket"))
+    .exec(openConnection())
     .exec(ws("Send ping message").sendText("""2probe""").await(5 second) {
       ws.checkTextMessage("check text ping")
     })

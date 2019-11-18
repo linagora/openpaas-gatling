@@ -8,7 +8,8 @@ import com.linagora.openpaas.gatling.core.LoginSteps._
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
 import com.linagora.openpaas.gatling.provisionning.RandomFeeder
 import io.gatling.core.Predef._
-import com.linagora.openpaas.gatling.core.TokenSteps.generateJwtToken
+import com.linagora.openpaas.gatling.core.TokenSteps.{generateJwtToken, retrieveAuthenticationToken}
+import com.linagora.openpaas.gatling.core.WebSocketSteps._
 
 import scala.concurrent.duration.DurationInt
 
@@ -22,6 +23,10 @@ class SendEmailScenario extends Simulation {
     .exec(provision())
     .pause(1 second)
     .exec(login())
+    .exec(retrieveAuthenticationToken)
+    .exec(getSocketId)
+    .exec(registerSocketNamespaces)
+    .exec(openConnection())
     .exec(provisionMessages)
     .pause(5 second)
     .exec(loadOpeningEventTemplates)
