@@ -29,7 +29,7 @@ object DomainSteps {
     http("get domain by ID")
       .get(s"/api/domains/$${$DomainId}")
       .basicAuth(UsernameSessionParam, PasswordSessionParam)
-      .check(status is 200)
+      .check(status in (200, 304))
 
   def getLogoForDomain: HttpRequestBuilder =
     http("get logo for particular domain")

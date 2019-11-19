@@ -17,6 +17,7 @@ Available settings:
  - Base URL for Jmap server
  - User count for scenario
  - Scenario duration
+ - Inject duration
  - Number of contacts per virtual user
  - Number of calendar events per virtual user
  - Number of emails per virtual user
@@ -126,4 +127,18 @@ $ sbt
 ```
 $ sbt
 > gatling:testOnly com.linagora.openpaas.gatling.chat.SendMessageScenario
+```
+
+### OpenPaaS mix scenario
+
+#### Scenario
+- Execute 4 scenarios above during scenario duration, each scenario has 25% of total time
+- Pause between scenarios from 7.5 to 15 seconds
+- Number of users: 20000
+- Injection duration: 2000 seconds (10 users/sec)
+
+#### Run
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.OpenPaaSMixScenario
 ```
