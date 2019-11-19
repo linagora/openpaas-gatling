@@ -1,6 +1,5 @@
 package com.linagora.openpaas.gatling.calendar
 
-import com.linagora.openpaas.gatling.calendar.SessionKeys._
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.calendar.CalendarsSteps._
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
@@ -8,9 +7,7 @@ import com.linagora.openpaas.gatling.provisionning.RandomFeeder
 import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import com.linagora.openpaas.gatling.core.DomainSteps._
 import io.gatling.core.Predef._
-import com.linagora.openpaas.gatling.core.LoginSteps._
-import com.linagora.openpaas.gatling.core.TokenSteps.retrieveAuthenticationToken
-import com.linagora.openpaas.gatling.core.WebSocketSteps._
+import com.linagora.openpaas.gatling.calendar.scenari.SearchEventsScenari
 
 import scala.concurrent.duration.DurationInt
 
@@ -27,38 +24,9 @@ class SearchEventsScenario extends  Simulation{
     .pause(1 second)
     .exec(provisionEvents)
     .pause(1 second)
-    .exec(loadLoginTemplates)
-    .exec(login())
-    .exec(retrieveAuthenticationToken)
-    .exec(getSocketId)
-    .exec(registerSocketNamespaces)
-    .exec(openConnection())
-    .exec(loadTemplatesForRedirectingToCalendarPageAfterLogin)
-    .exec(getDomain)
-    .exec(getLogoForDomain)
-    .exec(getCalendarConfiguration)
-    .exec(getDefaultCalendar)
-    .exec(listUsableCalendarsForUser())
-    .group("List events from usable calendars") {
-      foreach("${calendarLinks}", s"${CalendarLink}") {
-        exec(listEvents())
-      }
+    .during(ScenarioDuration) {
+      exec(SearchEventsScenari.generate())
     }
-    .exec(loadSearchResultPageTemplates)
-    .exec(listUsableCalendarsForUser())
-    .group("Search events from usable calendars") {
-      foreach("${calendarLinks}", s"${CalendarLink}") {
-        exec(session => {
-          val calendarFullLink = session(s"${CalendarLink}").as[String]
-          val calendarLink = calendarFullLink.dropRight(".json".length) // remove ".json" extension
-          session.set(s"${CalendarLink}", calendarLink)
-        })
-          .exec(searchEvents())
-      }
-    }
-    .exec(loadOpeningEventTemplates)
-    .exec(listUsableCalendarsForUser())
-    .exec(logout)
 
     setUp(
       scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)

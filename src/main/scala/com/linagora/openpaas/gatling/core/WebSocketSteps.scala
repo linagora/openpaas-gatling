@@ -39,7 +39,7 @@ object WebSocketSteps {
       .queryParam("sid", "${sid}")
       .body(StringBody("""17:40/collaboration,15:40/graceperiod,13:40/calendars,14:40/userstatus,18:40/contact-import,19:40/videoconference,8:40/chat,17:40/notifications,"""))
 
-  def openConnection(url: String = "/", transport: String = "websocket") =
+  def openWsConnection(url: String = "/", transport: String = "websocket") =
     ws("WsOpen")
       .connect(url)
       .queryParam("token", s"$${$Token}")
@@ -48,7 +48,7 @@ object WebSocketSteps {
       .queryParam("user", s"$${$UserId}")
     .queryParam("sid", "${sid}")
 
-  def closeConnection =
+  def closeWsConnection =
     ws("Ws close").close
 }
 
