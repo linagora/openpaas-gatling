@@ -46,5 +46,5 @@ class SendEmailScenario extends Simulation {
     .exec(sendMessageWithAttachment)
     .exec(logout)
 
-  setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
 }

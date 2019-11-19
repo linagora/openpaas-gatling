@@ -67,5 +67,5 @@ class SendMessageScenario extends Simulation {
     .exec(closeConnection)
     .exec(logout)
 
-  setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
 }

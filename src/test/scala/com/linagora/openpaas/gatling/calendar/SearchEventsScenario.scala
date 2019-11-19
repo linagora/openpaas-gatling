@@ -61,5 +61,5 @@ class SearchEventsScenario extends  Simulation{
     .exec(logout)
 
     setUp(
-      scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
+      scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
 }
