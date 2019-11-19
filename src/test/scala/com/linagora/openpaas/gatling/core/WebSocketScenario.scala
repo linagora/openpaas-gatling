@@ -26,7 +26,7 @@ class WebSocketScenario extends Simulation {
     .pause(1 second)
     .exec(getSocketId)
     .exec(registerSocketNamespaces)
-    .exec(openConnection())
+    .exec(openWsConnection())
 
   setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
 }

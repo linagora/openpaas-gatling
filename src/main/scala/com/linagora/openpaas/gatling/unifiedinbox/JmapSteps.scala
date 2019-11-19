@@ -1,6 +1,6 @@
 package com.linagora.openpaas.gatling.unifiedinbox
 
-import com.linagora.openpaas.gatling.core.TokenSteps.generateJwtToken
+import com.linagora.openpaas.gatling.core.TokenSteps._
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.unifiedinbox.SessionKeys._
 import com.linagora.openpaas.gatling.Configuration._
@@ -10,7 +10,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import org.apache.james.gatling.jmap.JmapMailbox.{getSystemMailboxesChecks}
 import org.apache.james.gatling.jmap.JmapMessages.{JmapParameters, NO_PARAMETERS, messageIdSessionParam, openpaasListMessageParameters}
-import org.apache.james.gatling.jmap.{JmapChecks, JmapHttp, JmapMailbox, JmapMessages}
+import org.apache.james.gatling.jmap.{JmapChecks, JmapHttp, JmapMailbox}
 import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import io.gatling.core.json.Json
 
@@ -110,12 +110,13 @@ object JmapSteps {
     val messageUuidFeeder = Iterator.continually(Map("messageIdSessionParam" -> randomUuidString))
 
     group("Provisioning messages") {
-      exec(generateJwtToken)
+      exec(generateJwtTokenWithAuth)
         .pause(1 second)
         .exec(getMailboxes)
         .repeat(EmailCount) {
           feed(messageUuidFeeder)
             .exec(sendMessages)
+            .pause(1 second)
         }
     }
   }

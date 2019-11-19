@@ -4,6 +4,7 @@ import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
+import com.linagora.openpaas.gatling.provisionning.Authentication._
 
 object TokenSteps {
 
@@ -23,4 +24,15 @@ object TokenSteps {
       val denormalizedJwtToken = session(JwtToken).as[String].replaceAll("\"", "")
       session.set(JwtToken, denormalizedJwtToken)
     })
+
+  def generateJwtTokenWithAuth =
+    exec(withAuth(http("Generate jwt token")
+      .post("/api/jwt/generate")
+      .check(status is 200)
+      .check(bodyString.saveAs(JwtToken))
+    ))
+      .exec(session => {
+        val denormalizedJwtToken = session(JwtToken).as[String].replaceAll("\"", "")
+        session.set(JwtToken, denormalizedJwtToken)
+      })
 }

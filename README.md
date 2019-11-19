@@ -17,6 +17,7 @@ Available settings:
  - Base URL for Jmap server
  - User count for scenario
  - Scenario duration
+ - Inject duration
  - Number of contacts per virtual user
  - Number of calendar events per virtual user
  - Number of emails per virtual user
@@ -31,6 +32,9 @@ Environment variable:
  - `JMAP_HOSTNAME` which is set to `OPENPAAS_HOSTNAME` by default
  - `JMAP_PORT` which is set to `1080` by default
  - `JMAP_PROTOCOL` which is set to `OPENPAAS_PROTOCOL` by default
+ - `INJECT_DURATION` which is set to `10` by default. Unit is second
+ - `SCENARIO_DURATION` which is set to `10` by default. Unit is second
+ - `USER_COUNT` which is set to `1` by default
  
 For example, to run with OpenPaaS port `8000`:
 
@@ -126,4 +130,20 @@ $ sbt
 ```
 $ sbt
 > gatling:testOnly com.linagora.openpaas.gatling.chat.SendMessageScenario
+```
+
+### OpenPaaS mix scenario
+
+#### Scenario
+- Execute 4 scenarios above during scenario duration, each scenario has 25% of total time
+- Pause between scenarios from 7.5 to 15 seconds
+- Number of users: 20000
+- Injection duration: 2000 seconds (10 users/sec)
+- Scenario duration is 3 hours
+
+#### Run
+```
+$ export INJECT_DURATION="2000" SCENARIO_DURATION="10800" USER_COUNT="20000"
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.OpenPaaSMixScenario
 ```

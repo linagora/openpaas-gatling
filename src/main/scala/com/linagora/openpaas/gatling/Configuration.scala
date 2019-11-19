@@ -29,8 +29,9 @@ object Configuration {
     .userAgentHeader("Gatling")
     .wsBaseUrl(WebSocketBaseUrl)
 
-  val ScenarioDuration = 10 second
-  val UserCount = 1
+  val InjectDuration = Properties.envOrElse("INJECT_DURATION", "10").toInt seconds
+  val ScenarioDuration = Properties.envOrElse("SCENARIO_DURATION", "10").toInt seconds
+  val UserCount = Properties.envOrElse("USER_COUNT", "1").toInt
   val ContactCount = 20
   val EventCount = 20
   val EmailCount = 20
