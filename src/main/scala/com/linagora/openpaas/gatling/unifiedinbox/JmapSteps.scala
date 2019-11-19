@@ -116,6 +116,7 @@ object JmapSteps {
         .repeat(EmailCount) {
           feed(messageUuidFeeder)
             .exec(sendMessages)
+            .pause(1 second)
         }
     }
   }

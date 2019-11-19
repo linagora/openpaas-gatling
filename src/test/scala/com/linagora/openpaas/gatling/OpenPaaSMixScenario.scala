@@ -26,7 +26,7 @@ class OpenPaaSMixScenario extends Simulation {
     .exec(provision())
     .pause(1 second)
     .exec(provisionMessages)
-    .pause(5 second)
+    .pause(1 second)
     .exec(provisionEvents)
     .pause(1 second)
     .exec(provisionContacts)
