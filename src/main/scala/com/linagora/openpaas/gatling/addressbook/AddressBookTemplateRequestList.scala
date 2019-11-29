@@ -250,7 +250,6 @@ object AddressBookTemplateRequestList {
     "/images/logo-tiny.png",
     "/contact/app/contact/list/contact-list-card.html",
     "/contact/app/contact/list/contact-list-item.html",
-    "/api/avatars?objectType=email&email=gatler@open-paas.org", // might need a step for this one
     "/views/modules/settings-overlay/template.html",
     "/contact/app/contact/photo/contact-photo.html",
     "/contact/images/contacts-icon.svg"

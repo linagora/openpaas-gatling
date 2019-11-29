@@ -15,7 +15,7 @@ object OpenContactScenari {
   def generate() =
     exec(loadLoginTemplates)
       .pause(1 second)
-      .exec(login())
+      .exec(login)
       .pause(1 second)
       .exec(retrieveAuthenticationToken)
       .exec(getSocketId)

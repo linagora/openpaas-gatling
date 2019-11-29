@@ -14,7 +14,7 @@ import scala.concurrent.duration.DurationInt
 object SearchEventsScenari {
   def generate() =
     exec(loadLoginTemplates)
-      .exec(login())
+      .exec(login)
       .exec(retrieveAuthenticationToken)
       .exec(getSocketId)
       .exec(registerSocketNamespaces)

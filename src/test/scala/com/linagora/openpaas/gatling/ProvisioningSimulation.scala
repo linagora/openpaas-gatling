@@ -1,29 +1,27 @@
-package com.linagora.openpaas.gatling.core
+package com.linagora.openpaas.gatling
 
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.DomainSteps.createGatlingTestDomainIfNotExist
-import com.linagora.openpaas.gatling.core.UsersSteps._
+import com.linagora.openpaas.gatling.core.UserSteps._
 import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
-import com.linagora.openpaas.gatling.provisionning._
+import com.linagora.openpaas.gatling.provisionning.RandomFeeder
 import io.gatling.core.Predef._
 
 import scala.concurrent.duration.DurationInt
 
-class RetrieveUserScenario extends Simulation {
+class ProvisioningSimulation extends Simulation {
   val feeder = new RandomFeeder(UserCount)
 
-  val scn = scenario("Testing OpenPaaS chat channel creation")
+  val scn = scenario("Testing OpenPaaS provisioning")
     .exec(createGatlingTestDomainIfNotExist)
     .feed(feeder.asFeeder())
     .pause(1 second)
     .exec(provision())
     .pause(1 second)
     .during(ScenarioDuration) {
-      exec(feeder.selectUsernameStep())
-        .exec(findUserIdByUsername)
+      exec(getProfile)
         .pause(1 second)
-        .exec(getOtherUserProfile)
     }
 
-  setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
 }
