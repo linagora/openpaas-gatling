@@ -35,6 +35,8 @@ Environment variable:
  - `INJECT_DURATION` which is set to `10` by default. Unit is second
  - `SCENARIO_DURATION` which is set to `10` by default. Unit is second
  - `USER_COUNT` which is set to `1` by default
+ - `HUMAN_ACTION_MIN_DELAY` which is set to `7` by default. The minimum amount of seconds between 2 human actions.
+ - `HUMAN_ACTION_MAX_DELAY` which is set to `15` by default. The maximum amount of seconds between 2 human actions.
  
 For example, to run with OpenPaaS port `8000`:
 

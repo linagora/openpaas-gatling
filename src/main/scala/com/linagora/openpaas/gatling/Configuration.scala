@@ -35,6 +35,9 @@ object Configuration {
   val ContactCount = 20
   val EventCount = 20
   val EmailCount = 20
+  
+  val humanActionMinDelay = Properties.envOrElse("HUMAN_ACTION_MIN_DELAY", "7").toInt
+  val humanActionMaxDelay = Properties.envOrElse("HUMAN_ACTION_MAX_DELAY", "15").toInt
 
   val PlatformAdminLogin = "admin@open-paas.org"
   val PlatformAdminPassword = "secret"
