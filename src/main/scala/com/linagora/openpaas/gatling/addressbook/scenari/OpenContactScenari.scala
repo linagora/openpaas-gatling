@@ -5,8 +5,9 @@ import com.linagora.openpaas.gatling.core.DomainSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
 import com.linagora.openpaas.gatling.core.TokenSteps.retrieveAuthenticationToken
 import com.linagora.openpaas.gatling.core.WebSocketSteps._
-import io.gatling.core.Predef._
+import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay._
 
+import io.gatling.core.Predef._
 import scala.concurrent.duration.DurationInt
 
 object OpenContactScenari {
@@ -24,16 +25,17 @@ object OpenContactScenari {
       .exec(getDomain)
       .exec(getLogoForDomain)
       .exec(getUserGroupMembershipPrincipals)
+      .pause(humanActionDelay() second)
       .exec(getUserAddressBooks)
       .exec(getDomainAddressBooks)
       .exec(listContactsFromUserAddressBooks)
-      .pause(1 second)
+      .pause(humanActionDelay() second)
       .exec(getCollectedAddressBookProperty)
       .exec(listContactsFromCollectedAddressBook)
-      .pause(1 second)
+      .pause(humanActionDelay() second)
       .exec(loadTemplatesForOpeningContact)
       .exec(getOneCreatedContactInCollectedAddressBook)
-      .pause(1 second)
+      .pause(humanActionDelay() second)
       .exec(closeWsConnection)
       .exec(logout)
 }
