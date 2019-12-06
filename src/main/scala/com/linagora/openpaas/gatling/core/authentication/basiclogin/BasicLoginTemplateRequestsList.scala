@@ -1,6 +1,6 @@
-package com.linagora.openpaas.gatling.core
+package com.linagora.openpaas.gatling.core.authentication.basiclogin
 
-object LoginTemplateRequestsList {
+object BasicLoginTemplateRequestsList {
   val loadTemplate = Array(
     "/",
     "/login?continue=%2F",

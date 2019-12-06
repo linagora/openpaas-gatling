@@ -3,8 +3,8 @@ package com.linagora.openpaas.gatling
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.addressbook.AddressBooksSteps._
 import com.linagora.openpaas.gatling.core.DomainSteps._
-import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
-import com.linagora.openpaas.gatling.provisionning.RandomFeeder
+import com.linagora.openpaas.gatling.core.LoginSteps.login
+import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import io.gatling.core.Predef._
 import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactScenari
 import com.linagora.openpaas.gatling.calendar.CalendarsSteps.provisionEvents
@@ -15,15 +15,16 @@ import com.linagora.openpaas.gatling.unifiedinbox.scenari.SendEmailScenari
 
 import scala.concurrent.duration.DurationInt
 
-class OpenPaaSMixScenario extends Simulation {
-  val feeder = new RandomFeeder(UserCount)
+class OpenPaaSMixSimulation extends Simulation {
+  private val feeder = csv("users.csv")
 
   val scn = scenario("Testing OpenPaaS mix scenarios")
     .exec(createGatlingTestDomainIfNotExist)
     .pause(1 second)
-    .feed(feeder.asFeeder())
+    .feed(feeder.circular())
     .pause(1 second)
-    .exec(provision())
+    .exec(login)
+    .exec(getProfile())
     .pause(1 second)
     .exec(provisionMessages)
     .pause(1 second)

@@ -21,7 +21,7 @@ object SendMessageScenari {
 
   def generate() =
     exec(loadLoginTemplates)
-      .exec(login())
+      .exec(login)
       .exec(loadTemplatesWhenRedirectingToChatPageAfterLogin)
       .exec(getDomain)
       .exec(getUnreadNotifications)

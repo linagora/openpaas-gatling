@@ -14,7 +14,7 @@ object SendEmailScenari {
 
   def generate() =
     exec(loadLoginTemplates)
-      .exec(login())
+      .exec(login)
       .exec(retrieveAuthenticationToken)
       .exec(getSocketId)
       .exec(registerSocketNamespaces)

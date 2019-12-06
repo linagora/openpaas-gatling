@@ -28,6 +28,7 @@ object ChannelsSteps {
   def listChannels(): HttpRequestBuilder =
     withAuth(http("listChannels")
       .get("/chat/api/conversations"))
+      .queryParam("creator", s"$${$UserId}")
       .check(status in(200, 304))
       .check(jsonPath("$[*]._id").findAll.saveAs(ChannelIds))
 

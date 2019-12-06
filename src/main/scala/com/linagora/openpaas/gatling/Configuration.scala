@@ -22,6 +22,11 @@ object Configuration {
   val JmapProtocol = Properties.envOrElse("JMAP_PROTOCOL", OpenPaaSProtocol)
   val JmapBaseUrl = s"$JmapProtocol://$JmapHostName:$JmapPort"
 
+  val authenticationStrategy = Properties.envOrElse("AUTHENTICATION_STRATEGY", "basic")
+  val lemonLDAPPortalProtocol = Properties.envOrElse("LEMONLDAP_PORTAL_PROTOCOL", OpenPaaSProtocol)
+  val lemonLDAPPortalHostName = Properties.envOrElse("LEMONLDAP_PORTAL_HOSTNAME", "auth.latest.integration-open-paas.org")
+  val LemonLDAPPortalUrl = s"$lemonLDAPPortalProtocol://$lemonLDAPPortalHostName"
+
   val httpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)
     .acceptHeader("application/json")

@@ -4,26 +4,22 @@ import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.DomainSteps.createGatlingTestDomainIfNotExist
 import com.linagora.openpaas.gatling.core.LoginSteps.login
 import com.linagora.openpaas.gatling.core.TokenSteps._
-import com.linagora.openpaas.gatling.provisionning.ProvisioningSteps.provision
-import com.linagora.openpaas.gatling.provisionning.RandomFeeder
+import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import io.gatling.core.Predef._
 
 import scala.concurrent.duration.DurationInt
 
-class TokenScenario extends Simulation {
-  val feeder = new RandomFeeder(UserCount)
+class TokenSimulation extends Simulation {
+  private val feeder = csv("users.csv")
 
   val scn = scenario("Testing OpenPaaS token retrieval")
-    .exec(createGatlingTestDomainIfNotExist)
-    .feed(feeder.asFeeder())
-    .pause(1 second)
-    .exec(provision())
-    .pause(1 second)
+    .feed(feeder.circular())
+    .exec(login)
+    .exec(getProfile())
     .during(ScenarioDuration) {
-      exec(login())
-      .exec(retrieveAuthenticationToken)
+      exec(retrieveAuthenticationToken)
         .pause(1 second)
     }
 
-  setUp(scn.inject(atOnceUsers(UserCount))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
 }
