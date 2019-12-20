@@ -87,7 +87,7 @@ For example: this scenario to search and open a calendar event. To run it:
 
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.calendar.SearchEventsScenario
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.SearchEventsSimulation
 ```
 
 ## Main Scenarios
@@ -103,7 +103,7 @@ $ sbt
 #### Run
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.unifiedinbox.SendEmailScenario
+> gatling:testOnly com.linagora.openpaas.gatling.unifiedinbox.SendEmailSimulation
 ```
 
 ### Search and open an calendar 
@@ -117,7 +117,7 @@ $ sbt
 #### Run
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.calendar.SearchEventsScenario
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.SearchEventsSimulation
 ```
 
 ### Open a contact in collected address book
@@ -131,7 +131,7 @@ $ sbt
 #### Run
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactScenario
+> gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactSimulation
 ```
 
 ### Send a chat message in general channel
@@ -145,7 +145,7 @@ $ sbt
 #### Run
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.chat.SendMessageScenario
+> gatling:testOnly com.linagora.openpaas.gatling.chat.SendMessageSimulation
 ```
 
 ### OpenPaaS mix scenario
@@ -161,5 +161,5 @@ $ sbt
 ```
 $ export INJECT_DURATION="2000" SCENARIO_DURATION="10800" USER_COUNT="20000"
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.OpenPaaSMixScenario
+> gatling:testOnly com.linagora.openpaas.gatling.OpenPaaSMixSimulation
 ```
