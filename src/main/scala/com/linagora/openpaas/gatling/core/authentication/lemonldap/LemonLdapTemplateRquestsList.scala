@@ -2,21 +2,26 @@ package com.linagora.openpaas.gatling.core.authentication.lemonldap
 
 object LemonLdapTemplateRequestsList {
   val authLoginPageTemplates = Array(
-    "/",
-    "/skins/openpaas/css/bootstrap.min.css",
-    "/skins/openpaas/css/bootstrap-theme.min.css",
-    "/skins/common/js/jquery-1.10.2.min.js",
-    "/skins/common/js/jquery-ui-1.10.3.custom.min.js",
-    "/skins/common/js/jquery.base64.min.js",
-    "/skins/common/js/jquery.cookie.min.js",
-    "/skins/openpaas/js/skin.min.js",
-    "/skins/common/js/portal.min.js",
-    "/skins/openpaas/js/bootstrap.min.js",
-    "/skins/openpaas/css/custom-openpaas.css",
-    "/skins/openpaas/css/custom-op-lemon.css",
-    "/skins/openpaas/css/mdi/css/materialdesignicons.min.css",
-    "/skins/openpaas/css/roboto-fontface/css/roboto-fontface.css",
-    "/skins/openpaas/css/animate.css/animate.min.css",
-    "/skins/common/favicon.ico"
+    "/static/bwr/bootstrap/dist/css/bootstrap.min.css",
+    "/static/bwr/jquery/dist/jquery.min.js",
+		"/static/bwr/jquery-ui/jquery-ui.min.js",
+		"/static/bwr/font-awesome/css/font-awesome.min.css",
+		"/static/bootstrap/js/skin.min.js",
+		"/static/bootstrap/css/styles.min.css",
+		"/index.psgi/psgi.js",
+		"/static/bwr/jquery.cookie/jquery.cookie.min.js",
+		"/portal.css",
+		"/static/common/js/portal.min.js",
+		"/static/bwr/bootstrap/dist/js/bootstrap.min.js",
+		"/static/common/logos/logo_llng_400px.png",
+		"/static/common/backgrounds/1280px-Cedar_Breaks_National_Monument_partially.jpg",
+		"/static/bwr/font-awesome/fonts/fontawesome-webfont.woff2?v=4.7.0",
+		"/static/common/vi.png",
+		"/static/common/en.png",
+		"/static/common/fr.png",
+		"/static/common/it.png",
+		"/static/common/fi.png",
+		"/static/common/de.png",
+		"/static/common/ar.png"
   )
 }

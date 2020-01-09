@@ -32,11 +32,11 @@ object LemonLdapSteps {
         "upgrade-insecure-requests" -> "1",
         "Content-Type" -> "application/x-www-form-urlencoded"))
       .formParam("url", "")
-      .formParam("timezone", "7")
-      .formParam("skin", "openpaas")
+      .formParam("timezone", "1")
+      .formParam("skin", "bootstrap")
       .formParam("user", s"$${$UsernameSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
-      .check(status is 303)
+      .check(status is 200)
 
   def goToOpenPaaSApplication: HttpRequestBuilder =
     http("Go to OpenPaaS application")

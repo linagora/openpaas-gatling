@@ -31,8 +31,8 @@ object TokenSteps {
       .check(status is 200)
       .check(bodyString.saveAs(JwtToken))
     ))
-      .exec(session => {
-        val denormalizedJwtToken = session(JwtToken).as[String].replaceAll("\"", "")
-        session.set(JwtToken, denormalizedJwtToken)
-      })
+    .exec(session => {
+      val denormalizedJwtToken = session(JwtToken).as[String].replaceAll("\"", "")
+      session.set(JwtToken, denormalizedJwtToken)
+    })
 }

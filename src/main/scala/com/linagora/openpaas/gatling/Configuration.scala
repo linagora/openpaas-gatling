@@ -44,8 +44,8 @@ object Configuration {
   val humanActionMinDelay = Properties.envOrElse("HUMAN_ACTION_MIN_DELAY", "7").toInt
   val humanActionMaxDelay = Properties.envOrElse("HUMAN_ACTION_MAX_DELAY", "15").toInt
 
-  val PlatformAdminLogin = "admin@open-paas.org"
-  val PlatformAdminPassword = "secret"
+  val PlatformAdminLogin = Properties.envOrElse("PLATFORM_ADMIN_USER", "admin@open-paas.org")
+  val PlatformAdminPassword = Properties.envOrElse("PLATFORM_ADMIN_PWD", "ah! ah!")
 
   val DomainName = "gatling-openpaas.org"
   val DomainAdminEmail = s"admin@${DomainName}"
