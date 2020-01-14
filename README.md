@@ -1,7 +1,6 @@
 # Gatling OpenPaaS
 
-This project enables to proceed to OpenPaaS load testing using [Gatling](https://gatling.io/) technology.
-
+This project enables to proceed to OpenPaaS load testing using [Gatling](https://gatling.io/) technology.  
 It aims to provide building blocks, specific OpenPaaS APIs steps as well as more complex scenario.
 
 ## Configuration

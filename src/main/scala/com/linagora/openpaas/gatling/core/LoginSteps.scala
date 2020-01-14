@@ -7,6 +7,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.gatling.core.structure.ChainBuilder
+import java.io._
 
 object LoginSteps {
 
@@ -16,9 +17,10 @@ object LoginSteps {
     else
       BasicLoginSteps.loadLoginTemplates
 
-  def login(): ChainBuilder=
+  def login(): ChainBuilder =
     if (authenticationStrategy.equals("lemonldap"))
-      exec(LemonLdapSteps.login)
+      exec(LemonLdapSteps.getPage)
+      .exec(LemonLdapSteps.login)
       .exec(LemonLdapSteps.goToOpenPaaSApplication)
     else
       exec(BasicLoginSteps.login)

@@ -10,4 +10,5 @@ object SessionKeys {
   val UserId = "userId"
   val Token = "token"
   val JwtToken = "jwtToken"
+  val LemonLdapFormToken = "lemonLdapFormToken";
 }

@@ -7,4 +7,5 @@ object SessionKeys {
   val SummarySessionParam = "summary"
   val UidSessionParam = "uid"
   val CalendarLink = "calendarLink"
+  val LemonLdapFormToken = "lemonLdapFormToken";
 }

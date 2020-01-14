@@ -47,7 +47,7 @@ object Configuration {
   val PlatformAdminLogin = Properties.envOrElse("PLATFORM_ADMIN_USER", "admin@open-paas.org")
   val PlatformAdminPassword = Properties.envOrElse("PLATFORM_ADMIN_PWD", "ah! ah!")
 
-  val DomainName = "gatling-openpaas.org"
+  val DomainName = "sandbox.integration-open-paas.org"
   val DomainAdminEmail = s"admin@${DomainName}"
   val DomainAdminPassword = "secret"
 }

@@ -23,10 +23,19 @@ object LemonLdapSteps {
       }
     }
 
+  def getPage: HttpRequestBuilder =
+    http("Get LemonLDAP login page")
+      .get(LemonLDAPPortalUrl)
+      .disableFollowRedirect
+      .headers(Map(
+        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+      ))
+      .check(status is 200)
+      .check(css("input[name=\"token\"]", "value").saveAs(LemonLdapFormToken))
+  
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
       .post(LemonLDAPPortalUrl)
-      .disableFollowRedirect
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "upgrade-insecure-requests" -> "1",
@@ -36,6 +45,7 @@ object LemonLdapSteps {
       .formParam("skin", "bootstrap")
       .formParam("user", s"$${$UsernameSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
+      .formParam("token", s"$${$LemonLdapFormToken}")
       .check(status is 200)
 
   def goToOpenPaaSApplication: HttpRequestBuilder =
