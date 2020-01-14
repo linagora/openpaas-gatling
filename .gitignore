@@ -2,3 +2,7 @@ target
 
 .idea
 .vscode
+.project
+
+env.sh
+src/test/resources/users.csv

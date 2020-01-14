@@ -1,12 +1,13 @@
 # Gatling OpenPaaS
 
-This project enables to proceed to OpenPaaS load testing using [Gatling](https://gatling.io/) technology.
-
+This project enables to proceed to OpenPaaS load testing using [Gatling](https://gatling.io/) technology.  
 It aims to provide building blocks, specific OpenPaaS APIs steps as well as more complex scenario.
 
 ## Configuration
 
-File path: `src/test/scala/com/linagora/openpaas/gatling/Configuration.scala`
+The configuration is defined in the `src/main/scala/com/linagora/openpaas/gatling/Configuration.scala` file.
+However, all the parameters can be set through environment variables. Just copy the
+**env.sh.tpl** file as **env.sh**, update the values and source it: `source env.sh`
 
 Available settings:
  - OpenPaaS platform admin credentials for domain provisioning
@@ -24,7 +25,7 @@ Available settings:
  - Authentication strategy
  - Base URL for LemonLDAP portal page
 
-Environment variable:
+Environment variables:
  - `OPENPAAS_HOSTNAME` which is set to `localhost` by default
  - `OPENPAAS_PORT` which is set to `8080` by default
  - `OPENPAAS_PROTOCOL` which is set to `http` by default (you can use `https` instead for example)
@@ -41,6 +42,8 @@ Environment variable:
  - `HUMAN_ACTION_MAX_DELAY` which is set to `15` by default. The maximum amount of seconds between 2 human actions.
  - `AUTHENTICATION_STRATEGY` which is set to `basic` by default (you can use `lemonldap` instead)
  - `LEMONLDAP_PORTAL_HOSTNAME` which is set to `auth.latest.integration-open-paas.org` by default.
+ - `PLATFORM_ADMIN_USER` is the user name of the platform administrator.
+ - `PLATFORM_ADMIN_PWD` is the password of the platform administrator.
  
 For example, to run with OpenPaaS port `8000`:
 
@@ -51,6 +54,7 @@ $ sbt
 ```
 
 ## User pool
+
 There are two ways of creating a user pool for running tests.
 
 1. Using a `src/test/resources/users.csv` file containing credentials of users.
@@ -59,7 +63,9 @@ This is the default method to retrieve user credentials. It is expected to have 
 2. Including the provisioning steps in each scenario. This method requires platform admin credentials in configuration.
 
 ## Running tests in LemonLDAP integrated platform
-For OpenPaaS instances that are protected by LemonLDAP, you need to provide the LemonLDAP portal page url in the configuration. You also have to change the `AUTHENTICATION_STRATEGY` configuration to `lemonldap`. Plus, all users credentials must be stored in `src/test/resources/users.csv` file. 
+
+For OpenPaaS instances that are protected by LemonLDAP, you need to provide the LemonLDAP portal page url in the configuration. You also have to change the `AUTHENTICATION_STRATEGY` configuration to `lemonldap`. Plus, all users credentials must be stored in `src/test/resources/users.csv` file.
+
 ## Gatling Recorder
 
 The Gatling Recorder helps you to quickly generate scenarios, by either acting as a HTTP proxy between the 
