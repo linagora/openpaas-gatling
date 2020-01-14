@@ -55,6 +55,7 @@ $ sbt
 ```
 
 ## User pool
+
 There are two ways of creating a user pool for running tests.
 
 1. Using a `src/test/resources/users.csv` file containing credentials of users.
@@ -63,7 +64,9 @@ This is the default method to retrieve user credentials. It is expected to have 
 2. Including the provisioning steps in each scenario. This method requires platform admin credentials in configuration.
 
 ## Running tests in LemonLDAP integrated platform
-For OpenPaaS instances that are protected by LemonLDAP, you need to provide the LemonLDAP portal page url in the configuration. You also have to change the `AUTHENTICATION_STRATEGY` configuration to `lemonldap`. Plus, all users credentials must be stored in `src/test/resources/users.csv` file. 
+
+For OpenPaaS instances that are protected by LemonLDAP, you need to provide the LemonLDAP portal page url in the configuration. You also have to change the `AUTHENTICATION_STRATEGY` configuration to `lemonldap`. Plus, all users credentials must be stored in `src/test/resources/users.csv` file.
+
 ## Gatling Recorder
 
 The Gatling Recorder helps you to quickly generate scenarios, by either acting as a HTTP proxy between the 

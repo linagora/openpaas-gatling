@@ -5,3 +5,4 @@ target
 .project
 
 env.sh
+src/test/resources/users.csv
