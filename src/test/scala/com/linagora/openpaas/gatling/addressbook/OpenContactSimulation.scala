@@ -18,6 +18,7 @@ class OpenContactSimulation extends Simulation{
     .exec(getProfile())
     .exec(provisionContacts)
     .pause(1 second)
+    .exec(logout)
     .during(ScenarioDuration) {
       exec(OpenContactScenari.generate())
     }
