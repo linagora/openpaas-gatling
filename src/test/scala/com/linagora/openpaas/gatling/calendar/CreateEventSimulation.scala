@@ -13,7 +13,7 @@ class CreateEventSimulation extends Simulation {
   private val feeder = csv("users.csv")
   val eventUuidFeeder = Iterator.continually(Map("eventUuid" -> randomUuidString))
 
-  val scn = scenario("Testing OpenPaaS calendar listing")
+  val scn = scenario("Testing OpenPaaS calendar create event")
     .feed(feeder.circular)
     .exec(login)
     .exec(getProfile())
