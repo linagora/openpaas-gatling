@@ -9,10 +9,11 @@ import com.linagora.openpaas.gatling.provisionning.Authentication._
 object TokenSteps {
 
   def retrieveAuthenticationToken =
-    http("Get Authentication Token")
+    exec(http("Get Authentication Token")
       .get("/api/authenticationtoken")
       .check(status in (200, 304))
       .check(jsonPath("$.token").saveAs(Token))
+    )
 
   def generateJwtToken: ChainBuilder =
     exec(http("Generate jwt token")

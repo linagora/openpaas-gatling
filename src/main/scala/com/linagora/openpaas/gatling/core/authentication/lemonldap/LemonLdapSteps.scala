@@ -31,8 +31,9 @@ object LemonLdapSteps {
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       ))
       .check(status is 200)
-      .check(css("input[name=\"token\"]", "value").saveAs(LemonLdapFormToken))
-  
+      .check(bodyString.saveAs("BODY"))
+      .check(css("input[name='token']", "value").saveAs(LemonLdapFormToken))
+
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
       .post(LemonLDAPPortalUrl)
@@ -51,5 +52,6 @@ object LemonLdapSteps {
   def goToOpenPaaSApplication: HttpRequestBuilder =
     http("Go to OpenPaaS application")
       .get("/")
+      //.disableFollowRedirect
       .check(status is 200)
 }
