@@ -167,7 +167,6 @@ object ChatTemplateRequestsList {
     "/chat/components/angular-inview/angular-inview.js",
     "/calendar/components/fullcalendar/dist/fullcalendar.min.js",
     "/calendar/components/fullcalendar/dist/locale-all.js",
-    "/james/components/james-admin-client/dist/james-admin-client.min.js",
     "/unifiedinbox/components/angularjs-dragula/dist/angularjs-dragula.js",
     "/unifiedinbox/components/sanitize-html/dist/sanitize-html.js",
     "/unifiedinbox.twitter/components/ngtweet/dist/ngtweet.min.js",

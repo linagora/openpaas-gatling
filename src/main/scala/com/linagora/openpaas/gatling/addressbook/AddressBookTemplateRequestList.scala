@@ -122,7 +122,6 @@ object AddressBookTemplateRequestList {
     "/contact.import.google/js/constants.js",
     "/linagora.esn.emoticon/js/emoticon.run.js",
     "/unifiedinbox/components/angularjs-dragula/dist/angularjs-dragula.js",
-    "/james/components/james-admin-client/dist/james-admin-client.min.js",
     "/linagora.esn.emoticon/js/emoticon-popup.component.js",
     "/linagora.esn.emoticon/js/emoticon.module.js",
     "/generated/js/esn/js/oauth",
