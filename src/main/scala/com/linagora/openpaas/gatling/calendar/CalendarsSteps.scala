@@ -26,7 +26,8 @@ object CalendarsSteps {
         "caldav:description":""
         }
         """))
-      .check(status is 201)
+        // 405 if already created
+      .check(status in(201, 405))
   }
 
   def createEventOnDefaultCalendar(): HttpRequestBuilder = {
