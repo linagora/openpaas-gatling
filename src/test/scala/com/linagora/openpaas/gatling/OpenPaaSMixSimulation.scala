@@ -3,7 +3,7 @@ package com.linagora.openpaas.gatling
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.addressbook.AddressBooksSteps._
 import com.linagora.openpaas.gatling.core.DomainSteps._
-import com.linagora.openpaas.gatling.core.LoginSteps.login
+import com.linagora.openpaas.gatling.core.LoginSteps._
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import io.gatling.core.Predef._
 import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactScenari
@@ -32,12 +32,13 @@ class OpenPaaSMixSimulation extends Simulation {
     .pause(1 second)
     .exec(provisionContacts)
     .pause(1 second)
+    .exec(logout)
+    .pause(1 second)
     .during(ScenarioDuration) {
       randomSwitch(
-        25.0 -> exec(SendMessageScenari.generate()),
-        25.0 -> exec(SearchEventsScenari.generate()),
-        25.0 -> exec(SendEmailScenari.generate()),
-        25.0 -> exec(OpenContactScenari.generate())
+        33.3 -> exec(SearchEventsScenari.generate()),
+        33.3 -> exec(SendEmailScenari.generate()),
+        33.3 -> exec(OpenContactScenari.generate())
       ).pause(7500 milliseconds, 15 seconds)
     }
 
