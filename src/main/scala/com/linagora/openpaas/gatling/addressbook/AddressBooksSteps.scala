@@ -75,7 +75,7 @@ object AddressBooksSteps {
   def getUserGroupMembershipPrincipals: HttpRequestBuilder =
     http("get user group membership principal")
       .httpRequest("PROPFIND", s"/dav/api/principals/users/$${$UserId}")
-      .check(status is 200)
+      .check(status in(200, 304))
 
   def getUserAddressBooks: HttpRequestBuilder =
     http("list address books from book home")
@@ -110,7 +110,7 @@ object AddressBooksSteps {
   def getCollectedAddressBookProperty: HttpRequestBuilder =
     http("Get collected address book property")
       .httpRequest("PROPFIND", s"/dav/api/addressbooks/$${$UserId}/collected.json")
-      .check(status is 200)
+      .check(status in(200, 304))
 
   def getOneCreatedContactInCollectedAddressBook: HttpRequestBuilder =
     http("get one single created contact in collected address book")

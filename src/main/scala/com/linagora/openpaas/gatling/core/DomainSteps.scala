@@ -13,7 +13,7 @@ object DomainSteps {
     http("list ESN domains")
       .get("/api/domains")
       .basicAuth(PlatformAdminLogin, PlatformAdminPassword)
-      .check(status is 200)
+      .check(status in(200, 304))
       .check(jsonPath("$[*].id").findAll.saveAs("domainIds"))
       .check(jsonPath("$[*].name").findAll.saveAs("domainNames"))
 
@@ -35,7 +35,7 @@ object DomainSteps {
     http("get logo for particular domain")
       .get(s"/api/themes/$${$DomainId}/logo")
       .basicAuth(UsernameSessionParam, PasswordSessionParam)
-      .check(status is 200)
+      .check(status in (200, 304))
 
   def createGatlingTestDomainIfNotExist: ChainBuilder =
     exec(listDomains)

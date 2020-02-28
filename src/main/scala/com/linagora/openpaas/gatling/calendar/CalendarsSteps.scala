@@ -79,7 +79,7 @@ object CalendarsSteps {
   def getDefaultCalendar(): HttpRequestBuilder =
     http("getDefaultCalendar")
       .get(s"/dav/api/calendars/$${$UserId}/events.json?withRights=true")
-      .check(status is 200)
+      .check(status in(200, 304))
 
   def searchEvents(): HttpRequestBuilder =
     http("searchEvents")

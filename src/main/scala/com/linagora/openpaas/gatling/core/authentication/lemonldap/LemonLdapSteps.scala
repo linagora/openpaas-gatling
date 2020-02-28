@@ -30,7 +30,7 @@ object LemonLdapSteps {
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       ))
-      .check(status is 200)
+      .check(status in (200, 304))
       .check(bodyString.saveAs("BODY"))
       .check(css("input[name='token']", "value").saveAs(LemonLdapFormToken))
 
@@ -53,5 +53,5 @@ object LemonLdapSteps {
     http("Go to OpenPaaS application")
       .get("/")
       //.disableFollowRedirect
-      .check(status is 200)
+      .check(status in (200, 304))
 }
