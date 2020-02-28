@@ -26,13 +26,13 @@ object JmapSteps {
   def getVacationResponse: HttpRequestBuilder = {
     authenticatedQueryWithJwtToken("getVacationResponse", "/jmap")
       .body(StringBody("""[["getVacationResponse",{},"#0"]]"""))
-      .check(status is 200)
+      .check(status in(200, 304))
   }
 
   def getMailboxes: HttpRequestBuilder =
     authenticatedQueryWithJwtToken("getMailboxes", "/jmap")
       .body(StringBody("""[["getMailboxes", {}, "#0"]]"""))
-      .check(status is 200)
+      .check(status in(200, 304))
       .check(JmapChecks.noError)
       .check(JmapMailbox.saveInboxAs("inboxID"): _*)
       .check(getSystemMailboxesChecks: _*)
@@ -49,7 +49,7 @@ object JmapSteps {
 
   def getMessageList: ChainBuilder =
     exec(listMessages(openpaasListMessageParameters("inboxID"))
-      .check(status is 200)
+      .check(status in(200, 304))
       .check(JmapChecks.noError))
 
   def sendMessages() =

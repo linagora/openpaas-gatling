@@ -14,7 +14,7 @@ object WebSocketSteps {
       .queryParam("EIO", "3")
       .queryParam("transport", "polling")
       .queryParam("user", s"$${$UserId}")
-      .check(status is 200)
+      .check(status in (200, 304))
       .check(regex("""\{(.*?)\}""").saveAs("socketResponse"))
     )
     .exec(session => {
