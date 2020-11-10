@@ -8,9 +8,9 @@ import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import org.apache.james.gatling.jmap.JmapMailbox.{getSystemMailboxesChecks}
-import org.apache.james.gatling.jmap.JmapMessages.{JmapParameters, NO_PARAMETERS, messageIdSessionParam, openpaasListMessageParameters}
-import org.apache.james.gatling.jmap.{JmapChecks, JmapHttp, JmapMailbox}
+import org.apache.james.gatling.jmap.draft.JmapMailbox.{getSystemMailboxesChecks}
+import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, messageIdSessionParam, openpaasListMessageParameters}
+import org.apache.james.gatling.jmap.draft.{JmapChecks, JmapHttp, JmapMailbox}
 import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import io.gatling.core.json.Json
 
