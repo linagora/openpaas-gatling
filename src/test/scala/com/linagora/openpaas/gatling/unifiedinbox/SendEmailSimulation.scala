@@ -22,7 +22,6 @@ class SendEmailSimulation extends Simulation {
     .exec(logout)
     .pause(1 second)
       exec(SendEmailScenari.generate())
-    }
 
   setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
 }

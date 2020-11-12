@@ -52,6 +52,5 @@ object LemonLdapSteps {
   def goToOpenPaaSApplication: HttpRequestBuilder =
     http("Go to OpenPaaS application")
       .get("/")
-      //.disableFollowRedirect
       .check(status in (200, 304))
 }
