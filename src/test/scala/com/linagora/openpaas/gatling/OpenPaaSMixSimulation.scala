@@ -9,7 +9,6 @@ import io.gatling.core.Predef._
 import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactScenari
 import com.linagora.openpaas.gatling.calendar.CalendarsSteps.provisionEvents
 import com.linagora.openpaas.gatling.calendar.scenari.SearchEventsScenari
-import com.linagora.openpaas.gatling.chat.scenari.SendMessageScenari
 import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps.provisionMessages
 import com.linagora.openpaas.gatling.unifiedinbox.scenari.SendEmailScenari
 
