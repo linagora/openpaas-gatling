@@ -13,6 +13,11 @@ object Configuration {
   val OpenPaaSProtocol = Properties.envOrElse("OPENPAAS_PROTOCOL", "http")
   val OpenPaaSBaseUrl = s"$OpenPaaSProtocol://$OpenPaaSHostName:$OpenPaaSPort"
 
+  val SabreHostName = Properties.envOrElse("SABRE_HOSTNAME", "localhost")
+  val SabrePort = Properties.envOrElse("SABRE_PORT", "8001").toInt
+  val SabreProtocol = Properties.envOrElse("SABRE_PROTOCOL", "http")
+  val SabreBaseUrl = s"$SabreProtocol://$SabreHostName:$SabrePort"
+
   val WebSocketHostName = Properties.envOrElse("WEBSOCKET_HOSTNAME", OpenPaaSHostName)
   val WebSocketPort = Properties.envOrElse("WEBSOCKET_PORT", s"${OpenPaaSPort}").toInt
   val WebSocketProtocol = Properties.envOrElse("WEBSOCKET_PROTOCOL", "ws")
@@ -44,8 +49,10 @@ object Configuration {
   val ScenarioDuration = Properties.envOrElse("SCENARIO_DURATION", "10").toInt seconds
   val UserCount = Properties.envOrElse("USER_COUNT", "1").toInt
   val ContactCount = 20
+  val CalendarCount = 2
   val EventCount = 20
   val EmailCount = 20
+  val EventAttendeeCount = 100
   
   val humanActionMinDelay = Properties.envOrElse("HUMAN_ACTION_MIN_DELAY", "7").toInt
   val humanActionMaxDelay = Properties.envOrElse("HUMAN_ACTION_MAX_DELAY", "15").toInt

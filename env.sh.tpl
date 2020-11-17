@@ -1,9 +1,12 @@
 #!/bin/bash
 
 # General settings
-export OPENPAAS_HOSTNAME="openpaas.sandbox.integration-open-paas.org"
-export OPENPAAS_PORT="443"
-export OPENPAAS_PROTOCOL="https"
+export OPENPAAS_HOSTNAME="localhost"
+export OPENPAAS_PORT="8080"
+export OPENPAAS_PROTOCOL="http"
+export SABRE_HOSTNAME="localhost"
+export SABRE_PORT="8001"
+export SABRE_PROTOCOL="http"
 export WEBSOCKET_HOSTNAME="${OPENPAAS_HOSTNAME}"
 export WEBSOCKET_PORT="${OPENPAAS_PORT}"
 export WEBSOCKET_PROTOCOL="wss"

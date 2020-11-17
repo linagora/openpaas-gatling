@@ -1,19 +1,17 @@
 package com.linagora.openpaas.gatling.calendar
 
 import com.linagora.openpaas.gatling.Configuration._
-import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
-import io.gatling.core.Predef._
 import com.linagora.openpaas.gatling.calendar.scenari._
+import io.gatling.core.Predef._
 import io.gatling.core.feeder.SourceFeederBuilder
 import io.gatling.core.structure.ScenarioBuilder
 
-class CreateEventSimulation extends Simulation {
+class ViewAndDeleteCalendarSimulation extends Simulation {
   val userFeeder: SourceFeederBuilder[String] = csv("users.csv").queue
-  val eventUUIDFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
-  val scn: ScenarioBuilder = scenario("CalendarCreateEventScenario")
+  val scn: ScenarioBuilder = scenario("ViewAndDeleteCalendarScenario")
     .feed(userFeeder)
     .exec(CalendarSteps.openCalendarSPA())
-    .exec(CreateEventScenari.generate(eventUUIDFeeder))
+    .exec(ViewAndDeleteCalendarScenari.generate())
 
   setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
 }
