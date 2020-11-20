@@ -15,6 +15,9 @@ object Authentication {
       case AuthenticationStrategy.OIDC => request
         .header("Origin", Configuration.OpenPaaSBaseUrl)
         .header("Authorization", "Bearer ${access_token}")
+      case AuthenticationStrategy.PKCE => request
+        .header("Origin", Configuration.OpenPaaSBaseUrl)
+        .header("Authorization", "Bearer ${access_token}")
       case _ => request
     }
   }

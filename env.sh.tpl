@@ -25,3 +25,5 @@ export LEMONLDAP_PORTAL_HOSTNAME="auth.sandbox.integration-open-paas.org"
 
 export PLATFORM_ADMIN_USER="admin@open-paas.org"
 export PLATFORM_ADMIN_PWD="ah! ah!"
+
+export OIDC_CLIENT="openpaas"

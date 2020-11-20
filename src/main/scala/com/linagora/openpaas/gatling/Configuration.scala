@@ -28,8 +28,10 @@ object Configuration {
   val lemonLDAPPortalHostName = Properties.envOrElse("LEMONLDAP_PORTAL_HOSTNAME", "auth.latest.integration-open-paas.org")
   val LemonLDAPPortalUrl = s"$lemonLDAPPortalProtocol://$lemonLDAPPortalHostName"
 
-  val oidcClient = Properties.envOrElse("OIDC_CLIENT", "")
-  val oidcCallback = OpenPaaSBaseUrl + "/account/#/auth/oidc/callback"
+  val oidcClient = Properties.envOrElse("OIDC_CLIENT", "openpaas")
+  val oidcCallback = OpenPaaSBaseUrl + Properties.envOrElse("OIDC_CALLBACK", "/inbox/#/auth/oidc/callback")
+
+  val pkceCodeChallengeMethod = Properties.envOrElse("PKCE_CODE_CHALLENGE_METHOD", "S256")
 
   val httpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)
