@@ -42,8 +42,7 @@ Environment variables:
  - `HUMAN_ACTION_MAX_DELAY` which is set to `15` by default. The maximum amount of seconds between 2 human actions.
  - `AUTHENTICATION_STRATEGY` which is set to `basic` by default (you can use `lemonldap`, `oidc` or `pkce` instead)
  - `OIDC_CLIENT` oidc client to use for `oidc` and `pkce` authentication strategies
- - `OIDC_CALLBACK` url to redirect to after a successful login with `oidc` and `pkce` authentication strategies
- - `PKCE_CODE_CHALLENGE_METHOD` which is set to `S256` by default. Which should not be changed at the moment.
+ - `OIDC_CALLBACK` url to redirect to after a successful login with `oidc` and `pkce` authentication strategies. Make sure to add redirect URL with explicit port in the lemonLDAP manager
  - `LEMONLDAP_PORTAL_HOSTNAME` which is set to `auth.latest.integration-open-paas.org` by default.
  - `PLATFORM_ADMIN_USER` is the user name of the platform administrator.
  - `PLATFORM_ADMIN_PWD` is the password of the platform administrator.

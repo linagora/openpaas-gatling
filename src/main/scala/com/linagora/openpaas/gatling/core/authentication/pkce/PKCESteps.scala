@@ -31,23 +31,22 @@ object PKCESteps {
 
   def getPage: HttpRequestBuilder =
     http("Get LemonLDAP login page")
-      .get(LemonLDAPPortalUrl)
+      .get(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${oidcClient}&redirect_uri=${URLEncoder.encode(oidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${pkceCodeChallengeMethod}&response_mode=query")
       .disableFollowRedirect
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       ))
       .check(status in (200, 304))
-      .check(bodyString.saveAs("BODY"))
       .check(css("input[name='token']", "value").saveAs(LemonLdapFormToken))
 
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
       .post(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${oidcClient}&redirect_uri=${URLEncoder.encode(oidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${pkceCodeChallengeMethod}&response_mode=query#")
       .headers(Map(
-        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         "upgrade-insecure-requests" -> "1",
         "Content-Type" -> "application/x-www-form-urlencoded"))
-      .formParam("url", "")
+      .formParam("url", "aHR0cDovL2wtYXV0aC5vcGVuLXBhYXMub3JnLy9vYXV0aDI=")
       .formParam("timezone", "1")
       .formParam("skin", "bootstrap")
       .formParam("user", s"$${$UsernameSessionParam}")
@@ -63,25 +62,17 @@ object PKCESteps {
     http("get token")
       .post(LemonLDAPPortalUrl + "/oauth2/token")
       .formParam("client_id", oidcClient)
+      .header("Content-Type", "application/x-www-form-urlencoded")
       .formParam("code", "${authorization_code}")
       .formParam("redirect_uri", oidcCallback)
       .formParam("code_verifier", "${pkce_code_verifier}")
       .formParam("grant_type", "authorization_code")
       .check(status.is(200),
-        jsonPath("access_token").findAll.saveAs("access_token"),
-        jsonPath("refresh_token").findAll.saveAs("refresh_token")
+        jsonPath("$.access_token").find.saveAs("access_token"),
+        jsonPath("$.refresh_token").find.saveAs("refresh_token")
       )
 
   private def extractAuthorizationCodeFromLocation(locationUrl: String): String = {
-    println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
-    println(locationUrl)
-    println(Uri.create(locationUrl.replace("/#/","/"))
-      .getEncodedQueryParams.asScala)
-
-    println(Uri.create(locationUrl.replace("/#/","/"))
-      .getEncodedQueryParams.asScala.find(_.getName == "code"))
-
-
     Uri.create(locationUrl.replace("/#/","/"))
       .getEncodedQueryParams.asScala.find(_.getName == "code").get.getValue
   }
@@ -89,6 +80,5 @@ object PKCESteps {
   def goToOpenPaaSApplication: HttpRequestBuilder =
     http("Go to OpenPaaS application")
       .get("/")
-      //.disableFollowRedirect
       .check(status in (200, 304))
 }

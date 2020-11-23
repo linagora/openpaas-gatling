@@ -31,7 +31,7 @@ object Configuration {
   val oidcClient = Properties.envOrElse("OIDC_CLIENT", "openpaas")
   val oidcCallback = OpenPaaSBaseUrl + Properties.envOrElse("OIDC_CALLBACK", "/inbox/#/auth/oidc/callback")
 
-  val pkceCodeChallengeMethod = Properties.envOrElse("PKCE_CODE_CHALLENGE_METHOD", "S256")
+  val pkceCodeChallengeMethod = "S256"
 
   val httpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)

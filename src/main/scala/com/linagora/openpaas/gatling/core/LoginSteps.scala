@@ -1,5 +1,9 @@
 package com.linagora.openpaas.gatling.core
 
+import java.security.MessageDigest
+import java.util.{Base64, UUID}
+
+import com.google.common.base.Charsets
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy
 import com.linagora.openpaas.gatling.core.authentication.basiclogin.BasicLoginSteps
@@ -34,12 +38,21 @@ object LoginSteps {
       .exec(OIDCSteps.goToOpenPaaSApplication)
 
     case AuthenticationStrategy.PKCE =>
-      exec(session =>
-        session.set("oidc_state", "bb64de2918074088b15ea6d5785d7181")
-          .set("pkce_code_challenge",	"GO6h862pJDkgMx2DGQuoNHNNm6nlgaa17rUGDPXm7W4")
-          .set("pkce_code_verifier",	"d8770d095e454d10bafa36447f17ac143580aa7ad13a4536904333bd0b71bc7d598de2cec8d14b20b81fcaccb9874fe5"))
+      exec(session => {
+        val codeChallengeVerifier = UUID.randomUUID().toString + UUID.randomUUID().toString + UUID.randomUUID().toString
+        val codeChallenge = Base64.getUrlEncoder
+          .encodeToString(MessageDigest.getInstance("SHA-256").digest(codeChallengeVerifier.getBytes(Charsets.US_ASCII)))
+          .split("=")(0)
+          .replace("+", "-")
+          .replace("/", "_")
+
+        session.set("oidc_state", UUID.randomUUID().toString + UUID.randomUUID().toString)
+          .set("pkce_code_challenge",	codeChallenge)
+          .set("pkce_code_verifier",	codeChallengeVerifier)
+      })
         .exec(PKCESteps.getPage)
         .exec(PKCESteps.login)
+        .exec(flushCookieJar)
         .exec(PKCESteps.getToken)
         .exec(PKCESteps.goToOpenPaaSApplication)
 
