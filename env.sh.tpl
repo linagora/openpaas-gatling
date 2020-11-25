@@ -25,3 +25,7 @@ export LEMONLDAP_PORTAL_HOSTNAME="auth.sandbox.integration-open-paas.org"
 
 export PLATFORM_ADMIN_USER="admin@open-paas.org"
 export PLATFORM_ADMIN_PWD="ah! ah!"
+
+export OIDC_CLIENT="openpaas"
+#callback for oidc/pkce authentication. Make sure to add redirect URL with explicit port in the lemonLDAP manager
+export OIDC_CALLBACK="/inbox-oidc/#/auth/oidc/callback"

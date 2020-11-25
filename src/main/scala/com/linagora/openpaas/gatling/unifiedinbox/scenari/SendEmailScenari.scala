@@ -3,11 +3,11 @@ package com.linagora.openpaas.gatling.unifiedinbox.scenari
 import com.linagora.openpaas.gatling.unifiedinbox.TemplatesSteps._
 import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
-import com.linagora.openpaas.gatling.core.TokenSteps.{generateJwtToken, retrieveAuthenticationToken}
+import com.linagora.openpaas.gatling.core.TokenSteps.{generateJwtTokenWithAuth, retrieveAuthenticationToken}
 import com.linagora.openpaas.gatling.core.WebSocketSteps._
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay._
-
 import io.gatling.core.Predef._
+
 import scala.concurrent.duration.DurationInt
 
 object SendEmailScenari {
@@ -20,11 +20,11 @@ object SendEmailScenari {
       .exec(registerSocketNamespaces)
       .exec(openWsConnection())
       .exec(loadOpeningEventTemplates)
-      .exec(generateJwtToken)
-      .exec(generateJwtToken)
-      .exec(generateJwtToken)
-      .exec(generateJwtToken)
-      .exec(generateJwtToken)
+      .exec(generateJwtTokenWithAuth)
+      .exec(generateJwtTokenWithAuth)
+      .exec(generateJwtTokenWithAuth)
+      .exec(generateJwtTokenWithAuth)
+      .exec(generateJwtTokenWithAuth)
       .exec(getVacationResponse)
       .exec(getMailboxes)
       .exec(getMailboxes)

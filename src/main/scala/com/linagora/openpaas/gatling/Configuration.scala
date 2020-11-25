@@ -1,5 +1,6 @@
 package com.linagora.openpaas.gatling
 
+import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
@@ -22,10 +23,15 @@ object Configuration {
   val JmapProtocol = Properties.envOrElse("JMAP_PROTOCOL", OpenPaaSProtocol)
   val JmapBaseUrl = s"$JmapProtocol://$JmapHostName:$JmapPort"
 
-  val authenticationStrategy = Properties.envOrElse("AUTHENTICATION_STRATEGY", "basic")
+  val authenticationStrategy = AuthenticationStrategy.fromConfiguration(Properties.envOrElse("AUTHENTICATION_STRATEGY", "basic")).get
   val lemonLDAPPortalProtocol = Properties.envOrElse("LEMONLDAP_PORTAL_PROTOCOL", OpenPaaSProtocol)
   val lemonLDAPPortalHostName = Properties.envOrElse("LEMONLDAP_PORTAL_HOSTNAME", "auth.latest.integration-open-paas.org")
   val LemonLDAPPortalUrl = s"$lemonLDAPPortalProtocol://$lemonLDAPPortalHostName"
+
+  val oidcClient = Properties.envOrElse("OIDC_CLIENT", "openpaas")
+  val oidcCallback = OpenPaaSBaseUrl + Properties.envOrElse("OIDC_CALLBACK", "/inbox/#/auth/oidc/callback")
+
+  val pkceCodeChallengeMethod = "S256"
 
   val httpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)
