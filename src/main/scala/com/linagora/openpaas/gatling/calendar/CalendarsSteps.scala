@@ -26,7 +26,8 @@ object CalendarsSteps {
         "caldav:description":""
         }
         """))
-      .check(status is 201)
+        // 405 if already created
+      .check(status in(201, 405))
   }
 
   def createEventOnDefaultCalendar(): HttpRequestBuilder = {
@@ -78,7 +79,7 @@ object CalendarsSteps {
   def getDefaultCalendar(): HttpRequestBuilder =
     http("getDefaultCalendar")
       .get(s"/dav/api/calendars/$${$UserId}/events.json?withRights=true")
-      .check(status is 200)
+      .check(status in(200, 304))
 
   def searchEvents(): HttpRequestBuilder =
     http("searchEvents")

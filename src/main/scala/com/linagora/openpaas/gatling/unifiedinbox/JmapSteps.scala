@@ -8,9 +8,9 @@ import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import org.apache.james.gatling.jmap.JmapMailbox.{getSystemMailboxesChecks}
-import org.apache.james.gatling.jmap.JmapMessages.{JmapParameters, NO_PARAMETERS, messageIdSessionParam, openpaasListMessageParameters}
-import org.apache.james.gatling.jmap.{JmapChecks, JmapHttp, JmapMailbox}
+import org.apache.james.gatling.jmap.draft.JmapMailbox.{getSystemMailboxesChecks}
+import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, messageIdSessionParam, openpaasListMessageParameters}
+import org.apache.james.gatling.jmap.draft.{JmapChecks, JmapHttp, JmapMailbox}
 import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import io.gatling.core.json.Json
 
@@ -26,13 +26,13 @@ object JmapSteps {
   def getVacationResponse: HttpRequestBuilder = {
     authenticatedQueryWithJwtToken("getVacationResponse", "/jmap")
       .body(StringBody("""[["getVacationResponse",{},"#0"]]"""))
-      .check(status is 200)
+      .check(status in(200, 304))
   }
 
   def getMailboxes: HttpRequestBuilder =
     authenticatedQueryWithJwtToken("getMailboxes", "/jmap")
       .body(StringBody("""[["getMailboxes", {}, "#0"]]"""))
-      .check(status is 200)
+      .check(status in(200, 304))
       .check(JmapChecks.noError)
       .check(JmapMailbox.saveInboxAs("inboxID"): _*)
       .check(getSystemMailboxesChecks: _*)
@@ -49,7 +49,7 @@ object JmapSteps {
 
   def getMessageList: ChainBuilder =
     exec(listMessages(openpaasListMessageParameters("inboxID"))
-      .check(status is 200)
+      .check(status in(200, 304))
       .check(JmapChecks.noError))
 
   def sendMessages() =
