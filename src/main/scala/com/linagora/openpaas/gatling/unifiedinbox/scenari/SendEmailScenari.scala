@@ -3,7 +3,7 @@ package com.linagora.openpaas.gatling.unifiedinbox.scenari
 import com.linagora.openpaas.gatling.unifiedinbox.TemplatesSteps._
 import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
-import com.linagora.openpaas.gatling.core.PeopleSteps
+import com.linagora.openpaas.gatling.core.{AvatarsSteps, PeopleSteps}
 import com.linagora.openpaas.gatling.core.TokenSteps.{generateJwtTokenWithAuth, retrieveAuthenticationToken}
 import com.linagora.openpaas.gatling.core.WebSocketSteps._
 import com.linagora.openpaas.gatling.provisionning.SessionKeys.UsernameSessionParam
@@ -11,6 +11,7 @@ import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay._
 import io.gatling.core.Predef._
 
 import scala.concurrent.duration.DurationInt
+import scala.util.Random
 
 object SendEmailScenari {
 
@@ -37,10 +38,22 @@ object SendEmailScenari {
       .exec(session => session.set("userNameFirstLetter", session(UsernameSessionParam).as[String].substring(0, 1)))
       .exec(session => session.set("userNameFirst3Letters", session(UsernameSessionParam).as[String].substring(0, 3)))
       .exec(PeopleSteps.search("userNameFirstLetter"))
+      .exec(session => extractRandomAvatar(session, "avatarToLoadA"))
+      .exec(session => extractRandomAvatar(session, "avatarToLoadB"))
+      .exec(session => extractRandomAvatar(session, "avatarToLoadC"))
+      .exec(AvatarsSteps.search("avatarToLoadA"))
+      .exec(AvatarsSteps.search("avatarToLoadB"))
+      .exec(AvatarsSteps.search("avatarToLoadC"))
       .pause(1 second)
       .exec(PeopleSteps.search("userNameFirst3Letters"))
+      .exec(session => extractRandomAvatar(session, "avatarToLoadSecondQueryA"))
+      .exec(session => extractRandomAvatar(session, "avatarToLoadSecondQueryB"))
+      .exec(AvatarsSteps.search("avatarToLoadSecondQueryA"))
+      .exec(AvatarsSteps.search("avatarToLoadSecondQueryB"))
       .pause(1 second)
       .exec(PeopleSteps.search(UsernameSessionParam))
+      .exec(session => extractRandomAvatar(session, "avatarToLoadThirdQuery"))
+      .exec(AvatarsSteps.search("avatarToLoadThirdQuery"))
       .pause(humanActionDelay() second)
       .exec(uploadAttachment)
       .pause(humanActionDelay() second)
@@ -48,4 +61,8 @@ object SendEmailScenari {
       .exec(closeWsConnection)
       .pause(humanActionDelay() second)
       .exec(logout)
+
+  private def extractRandomAvatar(session: Session, key: String) = {
+    session.set(key, Random.shuffle(session(PeopleSteps.avatarsToLoadAfterSearch).as[Vector[String]]).head)
+  }
 }

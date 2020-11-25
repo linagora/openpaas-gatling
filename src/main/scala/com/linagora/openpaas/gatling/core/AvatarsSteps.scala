@@ -18,23 +18,17 @@
  * ************************************************************** */
 package com.linagora.openpaas.gatling.core
 
-import com.linagora.openpaas.gatling.core.UsersSteps.statusCode
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import com.linagora.openpaas.gatling.provisionning.Authentication._
 import io.gatling.http.request.builder.HttpRequestBuilder
 
-object PeopleSteps {
-  val avatarsToLoadAfterSearch = "avatarsToLoad"
+object AvatarsSteps {
   def search(queryKey: String): HttpRequestBuilder = {
-    withAuth(
-      http("Search people for autocomplete")
-        .post(s"/api/people/search"))
-      .body(
-        StringBody(s"""{"q":"$${$queryKey}","objectTypes":["user","contact","group","ldap"],"limit":20,"excludes":[]}""".stripMargin))
-      .check(status.in(200, 304).saveAs(statusCode),
-        jsonPath("$[*].emailAddresses[0]").findAll.saveAs(avatarsToLoadAfterSearch)
+      http("load avatar for user")
+        .get(s"/api/avatars")
+        .queryParam("objectType", "user")
+        .queryParam("email", s"$${$queryKey}")
+      .check(status.in(200, 304)
       )
   }
-
 }
