@@ -281,22 +281,9 @@ object LoginTemplateRequestsList {
   );
 
   val openingComposerTemplates = Array(
-    "/views/modules/box-overlay/box-overlay.html",
-    "/unifiedinbox/app/components/composer/boxed/composer-boxed.html",
-    "/unifiedinbox/app/components/composer/composer-desktop.html",
-    "/unifiedinbox/app/components/composer/identity-selector/composer-identity-selector.html",
-    "/unifiedinbox/app/components/composer/body-editor/html/composer-body-editor-html.html",
-    "/linagora.esn.unifiedinbox.linshare/app/composer-select-attachment/composer-select-attachment.html",
-    "/unifiedinbox/api/inbox/identities/default",
     "/components/summernote/dist/font/summernote.woff?3297c53f47926b9d4fc132301b6ab80e",
-    "/components/material-admin/img/select.png",
-    "/unifiedinbox/app/components/composer/attachments/composer-attachments.html",
-    "/linagora.esn.unifiedinbox.linshare/images/linshare-desktop-icon.svg",
     "/images/upload.svg",
     "/images/exclamation.svg",
-    "/unifiedinbox/views/composer/recipients-auto-complete.html",
-    "/unifiedinbox/app/components/composer/attachments-selector/composer-attachments-selector.html",
-    "/images/file-icons/default.png",
-    "/views/modules/attachments-selector/attachments-selector.html"
+    "/images/file-icons/default.png"
   )
 }
