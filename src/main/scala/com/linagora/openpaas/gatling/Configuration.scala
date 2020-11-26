@@ -33,6 +33,8 @@ object Configuration {
 
   val pkceCodeChallengeMethod = "S256"
 
+  val inboxSpaPath= Properties.envOrElse("INBOX_SPA_PATH", "inbox")
+
   val httpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)
     .acceptHeader("application/json")

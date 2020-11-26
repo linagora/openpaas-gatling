@@ -1,9 +1,11 @@
 package com.linagora.openpaas.gatling.unifiedinbox.scenari
 
+import com.linagora.openpaas.gatling.Configuration
 import com.linagora.openpaas.gatling.unifiedinbox.TemplatesSteps._
 import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
-import com.linagora.openpaas.gatling.core.{AvatarsSteps, PeopleSteps}
+import com.linagora.openpaas.gatling.core.StaticAssetsSteps.{extractMainJsUrl, loadIndexHtml, loadIndexHtmlAndMainJs, loadMainJs}
+import com.linagora.openpaas.gatling.core.{AvatarsSteps, PeopleSteps, StaticAssetsSteps}
 import com.linagora.openpaas.gatling.core.TokenSteps.{generateJwtTokenWithAuth, retrieveAuthenticationToken}
 import com.linagora.openpaas.gatling.core.WebSocketSteps._
 import com.linagora.openpaas.gatling.provisionning.SessionKeys.UsernameSessionParam
@@ -18,6 +20,7 @@ object SendEmailScenari {
   def generate() =
     exec(loadLoginTemplates)
       .exec(login)
+      .exec(loadIndexHtmlAndMainJs(Configuration.inboxSpaPath))
       .exec(retrieveAuthenticationToken)
       .exec(getSocketId)
       .exec(registerSocketNamespaces)
