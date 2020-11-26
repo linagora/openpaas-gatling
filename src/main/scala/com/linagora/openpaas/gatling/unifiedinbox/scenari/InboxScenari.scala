@@ -15,9 +15,9 @@ import io.gatling.core.Predef._
 import scala.concurrent.duration.DurationInt
 import scala.util.Random
 
-object SendEmailScenari {
+object InboxScenari {
 
-  def generate() =
+  def generateOnceWithLogin() =
     exec(loadLoginTemplates)
       .exec(login)
       .exec(loadIndexHtmlAndMainJs(Configuration.inboxSpaPath))
@@ -37,7 +37,52 @@ object SendEmailScenari {
       .exec(getMessageList)
       .repeat(10)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName=true)))
       .pause(humanActionDelay() second)
-      .exec(loadOpeningComposerTemplates)
+      .group("send email")(sendEmailSteps)
+      .exec(closeWsConnection)
+      .pause(humanActionDelay() second)
+      .exec(logout)
+
+  def generateOnceAlreadyLogged() = group("send")(
+    exec(retrieveAuthenticationToken)
+      .exec(generateJwtTokenWithAuth)
+      .pause(humanActionDelay() second)
+      .exec(getMailboxes)
+      .exec(getMessageList)
+      .repeat(10)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true)))
+      .pause(humanActionDelay() second)
+      .group("do send email")(sendEmailSteps))
+
+
+  def userLogin() = group("login")(exec(loadLoginTemplates)
+    .exec(login)
+    .exec(loadIndexHtmlAndMainJs(Configuration.inboxSpaPath))
+    .exec(retrieveAuthenticationToken)
+    .exec(getSocketId)
+    .exec(registerSocketNamespaces)
+    .exec(openWsConnection())
+    .exec(loadOpeningEventTemplates)
+    .exec(generateJwtTokenWithAuth)
+    .exec(getVacationResponse)
+    .exec(getMailboxes)
+    .exec(getMailboxes)
+    .pause(humanActionDelay() second)
+    .exec(getVacationResponse)
+    .exec(getMailboxes)
+    .pause(humanActionDelay() second)
+    .exec(getMessageList))
+
+  def userLogout() = group("logout")(exec(closeWsConnection)
+    .pause(humanActionDelay() second)
+    .exec(logout))
+
+  def idle() = group("idle")(
+    exec(getMailboxes)
+      .exec(getMessageList)
+      .repeat(3)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true)))
+      .pause(60.seconds))
+
+  private def sendEmailSteps = {
+    exec(loadOpeningComposerTemplates)
       .pause(humanActionDelay() second)
       .exec(session => session.set("userNameFirstLetter", session(UsernameSessionParam).as[String].substring(0, 1)))
       .exec(session => session.set("userNameFirst3Letters", session(UsernameSessionParam).as[String].substring(0, 3)))
@@ -62,9 +107,7 @@ object SendEmailScenari {
       .exec(uploadAttachment)
       .pause(humanActionDelay() second)
       .exec(sendMessageWithAttachment)
-      .exec(closeWsConnection)
-      .pause(humanActionDelay() second)
-      .exec(logout)
+  }
 
   private def extractRandomAvatar(session: Session, key: String) = {
     session.set(key, Random.shuffle(session(PeopleSteps.avatarsToLoadAfterSearch).as[Vector[String]]).head)

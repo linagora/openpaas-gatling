@@ -72,6 +72,18 @@ object PKCESteps {
         jsonPath("$.refresh_token").find.saveAs("refresh_token")
       )
 
+  def renewAccessToken: HttpRequestBuilder =
+    http("get token")
+      .post(LemonLDAPPortalUrl + "/oauth2/token")
+      .formParam("client_id", oidcClient)
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .formParam("refresh_token", "${refresh_token}")
+      .formParam("request_type", "si:s")
+      .formParam("grant_type", "refresh_token")
+      .check(status.is(200),
+        jsonPath("$.access_token").find.saveAs("access_token")
+      )
+
   private def extractAuthorizationCodeFromLocation(locationUrl: String): String = {
     Uri.create(locationUrl.replace("/#/","/"))
       .getEncodedQueryParams.asScala.find(_.getName == "code").get.getValue
