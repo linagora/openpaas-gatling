@@ -32,6 +32,7 @@ object SendEmailScenari {
       .exec(getMailboxes)
       .pause(humanActionDelay() second)
       .exec(getMessageList)
+      .repeat(10)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName=true)))
       .pause(humanActionDelay() second)
       .exec(loadOpeningComposerTemplates)
       .pause(humanActionDelay() second)

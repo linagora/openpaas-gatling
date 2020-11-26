@@ -22,13 +22,22 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 
+import scala.util.Random
+
 object AvatarsSteps {
-  def search(queryKey: String): HttpRequestBuilder = {
-      http("load avatar for user")
-        .get(s"/api/avatars")
-        .queryParam("objectType", "user")
-        .queryParam("email", s"$${$queryKey}")
-      .check(status.in(200, 304)
+  def search(queryKey: String, withRandomDisplayName: Boolean = false): HttpRequestBuilder = {
+    val query = http("load avatar for user" + (if(withRandomDisplayName) " with random display name" else ""))
+      .get(s"/api/avatars")
+      .queryParam("objectType", "user")
+      .queryParam("email", s"$${$queryKey}")
+
+    (if (withRandomDisplayName) {
+      query.queryParam("displayName", _ => Random.alphanumeric.filter(_.isLetter).take(Random.nextInt(10) + 1).toList.mkString
       )
+    }
+    else {
+      query
+    })
+      .check(status.in(200, 304))
   }
 }
