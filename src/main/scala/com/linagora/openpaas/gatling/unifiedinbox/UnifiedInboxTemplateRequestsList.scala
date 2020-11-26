@@ -92,7 +92,6 @@ object LoginTemplateRequestsList {
     "/components/re-tree/re-tree.min.js",
     "/components/ng-device-detector/ng-device-detector.min.js",
     "/components/angular-fullscreen/src/angular-fullscreen.js",
-    "/components/jmap-client/dist/jmap-client.min.js",
     "/components/angularjs-naturalsort/dist/naturalSortVersion.min.js",
     "/components/summernote/dist/summernote.min.js",
     "/components/angular-summernote/dist/angular-summernote.min.js",
@@ -213,15 +212,10 @@ object LoginTemplateRequestsList {
     "/api/user?_=1572857143329",
     "/api/user/notifications/unread",
     "/api/authenticationtoken",
-    "/chat/api/user/privateConversations",
-    "/chat/api/user/conversations",
     "/unifiedinbox/views/home",
-    "/chat/api/user/conversations",
-    "/chat/api/user/privateConversations",
     "/views/esn/partials/application.html",
     "/unifiedinbox/views/unified-inbox/index",
     "/chat/api/user/privateConversations",
-    "/views/modules/header/header.html",
     "/chat/api/user/conversations",
     "/unifiedinbox/app/components/banner/quota-banner/quota-banner.html",
     "/unifiedinbox/app/components/banner/vacation-banner/vacation-banner.html",
@@ -281,22 +275,9 @@ object LoginTemplateRequestsList {
   );
 
   val openingComposerTemplates = Array(
-    "/views/modules/box-overlay/box-overlay.html",
-    "/unifiedinbox/app/components/composer/boxed/composer-boxed.html",
-    "/unifiedinbox/app/components/composer/composer-desktop.html",
-    "/unifiedinbox/app/components/composer/identity-selector/composer-identity-selector.html",
-    "/unifiedinbox/app/components/composer/body-editor/html/composer-body-editor-html.html",
-    "/linagora.esn.unifiedinbox.linshare/app/composer-select-attachment/composer-select-attachment.html",
-    "/unifiedinbox/api/inbox/identities/default",
     "/components/summernote/dist/font/summernote.woff?3297c53f47926b9d4fc132301b6ab80e",
-    "/components/material-admin/img/select.png",
-    "/unifiedinbox/app/components/composer/attachments/composer-attachments.html",
-    "/linagora.esn.unifiedinbox.linshare/images/linshare-desktop-icon.svg",
     "/images/upload.svg",
     "/images/exclamation.svg",
-    "/unifiedinbox/views/composer/recipients-auto-complete.html",
-    "/unifiedinbox/app/components/composer/attachments-selector/composer-attachments-selector.html",
-    "/images/file-icons/default.png",
-    "/views/modules/attachments-selector/attachments-selector.html"
+    "/images/file-icons/default.png"
   )
 }

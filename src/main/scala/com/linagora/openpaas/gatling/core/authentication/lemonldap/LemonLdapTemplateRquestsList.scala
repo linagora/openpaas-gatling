@@ -8,7 +8,6 @@ object LemonLdapTemplateRequestsList {
 		"/static/bwr/font-awesome/css/font-awesome.min.css",
 		"/static/bootstrap/js/skin.min.js",
 		"/static/bootstrap/css/styles.min.css",
-		"/index.psgi/psgi.js",
 		"/static/bwr/jquery.cookie/jquery.cookie.min.js",
 		"/portal.css",
 		"/static/common/js/portal.min.js",
