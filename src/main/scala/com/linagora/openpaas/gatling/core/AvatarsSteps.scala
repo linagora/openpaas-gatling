@@ -21,6 +21,7 @@ package com.linagora.openpaas.gatling.core
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
+import scala.util.Random
 
 object AvatarsSteps {
   def search(queryKey: String): HttpRequestBuilder = {
@@ -30,5 +31,9 @@ object AvatarsSteps {
         .queryParam("email", s"$${$queryKey}")
       .check(status.in(200, 304)
       )
+  }
+
+  def extractRandomAvatar(session: Session, key: String) = {
+    session.set(key, Random.shuffle(session(PeopleSteps.avatarsToLoadAfterSearch).as[Vector[String]]).head)
   }
 }
