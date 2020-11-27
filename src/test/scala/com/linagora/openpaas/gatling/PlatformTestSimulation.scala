@@ -3,7 +3,7 @@ package com.linagora.openpaas.gatling
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.addressbook.AddressBooksSteps._
 import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactScenari
-import com.linagora.openpaas.gatling.calendar.CalendarsSteps.provisionEvents
+import com.linagora.openpaas.gatling.calendar.EventSteps.provisionEvents
 import com.linagora.openpaas.gatling.calendar.scenari.SearchEventsScenari
 import com.linagora.openpaas.gatling.core.DomainSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._

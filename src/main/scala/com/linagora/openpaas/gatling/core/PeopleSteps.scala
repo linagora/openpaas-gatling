@@ -21,11 +21,16 @@ package com.linagora.openpaas.gatling.core
 import com.linagora.openpaas.gatling.core.UsersSteps.statusCode
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import com.linagora.openpaas.gatling.provisionning.Authentication._
 import io.gatling.http.request.builder.HttpRequestBuilder
+import com.linagora.openpaas.gatling.provisionning.Authentication._
+import com.linagora.openpaas.gatling.provisionning.SessionKeys.UsernameSessionParam
+import io.gatling.core.structure.ChainBuilder
+
+import scala.concurrent.duration.DurationInt
 
 object PeopleSteps {
   val avatarsToLoadAfterSearch = "avatarsToLoad"
+
   def search(queryKey: String): HttpRequestBuilder = {
     withAuth(
       http("Search people for autocomplete")
@@ -37,4 +42,27 @@ object PeopleSteps {
       )
   }
 
+  def simulatePeopleSearch(): ChainBuilder = {
+    group("simulatePeopleSearch") {
+      exec(session => session.set("userNameFirstLetter", session(UsernameSessionParam).as[String].substring(0, 1)))
+        .exec(session => session.set("userNameFirst3Letters", session(UsernameSessionParam).as[String].substring(0, 3)))
+        .exec(PeopleSteps.search("userNameFirstLetter"))
+        .exec(session => AvatarsSteps.extractRandomAvatar(session, "avatarToLoadA"))
+        .exec(session => AvatarsSteps.extractRandomAvatar(session, "avatarToLoadB"))
+        .exec(session => AvatarsSteps.extractRandomAvatar(session, "avatarToLoadC"))
+        .exec(AvatarsSteps.search("avatarToLoadA"))
+        .exec(AvatarsSteps.search("avatarToLoadB"))
+        .exec(AvatarsSteps.search("avatarToLoadC"))
+        .pause(1 second)
+        .exec(PeopleSteps.search("userNameFirst3Letters"))
+        .exec(session => AvatarsSteps.extractRandomAvatar(session, "avatarToLoadSecondQueryA"))
+        .exec(session => AvatarsSteps.extractRandomAvatar(session, "avatarToLoadSecondQueryB"))
+        .exec(AvatarsSteps.search("avatarToLoadSecondQueryA"))
+        .exec(AvatarsSteps.search("avatarToLoadSecondQueryB"))
+        .pause(1 second)
+        .exec(PeopleSteps.search(UsernameSessionParam))
+        .exec(session => AvatarsSteps.extractRandomAvatar(session, "avatarToLoadThirdQuery"))
+        .exec(AvatarsSteps.search("avatarToLoadThirdQuery"))
+    }
+  }
 }

@@ -1,7 +1,7 @@
 # Gatling OpenPaaS
 
 This project enables to proceed to OpenPaaS load testing using [Gatling](https://gatling.io/) technology.  
-It aims to provide building blocks, specific OpenPaaS APIs steps as well as more complex scenario.
+It aims to provide building blocks, specific OpenPaaS APIs steps as well as more complex scenarios.
 
 ## Configuration
 
@@ -14,6 +14,7 @@ Available settings:
  - Domain used for load testing
  - Platform admin & Domain admin credentials
  - Base URL for OpenPaaS endpoints
+ - Base URL for Sabre endpoints
  - Base URL for Web Socket server
  - Base URL for Jmap server
  - User count for scenario
@@ -29,6 +30,9 @@ Environment variables:
  - `OPENPAAS_HOSTNAME` which is set to `localhost` by default
  - `OPENPAAS_PORT` which is set to `8080` by default
  - `OPENPAAS_PROTOCOL` which is set to `http` by default (you can use `https` instead for example)
+ - `SABRE_HOSTNAME` which is set to `localhost` by default
+ - `SABRE_PORT` which is set to `8001` by default
+ - `SABRE_PROTOCOL` which is set to `http` by default (you can use `https` instead for example)
  - `WEBSOCKET_HOSTNAME` which is set to `OPENPAAS_HOSTNAME` by default
  - `WEBSOCKET_PORT` which is set to `OPENPAAS_PORT` by default
  - `WEBSOCKET_PROTOCOL` which is set to `ws` by default (you can use `wss` instead for example)
@@ -46,7 +50,8 @@ Environment variables:
  - `LEMONLDAP_PORTAL_HOSTNAME` which is set to `auth.latest.integration-open-paas.org` by default.
  - `PLATFORM_ADMIN_USER` is the user name of the platform administrator.
  - `PLATFORM_ADMIN_PWD` is the password of the platform administrator.
- - `INBOX_SPA_PATH` is the path to access `inbox` SPA. default is `inbox`
+ - `INBOX_SPA_PATH` is the path to access the Inbox SPA. which is set to `inbox` by default
+ - `CALENDAR_SPA_PATH` is the path to access the Calendar SPA, which is set to `calendar` by default
  
 For example, to run with OpenPaaS port `8000`:
 
@@ -58,7 +63,7 @@ $ sbt
 
 ## User pool
 
-There are two ways of creating a user pool for running tests.
+There are two ways of creating a user pool for running tests:
 
 1. Using a `src/test/resources/users.csv` file containing credentials of users.
 This is the default method to retrieve user credentials. It is expected to have all users provisioned in the testing platform.
@@ -79,94 +84,279 @@ All the instructions to install and use are available at this [documentation](ht
 
 ## Run scenario
 
-You can run all the scenario via sbt :
+You can run all the scenario via sbt:
 
 ```bash
 $ sbt
  > gatling:test
 ```
 
-Run a specific scenario via sbt :
+Run a specific scenario via sbt:
+
 ```bash
 $ sbt
  > gatling:testOnly SCENARIO_FQDN
 ```
 
-For example: this scenario to search and open a calendar event. To run it:
+For example, you can run this scenario to open Calendar and open an event to view it details:
 
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.calendar.SearchEventsSimulation
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.ViewEventDetailsSimulation
 ```
 
-## Main Scenarios
+## Scenarios for Inbox
+
 ### Send an email
+
 #### Scenario
-- user login on OpenPaaS
-- go in "inbox"
-- open a compose window
-- write an email, attach a 200kB file
-- send
-- disconnect
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Inbox
+- Open a composer window
+- Write an email, attach a 200kB file
+- Send the email
+- Log out
 
 #### Run
+
 ```
 $ sbt
 > gatling:testOnly com.linagora.openpaas.gatling.unifiedinbox.SendEmailSimulation
 ```
 
-### Search and open an calendar 
+## Scenarios for Calendar
+
+### 1. List calendars
+
 #### Scenario
-- user login on OP
-- go in calendar
-- lookup an event using search
-- click on the event
-- disconnect
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar, and all the usable calendars are listed
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
 
 #### Run
+
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.calendar.SearchEventsSimulation
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.ListCalendarsSimulation
 ```
 
-### Open a contact in collected address book
-#### Scenario
-- user login on OP
-- go in contacts
-- click on collected contacts
-- open a contact
-- disconnect
+### 2. Create a new calendar
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Create a new calendar
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
 
 #### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.CreateCalendarSimulation
+```
+
+### 3. View a calendar's details and update the calendar
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Choose a calendar to view its details
+- Update the calendar
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
+#### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.ViewAndUpdateCalendarSimulation
+```
+
+### 4. View a calendar's details and then delete the calendar
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Choose a calendar to view its details
+- Delete the calendar
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
+#### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.ViewAndDeleteCalendarSimulation
+```
+
+### 5. Create a new event 
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Create a new event in the default calendar
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
+#### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.CreateEventSimulation
+```
+
+### 6. Create a new event with a lot of attendees
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Create a new event in the default calendar with a lof of attendees (between 100 and 200 attendees)
+
+The equivalent simulation will ramp 20 users over 1 second. These numbers are configurable (see the commands below).
+
+#### Run
+
+- Run with the default configuration (ramping 20 users over 1 second):
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.CreateEventWithLotsOfAttendeesSimulation
+```
+
+- Run with a custom configuration (ramping 40 users over 2 seconds):
+
+```
+$ sbt
+> ;-DrampUserCount=40;-DrampUserDuration=2;gatling:testOnly com.linagora.openpaas.gatling.calendar.CreateEventWithLotsOfAttendeesSimulation
+```
+
+### 7. Open an event
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Open an event to view its details
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
+#### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.ViewEventDetailsSimulation
+```
+
+### 8. Open an event and update the event
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Open an event to view its details
+- Update the event
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
+#### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.ViewAndUpdateEventSimulation
+```
+
+### 9. Open an event and delete the event
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Open an event to view its details
+- Delete the event
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
+#### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.ViewAndDeleteEventSimulation
+```
+
+### 10. Mixed scenario
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Calendar
+- Do one of the following actions at random:
+  - 40%: Open an event
+  - 20%: Create an event with a few attendees (between 1 and 10 attendees)
+  - 15%: Open an event and update the event
+  - 10%: Create a new event
+  - 5%: Open an event and delete the event
+  - 5%: Open an event and update the event
+  - 3%: Create a new calendar
+  - 2%: View a calendar's details and then delete the calendar
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
+#### Run
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.calendar.CalendarMixSimulation
+```
+
+## Scenarios for Contacts
+
+### Open a contact in the collected address book
+
+#### Scenario
+
+In this scenario, each user will:
+
+- Login to OpenPaaS
+- Go to Contacts
+- Open the collected address book
+- Open a contact
+- Log out
+
+#### Run
+
 ```
 $ sbt
 > gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactSimulation
 ```
 
-### Send a chat message in general channel
-#### Scenario
-- user login on OP
-- go in chat
-- go in general channel
-- writes a message
-- disconnect
+## OpenPaaS Mixed Scenario
 
-#### Run
-```
-$ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.chat.SendMessageSimulation
-```
+### Scenario
 
-### OpenPaaS mix scenario
-
-#### Scenario
-- Execute 4 scenarios above during scenario duration, each scenario has 25% of total time
+- Execute the 3 following scenarios randomly (each has a 33% chance to be executed):
+  - Scenario 1: Calendar's mixed scenario
+  - Scenario 2: Send an email
+  - Scenario 3: Open a contact in the collected address book
 - Pause between scenarios from 7.5 to 15 seconds
 - Number of users: 20000
 - Injection duration: 2000 seconds (10 users/sec)
 - Scenario duration is 3 hours
 
-#### Run
+### Run
+
 ```
 $ export INJECT_DURATION="2000" SCENARIO_DURATION="10800" USER_COUNT="20000"
 $ sbt

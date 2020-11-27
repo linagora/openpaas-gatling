@@ -28,13 +28,16 @@ object DomainSteps {
   def getDomain: HttpRequestBuilder =
     http("get domain by ID")
       .get(s"/api/domains/$${$DomainId}")
-      .basicAuth(UsernameSessionParam, PasswordSessionParam)
+      .check(status in (200, 304))
+
+  def getThemeForDomain(): HttpRequestBuilder =
+    http("getThemeForDomain")
+      .get(s"/api/themes/$${$DomainId}")
       .check(status in (200, 304))
 
   def getLogoForDomain: HttpRequestBuilder =
-    http("get logo for particular domain")
+    http("getLogoForDomain")
       .get(s"/api/themes/$${$DomainId}/logo")
-      .basicAuth(UsernameSessionParam, PasswordSessionParam)
       .check(status in (200, 304))
 
   def createGatlingTestDomainIfNotExist: ChainBuilder =

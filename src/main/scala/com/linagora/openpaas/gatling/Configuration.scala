@@ -13,6 +13,11 @@ object Configuration {
   val OpenPaaSProtocol = Properties.envOrElse("OPENPAAS_PROTOCOL", "http")
   val OpenPaaSBaseUrl = s"$OpenPaaSProtocol://$OpenPaaSHostName:$OpenPaaSPort"
 
+  val SabreHostName = Properties.envOrElse("SABRE_HOSTNAME", "localhost")
+  val SabrePort = Properties.envOrElse("SABRE_PORT", "8001").toInt
+  val SabreProtocol = Properties.envOrElse("SABRE_PROTOCOL", "http")
+  val SabreBaseUrl = s"$SabreProtocol://$SabreHostName:$SabrePort"
+
   val WebSocketHostName = Properties.envOrElse("WEBSOCKET_HOSTNAME", OpenPaaSHostName)
   val WebSocketPort = Properties.envOrElse("WEBSOCKET_PORT", s"${OpenPaaSPort}").toInt
   val WebSocketProtocol = Properties.envOrElse("WEBSOCKET_PROTOCOL", "ws")
@@ -34,6 +39,7 @@ object Configuration {
   val PkceCodeChallengeMethod = "S256"
 
   val InboxSpaPath= Properties.envOrElse("INBOX_SPA_PATH", "inbox")
+  val CalendarSpaPath = Properties.envOrElse("CALENDAR_SPA_PATH", "calendar")
 
   val HttpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)
@@ -45,7 +51,10 @@ object Configuration {
   val InjectDuration = Properties.envOrElse("INJECT_DURATION", "10").toInt seconds
   val ScenarioDuration = Properties.envOrElse("SCENARIO_DURATION", "10").toInt seconds
   val UserCount = Properties.envOrElse("USER_COUNT", "1").toInt
+  val CustomRampUserCount = if (System.getProperty("rampUserCount") != null) Integer.parseInt(System.getProperty("rampUserCount")) else 20
+  val CustomRampUserDuration = if (System.getProperty("rampUserDuration") != null) Integer.parseInt(System.getProperty("rampUserDuration")) else 1
   val ContactCount = 20
+  val CalendarCount = 2
   val EventCount = 20
   val EmailCount = 20
   
