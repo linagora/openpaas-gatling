@@ -5,6 +5,6 @@ import scala.util.Random
 
 object RandomHumanActionDelay {
   def humanActionDelay() : Int = {
-    return humanActionMinDelay + new Random().nextInt(humanActionMaxDelay - humanActionMinDelay + 1) 
+    return HumanActionMinDelay + new Random().nextInt(HumanActionMaxDelay - HumanActionMinDelay + 1)
   }
 }

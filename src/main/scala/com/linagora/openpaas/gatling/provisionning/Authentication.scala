@@ -9,7 +9,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 object Authentication {
 
   def withAuth(request: HttpRequestBuilder): HttpRequestBuilder = {
-    Configuration.authenticationStrategy match {
+    Configuration.AuthenticationStrategyToUse match {
       case AuthenticationStrategy.Basic =>
         request.basicAuth(s"$${$UsernameSessionParam}", s"$${$PasswordSessionParam}")
       case AuthenticationStrategy.OIDC => request

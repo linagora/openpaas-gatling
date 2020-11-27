@@ -23,17 +23,19 @@ object Configuration {
   val JmapProtocol = Properties.envOrElse("JMAP_PROTOCOL", OpenPaaSProtocol)
   val JmapBaseUrl = s"$JmapProtocol://$JmapHostName:$JmapPort"
 
-  val authenticationStrategy = AuthenticationStrategy.fromConfiguration(Properties.envOrElse("AUTHENTICATION_STRATEGY", "basic")).get
-  val lemonLDAPPortalProtocol = Properties.envOrElse("LEMONLDAP_PORTAL_PROTOCOL", OpenPaaSProtocol)
-  val lemonLDAPPortalHostName = Properties.envOrElse("LEMONLDAP_PORTAL_HOSTNAME", "auth.latest.integration-open-paas.org")
-  val LemonLDAPPortalUrl = s"$lemonLDAPPortalProtocol://$lemonLDAPPortalHostName"
+  val AuthenticationStrategyToUse = AuthenticationStrategy.fromConfiguration(Properties.envOrElse("AUTHENTICATION_STRATEGY", "basic")).get
+  val LemonLDAPPortalProtocol = Properties.envOrElse("LEMONLDAP_PORTAL_PROTOCOL", OpenPaaSProtocol)
+  val LemonLDAPPortalHostName = Properties.envOrElse("LEMONLDAP_PORTAL_HOSTNAME", "auth.latest.integration-open-paas.org")
+  val LemonLDAPPortalUrl = s"$LemonLDAPPortalProtocol://$LemonLDAPPortalHostName"
 
-  val oidcClient = Properties.envOrElse("OIDC_CLIENT", "openpaas")
-  val oidcCallback = OpenPaaSBaseUrl + Properties.envOrElse("OIDC_CALLBACK", "/inbox/#/auth/oidc/callback")
+  val OidcClient = Properties.envOrElse("OIDC_CLIENT", "openpaas")
+  val OidcCallback = OpenPaaSBaseUrl + Properties.envOrElse("OIDC_CALLBACK", "/inbox/#/auth/oidc/callback")
 
-  val pkceCodeChallengeMethod = "S256"
+  val PkceCodeChallengeMethod = "S256"
 
-  val httpProtocol = http
+  val InboxSpaPath= Properties.envOrElse("INBOX_SPA_PATH", "inbox")
+
+  val HttpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)
     .acceptHeader("application/json")
     .contentTypeHeader("application/json; charset=UTF-8")
@@ -47,8 +49,8 @@ object Configuration {
   val EventCount = 20
   val EmailCount = 20
   
-  val humanActionMinDelay = Properties.envOrElse("HUMAN_ACTION_MIN_DELAY", "7").toInt
-  val humanActionMaxDelay = Properties.envOrElse("HUMAN_ACTION_MAX_DELAY", "15").toInt
+  val HumanActionMinDelay = Properties.envOrElse("HUMAN_ACTION_MIN_DELAY", "7").toInt
+  val HumanActionMaxDelay = Properties.envOrElse("HUMAN_ACTION_MAX_DELAY", "15").toInt
 
   val PlatformAdminLogin = Properties.envOrElse("PLATFORM_ADMIN_USER", "admin@open-paas.org")
   val PlatformAdminPassword = Properties.envOrElse("PLATFORM_ADMIN_PWD", "ah! ah!")

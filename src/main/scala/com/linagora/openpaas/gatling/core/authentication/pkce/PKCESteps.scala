@@ -31,7 +31,7 @@ object PKCESteps {
 
   def getPage: HttpRequestBuilder =
     http("Get LemonLDAP login page")
-      .get(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${oidcClient}&redirect_uri=${URLEncoder.encode(oidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${pkceCodeChallengeMethod}&response_mode=query")
+      .get(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${OidcClient}&redirect_uri=${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${PkceCodeChallengeMethod}&response_mode=query")
       .disableFollowRedirect
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
@@ -41,7 +41,7 @@ object PKCESteps {
 
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
-      .post(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${oidcClient}&redirect_uri=${URLEncoder.encode(oidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${pkceCodeChallengeMethod}&response_mode=query#")
+      .post(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${OidcClient}&redirect_uri=${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${PkceCodeChallengeMethod}&response_mode=query#")
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         "upgrade-insecure-requests" -> "1",
@@ -61,15 +61,27 @@ object PKCESteps {
    def getToken: HttpRequestBuilder =
     http("get token")
       .post(LemonLDAPPortalUrl + "/oauth2/token")
-      .formParam("client_id", oidcClient)
+      .formParam("client_id", OidcClient)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .formParam("code", "${authorization_code}")
-      .formParam("redirect_uri", oidcCallback)
+      .formParam("redirect_uri", OidcCallback)
       .formParam("code_verifier", "${pkce_code_verifier}")
       .formParam("grant_type", "authorization_code")
       .check(status.is(200),
         jsonPath("$.access_token").find.saveAs("access_token"),
         jsonPath("$.refresh_token").find.saveAs("refresh_token")
+      )
+
+  def renewAccessToken: HttpRequestBuilder =
+    http("get token")
+      .post(LemonLDAPPortalUrl + "/oauth2/token")
+      .formParam("client_id", OidcClient)
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .formParam("refresh_token", "${refresh_token}")
+      .formParam("request_type", "si:s")
+      .formParam("grant_type", "refresh_token")
+      .check(status.is(200),
+        jsonPath("$.access_token").find.saveAs("access_token")
       )
 
   private def extractAuthorizationCodeFromLocation(locationUrl: String): String = {

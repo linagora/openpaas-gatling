@@ -17,14 +17,14 @@ import io.gatling.core.structure.ChainBuilder
 
 object LoginSteps {
 
-  def loadLoginTemplates: ChainBuilder = authenticationStrategy match {
+  def loadLoginTemplates: ChainBuilder = AuthenticationStrategyToUse match {
     case AuthenticationStrategy.LemonLDAP => LemonLdapSteps.loadLoginTemplates
     case AuthenticationStrategy.Basic => BasicLoginSteps.loadLoginTemplates
     case AuthenticationStrategy.OIDC => OIDCSteps.loadLoginTemplates
     case AuthenticationStrategy.PKCE => PKCESteps.loadLoginTemplates
   }
 
-  def login(): ChainBuilder = authenticationStrategy match {
+  def login(): ChainBuilder = AuthenticationStrategyToUse match {
     case AuthenticationStrategy.LemonLDAP  =>
       exec(LemonLdapSteps.getPage)
         .exec(LemonLdapSteps.login)

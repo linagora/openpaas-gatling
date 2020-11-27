@@ -46,6 +46,7 @@ Environment variables:
  - `LEMONLDAP_PORTAL_HOSTNAME` which is set to `auth.latest.integration-open-paas.org` by default.
  - `PLATFORM_ADMIN_USER` is the user name of the platform administrator.
  - `PLATFORM_ADMIN_PWD` is the password of the platform administrator.
+ - `INBOX_SPA_PATH` is the path to access `inbox` SPA. default is `inbox`
  
 For example, to run with OpenPaaS port `8000`:
 

@@ -4,7 +4,7 @@ import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps._
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import com.linagora.openpaas.gatling.core.LoginSteps._
-import com.linagora.openpaas.gatling.unifiedinbox.scenari.SendEmailScenari
+import com.linagora.openpaas.gatling.unifiedinbox.scenari.InboxScenari
 import io.gatling.core.Predef._
 
 import scala.concurrent.duration.DurationInt
@@ -21,7 +21,7 @@ class SendEmailSimulation extends Simulation {
     .pause(5 second)
     .exec(logout)
     .pause(1 second)
-    .exec(SendEmailScenari.generate())
+    .exec(InboxScenari.generateOnceWithLogin())
 
-  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

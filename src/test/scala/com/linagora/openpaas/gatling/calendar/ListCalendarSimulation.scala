@@ -25,5 +25,5 @@ class ListCalendarSimulation extends Simulation {
         .pause(1 second)
     }
 
-  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }
