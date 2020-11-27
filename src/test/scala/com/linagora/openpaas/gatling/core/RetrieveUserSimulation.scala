@@ -27,5 +27,5 @@ class RetrieveUserSimulation extends Simulation {
         .exec(getOtherUserProfile)
     }
 
-  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

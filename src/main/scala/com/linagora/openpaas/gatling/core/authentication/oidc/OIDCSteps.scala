@@ -42,7 +42,7 @@ object OIDCSteps {
 
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
-      .post(LemonLDAPPortalUrl  + s"/oauth2/authorize?client_id=${oidcClient}&redirect_uri=${URLEncoder.encode(oidcCallback, Charsets.UTF_8)}&response_type=id_token%20token&scope=openid%20email%20profile&state=$${oidc_state}&nonce=$${oidc_nonce}")
+      .post(LemonLDAPPortalUrl  + s"/oauth2/authorize?client_id=${OidcClient}&redirect_uri=${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}&response_type=id_token%20token&scope=openid%20email%20profile&state=$${oidc_state}&nonce=$${oidc_nonce}")
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "upgrade-insecure-requests" -> "1",

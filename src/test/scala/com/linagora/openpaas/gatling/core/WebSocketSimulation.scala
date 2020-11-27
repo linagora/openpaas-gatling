@@ -24,5 +24,5 @@ class WebSocketSimulation extends Simulation {
     .exec(registerSocketNamespaces)
     .exec(openWsConnection())
 
-  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

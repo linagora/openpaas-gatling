@@ -46,5 +46,5 @@ class PlatformTestSimulation extends Simulation {
       ).pause(7500 milliseconds, 15 seconds)
     }
 
-  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

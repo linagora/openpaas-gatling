@@ -30,5 +30,5 @@ class SearchEventsSimulation extends  Simulation{
     }
 
     setUp(
-      scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+      scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

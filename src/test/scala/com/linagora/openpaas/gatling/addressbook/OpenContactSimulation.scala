@@ -23,5 +23,5 @@ class OpenContactSimulation extends Simulation{
       exec(OpenContactScenari.generate())
     }
 
-  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

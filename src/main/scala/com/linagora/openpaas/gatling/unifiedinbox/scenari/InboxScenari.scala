@@ -20,7 +20,7 @@ object InboxScenari {
   def generateOnceWithLogin() =
     exec(loadLoginTemplates)
       .exec(login)
-      .exec(loadIndexHtmlAndMainJs(Configuration.inboxSpaPath))
+      .exec(loadIndexHtmlAndMainJs(Configuration.InboxSpaPath))
       .exec(retrieveAuthenticationToken)
       .exec(getSocketId)
       .exec(registerSocketNamespaces)
@@ -55,7 +55,7 @@ object InboxScenari {
 
   def userLogin() = group("login")(exec(loadLoginTemplates)
     .exec(login)
-    .exec(loadIndexHtmlAndMainJs(Configuration.inboxSpaPath))
+    .exec(loadIndexHtmlAndMainJs(Configuration.InboxSpaPath))
     .exec(retrieveAuthenticationToken)
     .exec(getSocketId)
     .exec(registerSocketNamespaces)

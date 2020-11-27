@@ -36,10 +36,10 @@ class OpenPaaSMixSimulation extends Simulation {
     .during(ScenarioDuration) {
       randomSwitch(
         33.3 -> exec(SearchEventsScenari.generate()),
-        33.3 -> exec(InboxScenari.generateOnceAlreadyLogged()),
+        33.3 -> exec(InboxScenari.generateOnceWithLogin()),
         33.3 -> exec(OpenContactScenari.generate())
       ).pause(7500 milliseconds, 15 seconds)
     }
 
-  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(httpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }
