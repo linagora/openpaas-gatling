@@ -51,6 +51,8 @@ object Configuration {
   val InjectDuration = Properties.envOrElse("INJECT_DURATION", "10").toInt seconds
   val ScenarioDuration = Properties.envOrElse("SCENARIO_DURATION", "10").toInt seconds
   val UserCount = Properties.envOrElse("USER_COUNT", "1").toInt
+  val CustomRampUserCount = if (System.getProperty("rampUserCount") != null) Integer.parseInt(System.getProperty("rampUserCount")) else 20
+  val CustomRampUserDuration = if (System.getProperty("rampUserDuration") != null) Integer.parseInt(System.getProperty("rampUserDuration")) else 1
   val ContactCount = 20
   val CalendarCount = 2
   val EventCount = 20

@@ -37,19 +37,21 @@ object CalendarSteps {
   }
 
   def createCalendar(): HttpRequestBuilder = {
-    val calId: String = randomUuidString
-
     http("createCalendar")
       .post(s"$SabreBaseUrl/calendars/$${$UserId}")
       .header(ESNToken, s"$${$Token}")
-      .body(StringBody(s"""
+      .body(StringBody(session => {
+        val calId: String = randomUuidString
+
+        s"""
         {
-        "id":"$calId",
-        "dav:name":"Test calendar - $calId",
-        "apple:color":"#01ea18",
-        "caldav:description":""
+          "id":"$calId",
+          "dav:name":"Test calendar - $calId",
+          "apple:color":"#01ea18",
+          "caldav:description":""
         }
-        """))
+        """
+      }))
       .check(status is 201)
   }
 
