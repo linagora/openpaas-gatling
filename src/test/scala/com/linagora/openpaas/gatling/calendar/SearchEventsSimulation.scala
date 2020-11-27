@@ -1,34 +1,17 @@
 package com.linagora.openpaas.gatling.calendar
 
 import com.linagora.openpaas.gatling.Configuration._
-import com.linagora.openpaas.gatling.calendar.CalendarsSteps._
-import com.linagora.openpaas.gatling.core.UserSteps.getProfile
-import com.linagora.openpaas.gatling.core.LoginSteps._
-import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
-import com.linagora.openpaas.gatling.core.DomainSteps._
-import io.gatling.core.Predef._
 import com.linagora.openpaas.gatling.calendar.scenari.SearchEventsScenari
+import io.gatling.core.Predef._
+import io.gatling.core.feeder.SourceFeederBuilder
+import io.gatling.core.structure.ScenarioBuilder
 
-import scala.concurrent.duration.DurationInt
+class SearchEventsSimulation extends Simulation {
+  val userFeeder: SourceFeederBuilder[String] = csv("users.csv")
+  val scn: ScenarioBuilder = scenario("SearchEventsSimulation")
+    .feed(userFeeder)
+    .exec(CalendarSteps.openCalendarSPA())
+    .exec(SearchEventsScenari.generate())
 
-class SearchEventsSimulation extends  Simulation{
-  private val feeder = csv("users.csv")
-
-  val scn = scenario("Testing OpenPaaS calendar searching")
-    .pause(1 second)
-    .feed(feeder.circular())
-    .pause(1 second)
-    .exec(login)
-    .exec(getProfile())
-    .pause(1 second)
-    .exec(provisionEvents)
-    .pause(1 second)
-    .exec(logout)
-    .pause(1 second)
-    .during(ScenarioDuration) {
-      exec(SearchEventsScenari.generate())
-    }
-
-    setUp(
-      scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
+  setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

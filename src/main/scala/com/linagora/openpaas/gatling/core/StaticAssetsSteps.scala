@@ -30,6 +30,22 @@ object StaticAssetsSteps {
     }
   }
 
+  def loadStaticAssets(staticAssets: Array[String]): ChainBuilder = {
+    group("loadStaticAssets") {
+      repeat(staticAssets.length, "index") {
+        exec(session => {
+          val index = session("index").as[Int]
+          val resourceURL = staticAssets(index)
+
+          session.set("staticAssetUrl", resourceURL)
+        })
+          .exec(http(s"load $${staticAssetUrl}")
+            .get(s"$${staticAssetUrl}")
+            .check(status in(200, 304)))
+      }
+    }
+  }
+
   def extractMainJsUrl(spaName: String)(session: Session): Session = {
     val indexHtmlContent: String = session(IndexHtmlContent).as[String]
     val matchMainJsUrlRegex: Regex = raw""""\/${spaName.toLowerCase()}\/main(.*?)"""".r
