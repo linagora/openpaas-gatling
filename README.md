@@ -336,11 +336,13 @@ In this scenario, each user will:
 - Open a contact
 - Log out
 
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
 #### Run
 
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactSimulation
+> gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactInCollectedAddressBookSimulation
 ```
 
 ## OpenPaaS Mixed Scenario
