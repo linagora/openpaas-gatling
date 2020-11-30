@@ -22,7 +22,6 @@ object CalendarSteps {
         .exec(LoginSteps.login())
         .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(CalendarSpaPath))
         .exec(StaticAssetsSteps.loadStaticAssets(CalendarStaticAssets.OpeningCalendarAssets))
-        .exec(session => StaticAssetsSteps.clearIndexHtmlContentInSession(session))
         .exec(TokenSteps.retrieveAuthenticationToken)
         .exec(WebSocketSteps.getSocketId)
         .exec(WebSocketSteps.registerSocketNamespaces)
