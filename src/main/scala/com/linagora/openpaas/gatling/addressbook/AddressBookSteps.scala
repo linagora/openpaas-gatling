@@ -8,6 +8,8 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 import com.linagora.openpaas.gatling.Configuration.ContactsSpaPath
 import com.linagora.openpaas.gatling.core.{DomainSteps, LoginSteps, StaticAssetsSteps, TokenSteps, UserSteps, WebSocketSteps}
 
+import scala.concurrent.duration.DurationInt
+
 object AddressBookSteps {
   def openContactsSpa(): ChainBuilder = {
     group("openContactsSPA") {
@@ -53,4 +55,7 @@ object AddressBookSteps {
     http("getCollectedAddressBookProperty")
       .httpRequest("PROPFIND", s"/dav/api/addressbooks/$${$UserId}/collected.json")
       .check(status in(200, 304))
+
+  def idle(): ChainBuilder =
+    pause(30 seconds, 60 seconds)
 }

@@ -137,6 +137,9 @@ object CalendarSteps {
       .body(StringBody("""[{"name":"linagora.esn.calendar","keys":["workingDays","hideDeclinedEvents"]}]"""))
       .check(status in(200, 304))
 
+  def idle(): ChainBuilder =
+    pause(30 seconds, 60 seconds)
+
   def provisionCalendars(): ChainBuilder = {
     group("provisionCalendars") {
       repeat(CalendarCount) {
