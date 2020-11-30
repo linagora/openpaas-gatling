@@ -12,14 +12,14 @@ object StaticAssetsSteps {
   def loadIndexHtml(spaName: String): HttpRequestBuilder = {
     http("loadIndexHtml")
       .get(s"/${spaName.toLowerCase()}")
-      .check(status is 200)
+      .check(status in 200)
       .check(bodyString.saveAs(IndexHtmlContent))
   }
 
   def loadMainJs(): HttpRequestBuilder = {
     http("loadMainJs")
       .get(s"$${$MainJsUrl}")
-      .check(status is 200)
+      .check(status in (200, 304))
   }
 
   def loadIndexHtmlAndMainJs(spaName: String): ChainBuilder = {
