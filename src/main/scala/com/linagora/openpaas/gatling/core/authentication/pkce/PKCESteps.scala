@@ -70,7 +70,8 @@ object PKCESteps {
       .formParam("grant_type", "authorization_code")
       .check(status.is(200),
         jsonPath("$.access_token").find.saveAs("access_token"),
-        jsonPath("$.refresh_token").find.saveAs("refresh_token")
+        jsonPath("$.refresh_token").find.saveAs("refresh_token"),
+        jsonPath("$.id_token").find.saveAs("id_token")
       )
 
   def renewAccessToken: HttpRequestBuilder =
