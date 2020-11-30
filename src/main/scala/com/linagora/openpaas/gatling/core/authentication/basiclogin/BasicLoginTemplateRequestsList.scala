@@ -32,7 +32,6 @@ object BasicLoginTemplateRequestsList {
     "/js/constants.js",
     "/components/angular-translate/angular-translate.min.js",
     "/generated/js/welcome/js/core",
-    "/moment-timezone/builds/moment-timezone-with-data.min.js",
     "/generated/css/welcome/styles.css",
     "/images/logo-tiny.png",
     "/images/white-logo.svg",
