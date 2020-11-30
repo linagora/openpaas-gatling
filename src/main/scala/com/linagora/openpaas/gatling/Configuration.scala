@@ -13,10 +13,7 @@ object Configuration {
   val OpenPaaSProtocol = Properties.envOrElse("OPENPAAS_PROTOCOL", "http")
   val OpenPaaSBaseUrl = s"$OpenPaaSProtocol://$OpenPaaSHostName:$OpenPaaSPort"
 
-  val SabreHostName = Properties.envOrElse("SABRE_HOSTNAME", "localhost")
-  val SabrePort = Properties.envOrElse("SABRE_PORT", "8001").toInt
-  val SabreProtocol = Properties.envOrElse("SABRE_PROTOCOL", "http")
-  val SabreBaseUrl = s"$SabreProtocol://$SabreHostName:$SabrePort"
+  val SabreBaseUrl = Properties.envOrElse("SABRE_BASE_URL", "")
 
   val WebSocketHostName = Properties.envOrElse("WEBSOCKET_HOSTNAME", OpenPaaSHostName)
   val WebSocketPort = Properties.envOrElse("WEBSOCKET_PORT", s"${OpenPaaSPort}").toInt

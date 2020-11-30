@@ -30,9 +30,7 @@ Environment variables:
  - `OPENPAAS_HOSTNAME` which is set to `localhost` by default
  - `OPENPAAS_PORT` which is set to `8080` by default
  - `OPENPAAS_PROTOCOL` which is set to `http` by default (you can use `https` instead for example)
- - `SABRE_HOSTNAME` which is set to `localhost` by default
- - `SABRE_PORT` which is set to `8001` by default
- - `SABRE_PROTOCOL` which is set to `http` by default (you can use `https` instead for example)
+ - `SABRE_BASE_URL` which is set to `` by default. If a url is provided, it will be used as the base URL for CalDAV requests, otherwise the ESN's DAV Proxy will handle CalDAV requests.
  - `WEBSOCKET_HOSTNAME` which is set to `OPENPAAS_HOSTNAME` by default
  - `WEBSOCKET_PORT` which is set to `OPENPAAS_PORT` by default
  - `WEBSOCKET_PROTOCOL` which is set to `ws` by default (you can use `wss` instead for example)
