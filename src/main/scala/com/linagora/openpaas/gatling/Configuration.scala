@@ -40,6 +40,7 @@ object Configuration {
 
   val InboxSpaPath= Properties.envOrElse("INBOX_SPA_PATH", "inbox")
   val CalendarSpaPath = Properties.envOrElse("CALENDAR_SPA_PATH", "calendar")
+  val ContactsSpaPath = Properties.envOrElse("CONTACTS_SPA_PATH", "contacts")
 
   val HttpProtocol = http
     .baseUrl(OpenPaaSBaseUrl)
