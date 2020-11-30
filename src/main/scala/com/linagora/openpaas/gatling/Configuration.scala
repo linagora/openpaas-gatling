@@ -11,7 +11,8 @@ object Configuration {
   val OpenPaaSHostName = Properties.envOrElse("OPENPAAS_HOSTNAME", "localhost")
   val OpenPaaSPort = Properties.envOrElse("OPENPAAS_PORT", "8080").toInt
   val OpenPaaSProtocol = Properties.envOrElse("OPENPAAS_PROTOCOL", "http")
-  val OpenPaaSBaseUrl = s"$OpenPaaSProtocol://$OpenPaaSHostName:$OpenPaaSPort"
+  private val usePortInUrl = Properties.envOrElse("OPENPAAS_PORT_IN_URL", "false").toBoolean
+  val OpenPaaSBaseUrl = if (usePortInUrl) s"$OpenPaaSProtocol://$OpenPaaSHostName:$OpenPaaSPort" else s"$OpenPaaSProtocol://$OpenPaaSHostName"
 
   val SabreBaseUrl = Properties.envOrElse("SABRE_BASE_URL", "")
 
