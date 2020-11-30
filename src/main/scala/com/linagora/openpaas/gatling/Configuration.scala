@@ -46,6 +46,7 @@ object Configuration {
     .contentTypeHeader("application/json; charset=UTF-8")
     .userAgentHeader("Gatling")
     .wsBaseUrl(WebSocketBaseUrl)
+    .disableCaching
 
   val InjectDuration = Properties.envOrElse("INJECT_DURATION", "10").toInt seconds
   val ScenarioDuration = Properties.envOrElse("SCENARIO_DURATION", "10").toInt seconds
