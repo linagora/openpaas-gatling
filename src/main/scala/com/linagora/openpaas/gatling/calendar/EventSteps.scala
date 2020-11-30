@@ -22,6 +22,8 @@ object EventSteps {
   def createEventInDefaultCalendar(): HttpRequestBuilder = {
     http("createEvent")
       .put(s"$SabreBaseUrl/calendars/$${$UserId}/$${$UserId}/$${$EventUuid}.ics")
+      .header("Accept", "application/json, text/plain, */*")
+      .header("Content-Type", "application/calendar+json")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(s"""
         [
@@ -35,7 +37,7 @@ object EventSteps {
                 ["dtstart",{"tzid": "Europe/Berlin"},"date-time","2019-10-22T14:00:00"],
                 ["dtend",{"tzid": "Europe/Berlin"},"date-time","2019-10-22T15:00:00"],
                 ["summary",{},"text","event-$${$EventUuid}"],
-                ["organizer",{"cn": "$UsernameSessionParam"},"cal-address","mailto:$UsernameSessionParam}"],
+                ["organizer",{"cn": "$${$UsernameSessionParam}"},"cal-address","mailto:$${$UsernameSessionParam}"],
                 ["attendee",{"partstat": "ACCEPTED","rsvp": "FALSE","role": "CHAIR","cutype": "INDIVIDUAL"},"cal-address","mailto:$${$UsernameSessionParam}"]
               ],
               []
@@ -51,6 +53,8 @@ object EventSteps {
 
     http("createEventWithAttendees")
       .put(s"$SabreBaseUrl/calendars/$${$UserId}/$${$UserId}/$${$EventUuid}.ics")
+      .header("Accept", "application/json, text/plain, */*")
+      .header("Content-Type", "application/calendar+json")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(s"""
         [
@@ -83,6 +87,8 @@ object EventSteps {
 
     http("listEvents")
       .httpRequest("REPORT", s"$SabreBaseUrl$${$CalendarLink}")
+      .header("Accept", "application/json, text/plain, */*")
+      .header("Content-Type", "application/calendar+json")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody (s"""{"match":{"start":"${dateTimeFormatter.format(start)}T000000","end":"${dateTimeFormatter.format(end)}T000000"}}""") )
       .check(status is 200)
@@ -99,6 +105,8 @@ object EventSteps {
   def updateEvent(): HttpRequestBuilder = {
     http("updateEvent")
       .put(s"$SabreBaseUrl$${$EventLink}")
+      .header("Accept", "application/json, text/plain, */*")
+      .header("Content-Type", "application/calendar+json")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(s"$${$NewEventContent}"))
       .check(status is 204)

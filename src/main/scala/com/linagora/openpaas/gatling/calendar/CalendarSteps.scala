@@ -22,6 +22,7 @@ object CalendarSteps {
         .exec(LoginSteps.login())
         .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(CalendarSpaPath))
         .exec(StaticAssetsSteps.loadStaticAssets(CalendarStaticAssets.OpeningCalendarAssets))
+        .exec(session => StaticAssetsSteps.clearIndexHtmlContentInSession(session))
         .exec(TokenSteps.retrieveAuthenticationToken)
         .exec(WebSocketSteps.getSocketId)
         .exec(WebSocketSteps.registerSocketNamespaces)
@@ -39,6 +40,8 @@ object CalendarSteps {
   def createCalendar(): HttpRequestBuilder = {
     http("createCalendar")
       .post(s"$SabreBaseUrl/calendars/$${$UserId}")
+      .header("Accept", "application/json, text/plain, */*")
+      .header("Content-Type", "application/calendar+json")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(session => {
         val calId: String = randomUuidString
@@ -65,6 +68,8 @@ object CalendarSteps {
   def updateCalendar(): HttpRequestBuilder = {
     http("updateCalendar")
       .httpRequest("PROPPATCH", s"$SabreBaseUrl$${$CalendarLink}")
+      .header("Accept", "application/json, text/plain, */*")
+      .header("Content-Type", "application/calendar+json")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(s"$${$NewCalendarContent}"))
       .check(status is 204)
@@ -91,12 +96,14 @@ object CalendarSteps {
   def listCalendarsForUser(): HttpRequestBuilder =
     http("listCalendars")
       .get(s"$SabreBaseUrl/calendars/$${$UserId}.json")
+      .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .check(status in(200, 304))
 
   def listUsableCalendarsForUser(): HttpRequestBuilder =
     http("listUsableCalendars")
       .get(s"$SabreBaseUrl/calendars/$${$UserId}.json?personal=true&sharedDelegationStatus=accepted&sharedPublicSubscription=true&withRights=true")
+      .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .check(status in(200, 304))
       .check(jsonPath("$._embedded['dav:calendar'][*]._links.self.href").saveAs(CalendarLinks))
@@ -110,7 +117,9 @@ object CalendarSteps {
   def getCalendarByCalendarIdInSession(): HttpRequestBuilder =
     http("getDefaultCalendar")
       .get(s"$SabreBaseUrl/calendars/$${$UserId}/$${$CalendarId}.json?withRights=true")
+      .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
+      .header("Accept", "application/json")
       .check(jsonPath("$").saveAs(CalendarContent))
       .check(jsonPath("$._links.self.href").saveAs(CalendarLink))
       .check(status is 200)
@@ -118,6 +127,7 @@ object CalendarSteps {
   def getDefaultCalendar(): HttpRequestBuilder =
     http("getDefaultCalendar")
       .get(s"$SabreBaseUrl/calendars/$${$UserId}/$${$UserId}.json?withRights=true")
+      .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .check(jsonPath("$").saveAs(CalendarContent))
       .check(jsonPath("$._links.self.href").saveAs(CalendarLink))
