@@ -77,7 +77,7 @@ object InboxScenari {
     exec(getMailboxes)
       .exec(getMessageList)
       .repeat(3)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true)))
-      .pause(60.seconds))
+      .pause(40.seconds, 60.seconds))
 
   private def sendEmailSteps = {
     exec(loadOpeningComposerTemplates)
