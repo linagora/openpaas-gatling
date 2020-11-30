@@ -52,7 +52,8 @@ Environment variables:
  - `PLATFORM_ADMIN_PWD` is the password of the platform administrator.
  - `INBOX_SPA_PATH` is the path to access the Inbox SPA. which is set to `inbox` by default
  - `CALENDAR_SPA_PATH` is the path to access the Calendar SPA, which is set to `calendar` by default
- 
+ - `CONTACTS_SPA_PATH` is the path to access the Contacts SPA, which is set to `contacts` by default 
+
 For example, to run with OpenPaaS port `8000`:
 
 ```bash
@@ -335,11 +336,13 @@ In this scenario, each user will:
 - Open a contact
 - Log out
 
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION`. 
+
 #### Run
 
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactSimulation
+> gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactInCollectedAddressBookSimulation
 ```
 
 ## OpenPaaS Mixed Scenario
