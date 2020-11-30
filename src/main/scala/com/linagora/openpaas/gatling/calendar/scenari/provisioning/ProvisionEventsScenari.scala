@@ -8,7 +8,7 @@ import io.gatling.core.structure.ScenarioBuilder
 
 object ProvisionEventsScenari {
   def generate(userFeeder: SourceFeederBuilder[String]): ScenarioBuilder =
-    scenario(s"CalendarProvisionEvents")
+    scenario(s"ProvisionEventsScenari")
       .feed(userFeeder)
       .exec(LoginSteps.login())
       .exec(UserSteps.getProfile())
