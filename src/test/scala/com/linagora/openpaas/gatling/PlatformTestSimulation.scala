@@ -1,15 +1,13 @@
 package com.linagora.openpaas.gatling
 
 import com.linagora.openpaas.gatling.Configuration._
-import com.linagora.openpaas.gatling.addressbook.AddressBookSteps._
+import com.linagora.openpaas.gatling.addressbook.ContactSteps.provisionContacts
 import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInCollectedAddressBookScenari
 import com.linagora.openpaas.gatling.calendar.EventSteps.provisionEvents
 import com.linagora.openpaas.gatling.calendar.scenari.SearchEventsScenari
-import com.linagora.openpaas.gatling.core.DomainSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
-import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps.provisionMessages
 import com.linagora.openpaas.gatling.unifiedinbox.scenari.InboxScenari
 import io.gatling.core.Predef._
 
