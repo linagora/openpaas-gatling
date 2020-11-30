@@ -13,7 +13,7 @@ export WEBSOCKET_PROTOCOL="wss"
 export JMAP_HOSTNAME="${OPENPAAS_HOSTNAME}"
 export JMAP_PORT="1080"
 export JMAP_PROTOCOL="${OPENPAAS_PROTOCOL}"
-
+export OPENPAAS_PORT_IN_URL="true"
 # Load settings
 export INJECT_DURATION="10"  # seconds
 export SCENARIO_DURATION="10" # seconds

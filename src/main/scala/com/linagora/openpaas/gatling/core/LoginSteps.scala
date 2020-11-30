@@ -6,6 +6,7 @@ import java.util.{Base64, UUID}
 import com.google.common.base.Charsets
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy
+import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy.PKCE
 import com.linagora.openpaas.gatling.core.authentication.basiclogin.BasicLoginSteps
 import com.linagora.openpaas.gatling.core.authentication.lemonldap.LemonLdapSteps
 import com.linagora.openpaas.gatling.core.authentication.oidc.OIDCSteps
@@ -59,8 +60,18 @@ object LoginSteps {
     case AuthenticationStrategy.Basic => exec(BasicLoginSteps.login)
   }
 
-  def logout: HttpRequestBuilder =
-    http("Logout")
-      .get("/logout")
-      .check(status in(200, 302))
+  def logout: HttpRequestBuilder = {
+    AuthenticationStrategyToUse match {
+      case PKCE =>
+        http("Logout")
+          .get(LemonLDAPPortalUrl+"/oauth2/logout")
+          .queryParam("id_token_hint", "${id_token}")
+          .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
+          .check(status in(200, 302))
+      case _ =>
+        http("Logout")
+          .get("/logout")
+          .check(status in(200, 302))
+    }
+  }
 }

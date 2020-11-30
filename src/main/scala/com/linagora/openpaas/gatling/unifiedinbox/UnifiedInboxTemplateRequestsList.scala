@@ -10,8 +10,8 @@ object LoginTemplateRequestsList {
     s"${Configuration.LemonLDAPPortalUrl}/static/common/js/crypto-js.min.js",
     s"${Configuration.LemonLDAPPortalUrl}/static/common/js/hmac-sha256.min.js",
     s"${Configuration.LemonLDAPPortalUrl}/static/common/js/enc-base64.min.js",
-    "/inbox-oidc/inbox-assets/apple-touch-icon-1024x1024.png",
-    "/inbox-oidc/inbox-assets/favicon-16x16.png",
+    s"/${removeTrailingSlash(Configuration.InboxSpaPath)}/inbox-assets/apple-touch-icon-1024x1024.png",
+    s"/${removeTrailingSlash(Configuration.InboxSpaPath)}/inbox-assets/favicon-16x16.png",
     "/images/mdi/mdi.svg",
     "/images/logo-tiny.png",
     "/components/roboto-fontface/fonts/Roboto-Bold.woff2",
@@ -24,4 +24,7 @@ object LoginTemplateRequestsList {
     "/images/exclamation.svg",
     "/images/file-icons/default.png"
   )
+
+  private def removeTrailingSlash(url: String): String = url.replaceAll("/$", "")
+
 }
