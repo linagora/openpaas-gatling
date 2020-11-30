@@ -1,6 +1,7 @@
 package com.linagora.openpaas.gatling.core.authentication.pkce
 
 import java.net.URLEncoder
+import java.util.Base64
 
 import com.google.common.base.Charsets
 import com.linagora.openpaas.gatling.Configuration._
@@ -31,7 +32,7 @@ object PKCESteps {
 
   def getPage: HttpRequestBuilder =
     http("Get LemonLDAP login page")
-      .get(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${OidcClient}&redirect_uri=${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${PkceCodeChallengeMethod}&response_mode=query")
+      .get(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${OidcClient}&redirect_uri=${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${PkceCodeChallengeMethod}&response_mode=query")
       .disableFollowRedirect
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
@@ -41,12 +42,12 @@ object PKCESteps {
 
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
-      .post(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${OidcClient}&redirect_uri=${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20offline_access%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${PkceCodeChallengeMethod}&response_mode=query#")
+      .post(LemonLDAPPortalUrl + s"/oauth2/authorize?client_id=${OidcClient}&redirect_uri=${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}&response_type=code&scope=openid%20email%20profile&state=$${oidc_state}&code_challenge=$${pkce_code_challenge}&code_challenge_method=${PkceCodeChallengeMethod}&response_mode=query#")
       .headers(Map(
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         "upgrade-insecure-requests" -> "1",
         "Content-Type" -> "application/x-www-form-urlencoded"))
-      .formParam("url", "aHR0cDovL2wtYXV0aC5vcGVuLXBhYXMub3JnLy9vYXV0aDI=")
+      .formParam("url", Base64.getEncoder.encodeToString((LemonLDAPPortalUrl + "//oauth2").getBytes(Charsets.UTF_8)))
       .formParam("timezone", "1")
       .formParam("skin", "bootstrap")
       .formParam("user", s"$${$UsernameSessionParam}")
