@@ -380,7 +380,7 @@ In this simulation, each user will:
 
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.CalendarAndContactsPlatformTestSimulation
+> gatling:testOnly com.linagora.openpaas.gatling.CalendarAndContactsWithRefreshTokenSimulation
 ```
 
 ### Inbox
