@@ -365,3 +365,24 @@ $ export INJECT_DURATION="2000" SCENARIO_DURATION="10800" USER_COUNT="20000"
 $ sbt
 > gatling:testOnly com.linagora.openpaas.gatling.OpenPaaSMixSimulation
 ```
+
+## Platform Test Simulations
+
+### Calendar & Contacts
+
+In this simulation, each user will:
+
+- Execute one of the following scenarios randomly:
+  - Scenario 1 (80% chance): Calendar's mixed scenario
+  - Scenario 2 (20% chance): Open a contact in the collected address book
+- Pause between 5 and 10 seconds between scenarios
+- Number of users: `USER_COUNT`
+- Injection duration: `INJECT_DURATION`
+- Scenario duration: `SCENARIO_DURATION`
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.CalendarAndContactsPlatformTestSimulation
+```
+
+### Inbox
