@@ -43,10 +43,10 @@ object DomainSteps {
   def createGatlingTestDomainIfNotExist: ChainBuilder =
     exec(listDomains)
       .pause(1 second)
-      .doIfOrElse(session => session("domainNames").as[Vector[String]].contains(DomainName)) {
+      .doIfOrElse(session => session("domainNames").as[Option[Vector[String]]].toVector.flatten.contains(DomainName)) {
         exec(session => {
-          val index = session("domainNames").as[Vector[String]].indexOf(DomainName)
-          val domainIds = session(DomainIds).as[Vector[String]]
+          val index = session("domainNames").as[Option[Vector[String]]].toVector.flatten.indexOf(DomainName)
+          val domainIds = session(DomainIds).as[Option[Vector[String]]].toVector.flatten
           session.set(DomainId, domainIds(index))
         })
       } {
