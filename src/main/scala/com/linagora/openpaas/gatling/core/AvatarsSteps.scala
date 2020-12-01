@@ -19,10 +19,11 @@
 package com.linagora.openpaas.gatling.core
 
 import io.gatling.core.Predef._
+import io.gatling.core.session.SessionAttribute
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import scala.util.Random
 
+import scala.util.Random
 import scala.util.Random
 
 object AvatarsSteps {
@@ -43,6 +44,11 @@ object AvatarsSteps {
   }
 
   def extractRandomAvatar(session: Session, key: String) = {
-    session.set(key, Random.shuffle(session(PeopleSteps.avatarsToLoadAfterSearch).as[Vector[String]]).head)
+    val searchResultOption: Option[Vector[String]] = session(PeopleSteps.avatarsToLoadAfterSearch)
+      .asOption[Vector[String]]
+    searchResultOption.flatMap(searchResult => Random.shuffle(searchResult).headOption) match {
+      case Some(avatar) => session.set(key, avatar)
+      case None => session.remove(key)
+    }
   }
 }
