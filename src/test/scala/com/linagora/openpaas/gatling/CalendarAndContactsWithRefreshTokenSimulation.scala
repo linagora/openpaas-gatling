@@ -6,6 +6,8 @@ import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInCollectedA
 import com.linagora.openpaas.gatling.calendar.CalendarSteps
 import com.linagora.openpaas.gatling.calendar.scenari._
 import com.linagora.openpaas.gatling.core.LoginSteps
+import com.linagora.openpaas.gatling.core.LoginSteps.{login, logout}
+import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import com.linagora.openpaas.gatling.core.WebSocketSteps.closeWsConnection
 import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
@@ -21,6 +23,9 @@ class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
   val eventUuidFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
   val scn: ScenarioBuilder = scenario("CalendarAndContactsPlatformTestScenario")
     .feed(userFeeder)
+    .exec(login)
+    .exec(getProfile())
+    .exec(logout)
     .during(ScenarioDuration) {
       randomSwitch(
         80.0 -> {
