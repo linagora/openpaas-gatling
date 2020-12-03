@@ -5,5 +5,4 @@ object SessionKeys {
   val ChannelId = "channelId"
   val SubscribedChannelIds = "subscribedChannelIds"
   val SubscribedChannelNames = "subscribedChannelNames"
-  val LemonLdapFormToken = "lemonLdapFormToken";
 }
