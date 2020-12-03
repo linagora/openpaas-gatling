@@ -7,6 +7,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import com.linagora.openpaas.gatling.Configuration.ContactsSpaPath
 import com.linagora.openpaas.gatling.core.{DomainSteps, LoginSteps, StaticAssetsSteps, TokenSteps, UserSteps, WebSocketSteps}
+import com.linagora.openpaas.gatling.provisionning.Authentication
 
 import scala.concurrent.duration.DurationInt
 
@@ -33,28 +34,28 @@ object AddressBookSteps {
   }
 
   def getUserGroupMembershipPrincipals: HttpRequestBuilder =
-    http("getUserGroupMembershipPrincipals")
+    Authentication.withAuth(http("getUserGroupMembershipPrincipals")
       .httpRequest("PROPFIND", s"/dav/api/principals/users/$${$UserId}")
-      .check(status in(200, 304))
+      .check(status in(200, 304)))
 
   def getUserAddressBooks: HttpRequestBuilder =
-    http("getUserAddressBooks")
+    Authentication.withAuth(http("getUserAddressBooks")
       .get(s"/dav/api/addressbooks/$${$UserId}.json?contactsCount=true&inviteStatus=2&personal=true&shared=true&subscribed=true")
       .check(status in(200, 304))
       .check(jsonPath("$._embedded['dav:addressbook'][*]._links.self.href")
         .findAll
-        .saveAs("addressBookLinks"))
+        .saveAs("addressBookLinks")))
 
   def getDomainAddressBooks: HttpRequestBuilder =
-    http("getDomainAddressBooks")
+    Authentication.withAuth(http("getDomainAddressBooks")
       .get(s"/dav/api/addressbooks/$${$DomainId}.json?contactsCount=true&inviteStatus=2&personal=true&shared=true&subscribed=true")
       .check(status in(200, 304))
-      .check(jsonPath("$._embedded['dav:addressbook']"))
+      .check(jsonPath("$._embedded['dav:addressbook']")))
 
   def getCollectedAddressBookProperty: HttpRequestBuilder =
-    http("getCollectedAddressBookProperty")
+    Authentication.withAuth(http("getCollectedAddressBookProperty")
       .httpRequest("PROPFIND", s"/dav/api/addressbooks/$${$UserId}/collected.json")
-      .check(status in(200, 304))
+      .check(status in(200, 304)))
 
   def idle(): ChainBuilder =
     pause(30 seconds, 60 seconds)
