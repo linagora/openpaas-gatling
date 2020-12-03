@@ -10,7 +10,7 @@ lazy val root = (project in file("."))
         libraryDependencies += "io.gatling" % "gatling-test-framework" % gatlingVersion,
         libraryDependencies += "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion
   )
-  .dependsOn(jamesGatling)
+  .dependsOn(jamesGatling % "compile->compile;test->test")
 
 val gatlingVersion = "3.0.3"
 
