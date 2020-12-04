@@ -14,6 +14,8 @@ object ViewAndUpdateCalendarScenari {
       .exec(CalendarSteps.getCalendarConfiguration())
       .exec(CalendarSteps.getDefaultCalendar())
       .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .exec(CalendarSteps.createCalendar())
+      .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(session => CalendarSteps.setCalendarIdFromCalendarLinkInSession(session))
       .exec(session => CalendarSteps.updateCalendarInSession(session))
       .exec(CalendarSteps.updateCalendar())

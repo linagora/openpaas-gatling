@@ -11,6 +11,8 @@ object UserSteps {
       http("Get profile")
         .get("/api/user"))
       .check(status.in(200, 304))
+      .check(jsonPath("$._id").exists)
+      .check(jsonPath("$.domains[0].domain_id").exists)
       .check(jsonPath("$._id").saveAs(UserId))
       .check(jsonPath("$.domains[0].domain_id").saveAs(DomainId))
 }

@@ -10,6 +10,8 @@ object ViewAndDeleteCalendarScenari {
   def generate(): ScenarioBuilder =
     scenario("ViewAndDeleteCalendarScenari")
       .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .exec(CalendarSteps.createCalendar())
+      .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(CalendarSteps.getSecondCalendar())
       .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(session => CalendarSteps.setCalendarIdFromCalendarLinkInSession(session))
