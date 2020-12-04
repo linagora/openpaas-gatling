@@ -10,7 +10,6 @@ object SessionKeys {
   val CalendarLink = "calendarLink"
   val CalendarContent = "calendarContent"
   val NewCalendarContent = "newCalendarContent"
-  val LemonLdapFormToken = "lemonLdapFormToken"
   val EventContent = "eventContent"
   val NewEventContent = "newEventContent"
   val EventLink = "eventLink"

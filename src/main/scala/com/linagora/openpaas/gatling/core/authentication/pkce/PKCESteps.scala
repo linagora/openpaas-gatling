@@ -38,7 +38,6 @@ object PKCESteps {
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       ))
       .check(status in (200, 304))
-      .check(css("input[name='token']", "value").saveAs(LemonLdapFormToken))
 
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
@@ -52,7 +51,6 @@ object PKCESteps {
       .formParam("skin", "bootstrap")
       .formParam("user", s"$${$UsernameSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
-      .formParam("token", s"$${$LemonLdapFormToken}")
       .disableFollowRedirect
       .check(status.is(302),
         header("Location")

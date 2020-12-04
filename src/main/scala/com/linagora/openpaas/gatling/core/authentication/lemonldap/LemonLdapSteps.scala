@@ -32,7 +32,6 @@ object LemonLdapSteps {
       ))
       .check(status in (200, 304))
       .check(bodyString.saveAs("BODY"))
-      .check(css("input[name='token']", "value").saveAs(LemonLdapFormToken))
 
   def login: HttpRequestBuilder =
     http("Login through LemonLDAP")
@@ -46,7 +45,6 @@ object LemonLdapSteps {
       .formParam("skin", "bootstrap")
       .formParam("user", s"$${$UsernameSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
-      .formParam("token", s"$${$LemonLdapFormToken}")
       .check(status is 200)
 
   def goToOpenPaaSApplication: HttpRequestBuilder =
