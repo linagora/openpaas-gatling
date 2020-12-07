@@ -11,8 +11,7 @@ class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
   val userFeeder: SourceFeederBuilder[String] = csv("users.csv").queue
   val eventUuidFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
   val contactUuidFeeder = Iterator.continually(Map("contactUuid" -> randomUuidString))
-  val scn: ScenarioBuilder = CalendarAndContactsScenari.generate(eventUuidFeeder, contactUuidFeeder)
-    .feed(userFeeder)
+  val scn: ScenarioBuilder = CalendarAndContactsScenari.generate(eventUuidFeeder, contactUuidFeeder, userFeeder)
 
   setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

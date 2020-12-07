@@ -13,12 +13,14 @@ import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
 import com.linagora.openpaas.gatling.provisionning.SessionKeys.UsernameSessionParam
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay._
 import io.gatling.core.Predef._
+import io.gatling.core.feeder.{FeederBuilder, SourceFeederBuilder}
 
 import scala.concurrent.duration.DurationInt
 
 object InboxScenari {
 
-  def platform() =scenario("Inbox platform scenario")
+  def platform(feederBuilder: SourceFeederBuilder[String]) =scenario("Inbox platform scenario")
+    .feed(feederBuilder.circular)
       .exec(login)
       .exec(getProfile())
       .exec(logout)

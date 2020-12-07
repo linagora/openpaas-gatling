@@ -7,8 +7,7 @@ import io.gatling.core.Predef._
 class InboxWithRefreshTokenSimulation extends Simulation {
   private val feeder = csv("users.csv")
 
-  val scn = InboxScenari.platform()
-    .feed(feeder.circular())
+  val scn = InboxScenari.platform(feeder)
 
   setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)
 }

@@ -12,13 +12,13 @@ import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
 import com.linagora.openpaas.gatling.core.{LoginSteps, TokenSteps}
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
 import io.gatling.core.Predef._
+import io.gatling.core.feeder.SourceFeederBuilder
 import io.gatling.core.structure.ScenarioBuilder
 
-import scala.concurrent.duration.DurationInt
-
 object CalendarAndContactsScenari {
-  def generate(eventUuidFeeder: Iterator[Map[String, String]], contactUuidFeeder: Iterator[Map[String, String]]): ScenarioBuilder = {
+  def generate(eventUuidFeeder: Iterator[Map[String, String]], contactUuidFeeder: Iterator[Map[String, String]], userFeeder: SourceFeederBuilder[String]): ScenarioBuilder = {
     scenario("CalendarAndContactsPlatformTestScenario")
+      .feed(userFeeder.circular)
       .exec(login)
       .exec(getProfile())
       .exec(logout)

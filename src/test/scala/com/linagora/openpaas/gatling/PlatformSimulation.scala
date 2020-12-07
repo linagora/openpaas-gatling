@@ -17,6 +17,8 @@ class PlatformSimulation extends Simulation {
   private val inboxFeeder = csv("users.csv")
   val calendarFeeder: SourceFeederBuilder[String] = csv("users.csv").queue
   val eventUuidFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
+  val contactUuidFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
+
   private def recordValueToString(recordValue: Any): String = recordValue match {
     case s: String => s
     case a: Any => println("Warning: calling toString on a feeder value"); a.toString
@@ -31,12 +33,13 @@ class PlatformSimulation extends Simulation {
   val jamesFeeder: AuthenticatedUserFeederBuilder = UserFeeder.toFeeder(authenticatedUsers)
 
 
-  val inbox = InboxScenari.platform()
-    .feed(inboxFeeder.circular())
-  val calendarAndContacts = CalendarAndContactsScenari.generate(eventUuidFeeder)
-    .feed(calendarFeeder)
+  val inbox = InboxScenari.platform(inboxFeeder)
+
+  val calendarAndContacts = CalendarAndContactsScenari.generate(eventUuidFeeder, contactUuidFeeder, userFeeder = calendarFeeder)
+
   val jmapJames = new JmapPlatformValidationScenario(minMessagesInMailbox = 10)
     .generate(duration = ScenarioDuration, userFeeder = jamesFeeder, recipientFeeder = RecipientFeeder.usersToFeeder(authenticatedUsers))
+
   val imapJames = new ImapPlatformValidationScenario()
     .generate(duration = ScenarioDuration, userFeeder = jamesFeeder)
 
