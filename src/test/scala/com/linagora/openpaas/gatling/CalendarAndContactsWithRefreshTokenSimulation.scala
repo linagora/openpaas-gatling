@@ -21,6 +21,7 @@ import scala.concurrent.duration.DurationInt
 class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
   val userFeeder: SourceFeederBuilder[String] = csv("users.csv").queue
   val eventUuidFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
+  val contactUuidFeeder = Iterator.continually(Map("contactUuid" -> randomUuidString))
   val scn: ScenarioBuilder = scenario("CalendarAndContactsPlatformTestScenario")
     .feed(userFeeder)
     .during(ScenarioDuration) {
@@ -44,7 +45,7 @@ class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
             .repeat(20) {
               exec(PKCESteps.renewAccessToken)
                 .randomSwitch(
-                  10.0 -> exec(OpenContactInDefaultAddressBookScenari.generate()),
+                  10.0 -> exec(OpenContactInDefaultAddressBookScenari.generate(contactUuidFeeder)),
                   90.0 -> exec(AddressBookSteps.idle())
                 )
             }
