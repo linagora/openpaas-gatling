@@ -1,7 +1,8 @@
 package com.linagora.openpaas.gatling.calendar.scenari
 
 import com.linagora.openpaas.gatling.calendar.{CalendarSteps, EventSteps}
-import com.linagora.openpaas.gatling.core.PeopleSteps
+import com.linagora.openpaas.gatling.core.{LoginSteps, PeopleSteps, TokenSteps}
+import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
@@ -24,5 +25,7 @@ object CreateEventWithAttendeesScenari {
         }
       }
       .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .exec(LoginSteps.renewToken())
+      .exec(TokenSteps.retrieveAuthenticationToken)
       .exec(EventSteps.createEventInDefaultCalendarWithAttendees(eventAttendeeCount))
 }

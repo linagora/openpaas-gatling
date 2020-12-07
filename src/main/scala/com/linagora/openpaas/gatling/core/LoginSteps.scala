@@ -60,6 +60,10 @@ object LoginSteps {
     case AuthenticationStrategy.Basic => exec(BasicLoginSteps.login)
   }
 
+  def renewToken(): ChainBuilder = AuthenticationStrategyToUse match {
+    case AuthenticationStrategy.PKCE => exec(PKCESteps.renewAccessToken)
+  }
+
   def logout: HttpRequestBuilder = {
     AuthenticationStrategyToUse match {
       case PKCE =>

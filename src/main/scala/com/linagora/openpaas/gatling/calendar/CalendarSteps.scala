@@ -8,6 +8,7 @@ import com.linagora.openpaas.gatling.calendar.SessionKeys._
 import com.linagora.openpaas.gatling.calendar.utils.CalendarUtils
 import com.linagora.openpaas.gatling.calendar.utils.CalendarUtils.getCalDAVBaseUrl
 import com.linagora.openpaas.gatling.core.{DomainSteps, LoginSteps, StaticAssetsSteps, TokenSteps, UserSteps, WebSocketSteps}
+import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
@@ -24,10 +25,10 @@ object CalendarSteps {
         .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(CalendarSpaPath))
         .exec(StaticAssetsSteps.loadStaticAssets(CalendarStaticAssets.OpeningCalendarAssets))
         .exec(TokenSteps.retrieveAuthenticationToken)
+        .exec(UserSteps.getProfile())
         .exec(WebSocketSteps.getSocketId)
         .exec(WebSocketSteps.registerSocketNamespaces)
         .exec(WebSocketSteps.openWsConnection())
-        .exec(UserSteps.getProfile())
         .exec(DomainSteps.getDomain)
         .exec(DomainSteps.getThemeForDomain())
         .exec(DomainSteps.getLogoForDomain)
@@ -38,15 +39,14 @@ object CalendarSteps {
   }
 
   def createCalendar(): HttpRequestBuilder = {
-    http("createCalendar")
+    withAuth(http("createCalendar")
       .post(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(session => {
         val calId: String = randomUuidString
 
-        s"""
-        {
+        s"""{
           "id":"$calId",
           "dav:name":"Test calendar - $calId",
           "apple:color":"#01ea18",
@@ -54,23 +54,23 @@ object CalendarSteps {
         }
         """
       }))
-      .check(status is 201)
+      .check(status is 201))
   }
 
   def deleteCalendar(): HttpRequestBuilder = {
-    http("deleteCalendar")
+    withAuth(http("deleteCalendar")
       .delete(s"${getCalDAVBaseUrl()}$${$CalendarLink}")
       .header(ESNToken, s"$${$Token}")
-      .check(status is 204)
+      .check(status is 204))
   }
 
   def updateCalendar(): HttpRequestBuilder = {
-    http("updateCalendar")
+    withAuth(http("updateCalendar")
       .httpRequest("PROPPATCH", s"$SabreBaseUrl$${$CalendarLink}")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(s"$${$NewCalendarContent}"))
-      .check(status is 204)
+      .check(status is 204))
   }
 
   def setCalendarIdFromCalendarLinkInSession(session: Session) = {
@@ -92,20 +92,20 @@ object CalendarSteps {
   }
 
   def listCalendarsForUser(): HttpRequestBuilder =
-    http("listCalendars")
+    withAuth(http("listCalendars")
       .get(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}.json")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
-      .check(status in(200, 304))
+      .check(status in(200, 304)))
 
   def listUsableCalendarsForUser(): HttpRequestBuilder =
-    http("listUsableCalendars")
+    withAuth(http("listUsableCalendars")
       .get(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}.json?personal=true&sharedDelegationStatus=accepted&sharedPublicSubscription=true&withRights=true")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .check(status in(200, 304))
       .check(jsonPath("$._embedded['dav:calendar'][*]._links.self.href").saveAs(CalendarLinks))
-      .check(jsonPath("$._embedded['dav:calendar'][0]._links.self.href").saveAs(CalendarLink))
+      .check(jsonPath("$._embedded['dav:calendar'][0]._links.self.href").saveAs(CalendarLink)))
 
   def getSecondCalendar(): HttpRequestBuilder =
     listUsableCalendarsForUser()
@@ -113,29 +113,29 @@ object CalendarSteps {
       .check(jsonPath("$._embedded['dav:calendar'][1]._links.self.href").saveAs(CalendarLink))
 
   def getCalendarByCalendarIdInSession(): HttpRequestBuilder =
-    http("getDefaultCalendar")
+    withAuth(http("getDefaultCalendar")
       .get(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}/$${$CalendarId}.json?withRights=true")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .header("Accept", "application/json")
       .check(jsonPath("$").saveAs(CalendarContent))
       .check(jsonPath("$._links.self.href").saveAs(CalendarLink))
-      .check(status is 200)
+      .check(status is 200))
 
   def getDefaultCalendar(): HttpRequestBuilder =
-    http("getDefaultCalendar")
+    withAuth(http("getDefaultCalendar")
       .get(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}/$${$UserId}.json?withRights=true")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .check(jsonPath("$").saveAs(CalendarContent))
       .check(jsonPath("$._links.self.href").saveAs(CalendarLink))
-      .check(status is 200)
+      .check(status is 200))
 
   def getCalendarConfiguration(): HttpRequestBuilder =
-    http("getCalendarConfiguration")
+    withAuth(http("getCalendarConfiguration")
       .post("/api/configurations?scope=user")
       .body(StringBody("""[{"name":"linagora.esn.calendar","keys":["workingDays","hideDeclinedEvents"]}]"""))
-      .check(status in(200, 304))
+      .check(status in(200, 304)))
 
   def idle(): ChainBuilder =
     pause(30 seconds, 60 seconds)

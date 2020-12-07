@@ -2,10 +2,10 @@ package com.linagora.openpaas.gatling
 
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.addressbook.AddressBookSteps
-import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInCollectedAddressBookScenari
+import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInDefaultAddressBookScenari
 import com.linagora.openpaas.gatling.calendar.CalendarSteps
 import com.linagora.openpaas.gatling.calendar.scenari._
-import com.linagora.openpaas.gatling.core.LoginSteps
+import com.linagora.openpaas.gatling.core.{LoginSteps, TokenSteps}
 import com.linagora.openpaas.gatling.core.LoginSteps.{login, logout}
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import com.linagora.openpaas.gatling.core.WebSocketSteps.closeWsConnection
@@ -23,15 +23,13 @@ class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
   val eventUuidFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
   val scn: ScenarioBuilder = scenario("CalendarAndContactsPlatformTestScenario")
     .feed(userFeeder)
-    .exec(login)
-    .exec(getProfile())
-    .exec(logout)
     .during(ScenarioDuration) {
       randomSwitch(
         80.0 -> {
           exec(CalendarSteps.openCalendarSPA())
             .repeat(20) {
               exec(PKCESteps.renewAccessToken)
+                .exec(TokenSteps.retrieveAuthenticationToken)
                 .randomSwitch(
                   20.0 -> exec(CalendarMixScenari.generate(eventUuidFeeder)),
                   80.0 -> exec(CalendarSteps.idle())
@@ -46,7 +44,7 @@ class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
             .repeat(20) {
               exec(PKCESteps.renewAccessToken)
                 .randomSwitch(
-                  10.0 -> exec(OpenContactInCollectedAddressBookScenari.generate()),
+                  10.0 -> exec(OpenContactInDefaultAddressBookScenari.generate()),
                   90.0 -> exec(AddressBookSteps.idle())
                 )
             }

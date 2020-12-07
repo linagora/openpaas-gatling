@@ -40,7 +40,8 @@ object DomainSteps {
   def getLogoForDomain: HttpRequestBuilder =
     Authentication.withAuth(http("getLogoForDomain")
       .get(s"/api/themes/$${$DomainId}/logo")
-      .check(status in (200, 304)))
+      .disableFollowRedirect
+      .check(status in (200, 302, 304)))
 
   def createGatlingTestDomainIfNotExist: ChainBuilder =
     exec(listDomains)

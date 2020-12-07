@@ -4,4 +4,5 @@ object SessionKeys {
   val ContactUuid = "contactUuid"
   val AddressBooksLinks = "addressBooksLinks"
   val AddressBookLink = "addressBookLink"
+  val ContactLink = "contactLink"
 }

@@ -15,6 +15,9 @@ object ViewAndDeleteEventScenari {
     val end: LocalDate = start.plusMonths(1)
 
     scenario("ViewAndDeleteEventScenari")
+      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .exec(EventSteps.createEventInDefaultCalendar())
+      .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(EventSteps.listEventsAndGetFirstEvent(start, end))
       .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(CalendarSteps.listUsableCalendarsForUser()) // When opening the event dialog, this is the only request that is sent if there are no attendees

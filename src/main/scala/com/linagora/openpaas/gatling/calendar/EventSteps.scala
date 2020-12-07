@@ -8,6 +8,8 @@ import com.linagora.openpaas.gatling.calendar.CalendarConstants.ESNToken
 import com.linagora.openpaas.gatling.calendar.SessionKeys._
 import com.linagora.openpaas.gatling.calendar.utils.AttendeeUtils.generateRandomAttendeesInICalFormat
 import com.linagora.openpaas.gatling.calendar.utils.CalendarUtils.getCalDAVBaseUrl
+import com.linagora.openpaas.gatling.calendar.utils.EventUtils
+import com.linagora.openpaas.gatling.core.{LoginSteps, TokenSteps}
 import com.linagora.openpaas.gatling.provisionning.Authentication.withAuth
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
@@ -21,12 +23,14 @@ import scala.util.matching.Regex
 
 object EventSteps {
   def createEventInDefaultCalendar(): HttpRequestBuilder = {
-    http("createEvent")
+    withAuth(http("createEvent")
       .put(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}/$${$UserId}/$${$EventUuid}.ics")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
-      .body(StringBody(s"""
-        [
+      .body(StringBody(session => {
+        val (startString, endString): (String, String) = EventUtils.getRandomStartAndEndDateString()
+
+        s"""[
           "vcalendar",
           [],
           [
@@ -34,8 +38,8 @@ object EventSteps {
               "vevent",
               [
                 ["uid",{},"text","$${$EventUuid}"],
-                ["dtstart",{"tzid": "Europe/Berlin"},"date-time","2019-10-22T14:00:00"],
-                ["dtend",{"tzid": "Europe/Berlin"},"date-time","2019-10-22T15:00:00"],
+                ["dtstart",{"tzid": "Europe/Berlin"},"date-time","$startString"],
+                ["dtend",{"tzid": "Europe/Berlin"},"date-time","$endString"],
                 ["summary",{},"text","event-$${$EventUuid}"],
                 ["organizer",{"cn": "$${$UsernameSessionParam}"},"cal-address","mailto:$${$UsernameSessionParam}"],
                 ["attendee",{"partstat": "ACCEPTED","rsvp": "FALSE","role": "CHAIR","cutype": "INDIVIDUAL"},"cal-address","mailto:$${$UsernameSessionParam}"]
@@ -44,19 +48,22 @@ object EventSteps {
             ]
           ]
         ]
-        """))
-      .check(status in (201, 204))
+        """
+      }))
+      .check(status in (201, 204)))
   }
 
   def createEventInDefaultCalendarWithAttendees(numberOfAttendees: Int): HttpRequestBuilder= {
     val attendeesInIcalFormat: String = generateRandomAttendeesInICalFormat(numberOfAttendees)
 
-    http("createEventWithAttendees")
-      .put(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}/$${$UserId}/$${$EventUuid}.ics")
-      .header("Accept", "application/json, text/plain, */*")
+    withAuth(http("createEventWithAttendees")
+      .put(s"${getCalDAVBaseUrl()}//calendars/$${$UserId}/$${$UserId}/$${$EventUuid}.ics")
+      .header("Accept", "application/json, application/calendar+json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
-      .body(StringBody(s"""
-        [
+      .body(StringBody(session => {
+        val (startString, endString): (String, String) = EventUtils.getRandomStartAndEndDateString()
+
+        s"""[
           "vcalendar",
           [],
           [
@@ -65,8 +72,8 @@ object EventSteps {
               [
                 ["uid",{},"text","$${$EventUuid}"],
                 ["transp",{},"text","OPAQUE"],
-                ["dtstart",{"tzid": "Europe/Berlin"},"date-time","2021-10-22T14:00:00"],
-                ["dtend",{"tzid": "Europe/Berlin"},"date-time","2021-10-22T15:00:00"],
+                ["dtstart",{"tzid": "Europe/Berlin"},"date-time","$startString"],
+                ["dtend",{"tzid": "Europe/Berlin"},"date-time","$endString"],
                 ["summary",{},"text","event-with-attendees-3-$${$EventUuid}"],
                 ["class",{},"text","PUBLIC"],
                 ["organizer",{"cn": "$${$UsernameSessionParam}"},"cal-address","mailto:$${$UsernameSessionParam}"],
@@ -77,19 +84,20 @@ object EventSteps {
             ]
           ]
         ]
-        """))
-      .check(status in (201, 204))
+        """
+      }))
+      .check(status in (201, 204)))
   }
 
   def listEvents(start: LocalDate = LocalDate.now, end: LocalDate = LocalDate.now.plusWeeks(1)): HttpRequestBuilder = {
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYYMMdd")
 
-    http("listEvents")
+    withAuth(http("listEvents")
       .httpRequest("REPORT", s"${getCalDAVBaseUrl()}$${$CalendarLink}")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody (s"""{"match":{"start":"${dateTimeFormatter.format(start)}T000000","end":"${dateTimeFormatter.format(end)}T000000"}}""") )
-      .check(status is 200)
+      .check(status is 200))
   }
 
   def listEventsAndGetFirstEvent(start: LocalDate = LocalDate.now, end: LocalDate = LocalDate.now.plusWeeks(1)): HttpRequestBuilder = {
@@ -101,12 +109,12 @@ object EventSteps {
   }
 
   def updateEvent(): HttpRequestBuilder = {
-    http("updateEvent")
+    withAuth(http("updateEvent")
       .put(s"${getCalDAVBaseUrl()}$${$EventLink}")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
       .body(StringBody(s"$${$NewEventContent}"))
-      .check(status is 204)
+      .check(status is 204))
   }
 
   def updateEventInSession(session: Session): Session = {
@@ -119,26 +127,40 @@ object EventSteps {
   }
 
   def deleteEvent(): HttpRequestBuilder = {
-    http("deleteEvent")
+    withAuth(http("deleteEvent")
       .delete(s"${getCalDAVBaseUrl()}$${$EventLink}")
       .header(ESNToken, s"$${$Token}")
-      .check(status is 204)
+      .check(status is 204))
   }
 
   def searchEvents(): HttpRequestBuilder =
-    http("searchEvents")
+    withAuth(http("searchEvents")
       .get(s"/calendar/api$${$CalendarLink}/events.json?limit=30&offset=0&query=event")
-      .check(status in(200, 304))
+      .check(status in(200, 304)))
 
   def provisionEvents(): ChainBuilder = {
     val eventUuidFeeder = Iterator.continually(Map("eventUuid" -> randomUuidString))
 
     group("provisionEvents") {
-      repeat(EventCount) {
-        feed(eventUuidFeeder)
-          .exec(createEventInDefaultCalendar())
-          .pause(1 second)
-      }
+      exec(session => session.set("eventCountBeforeRenewToken", 5))
+        .repeat(EventCount) {
+          feed(eventUuidFeeder)
+            .doIfOrElse(session => session("eventCountBeforeRenewToken").as[Int] == 0)
+              {
+                exec(session => session.set("eventCountBeforeRenewToken", 5))
+                  .exec(LoginSteps.renewToken())
+                  .exec(TokenSteps.retrieveAuthenticationToken)
+              }
+              {
+                exec(session => {
+                  val currentEventCountBeforeRenewToken: Int = session("eventCountBeforeRenewToken").as[Int]
+
+                  session.set("eventCountBeforeRenewToken", currentEventCountBeforeRenewToken - 1)
+                })
+              }
+            .exec(createEventInDefaultCalendar())
+            .pause(1 second)
+        }
     }
   }
 }
