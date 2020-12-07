@@ -2,7 +2,7 @@ package com.linagora.openpaas.gatling
 
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.addressbook.AddressBookSteps
-import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInCollectedAddressBookScenari
+import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInDefaultAddressBookScenari
 import com.linagora.openpaas.gatling.calendar.CalendarSteps
 import com.linagora.openpaas.gatling.calendar.scenari._
 import com.linagora.openpaas.gatling.core.{LoginSteps, TokenSteps}
@@ -44,7 +44,7 @@ class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
             .repeat(20) {
               exec(PKCESteps.renewAccessToken)
                 .randomSwitch(
-                  10.0 -> exec(OpenContactInCollectedAddressBookScenari.generate()),
+                  10.0 -> exec(OpenContactInDefaultAddressBookScenari.generate()),
                   90.0 -> exec(AddressBookSteps.idle())
                 )
             }

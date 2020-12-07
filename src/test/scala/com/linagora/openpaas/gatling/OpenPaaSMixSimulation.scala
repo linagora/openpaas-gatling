@@ -6,7 +6,7 @@ import com.linagora.openpaas.gatling.core.DomainSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import io.gatling.core.Predef._
-import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInCollectedAddressBookScenari
+import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInDefaultAddressBookScenari
 import com.linagora.openpaas.gatling.calendar.EventSteps.provisionEvents
 import com.linagora.openpaas.gatling.calendar.scenari.SearchEventsScenari
 import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps.provisionMessages
@@ -37,7 +37,7 @@ class OpenPaaSMixSimulation extends Simulation {
       randomSwitch(
         33.3 -> exec(SearchEventsScenari.generate()),
         33.3 -> exec(InboxScenari.generateOnceWithLogin()),
-        33.3 -> exec(OpenContactInCollectedAddressBookScenari.generate())
+        33.3 -> exec(OpenContactInDefaultAddressBookScenari.generate())
       ).pause(7500 milliseconds, 15 seconds)
     }
 

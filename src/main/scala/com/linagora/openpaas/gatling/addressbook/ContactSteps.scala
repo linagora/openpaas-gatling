@@ -14,27 +14,27 @@ import scala.concurrent.duration.DurationInt
 
 object ContactSteps {
   def createContactInDefaultAddressBook(): HttpRequestBuilder = {
-    http("createContactsInDefaultAddressBook")
-      .put(s"/dav/api/addressbooks/$${$UserId}/collected/$${$ContactUuid}.vcf")
+    withAuth(http("createContactsInDefaultAddressBook")
+      .put(s"/dav/api/addressbooks/$${$UserId}/contacts/$${$ContactUuid}.vcf")
       .body(StringBody(s"""
         [
           "vcard",
           [
             ["version", {}, "text", "4.0"],
             ["uid", {}, "text", "$${$ContactUuid}"],
-            ["fn", {}, "text", "Dummy"],
+            ["fn", {}, "text", "Dummy - $${$ContactUuid}"],
             ["n", {}, "text", ["", "Dummy"]]
           ],
           []
         ]
         """))
-      .check(status is 201)
+      .check(status is 201))
   }
 
   def listContactsFromAddressBook(addressBookLink: String): HttpRequestBuilder =
-    http(s"load contacts from address book $addressBookLink")
+    withAuth(http(s"listContactsFromAddressBook")
       .get(s"/dav/api$addressBookLink?limit=20&offset=0&sort=fn")
-      .check(status in (200, 304))
+      .check(status in (200, 304)))
 
   def listContactsFromUserAddressBooks(): ChainBuilder =
     group("listContactsFromUserAddressBooks") {
@@ -44,13 +44,26 @@ object ContactSteps {
       }
     }
 
-  def listContactsFromCollectedAddressBook(): HttpRequestBuilder =
-    listContactsFromAddressBook(s"/addressbooks/$${$UserId}/collected.json")
+  def listContactsInCollectedAddressBook(): ChainBuilder = {
+    group("listContactsInCollectedAddressBook") {
+      exec(listContactsFromAddressBook(s"/addressbooks/$${$UserId}/collected.json"))
+    }
+  }
 
-  def getOneCreatedContactInCollectedAddressBook(): HttpRequestBuilder =
-    http("getOneCreatedContactInCollectedAddressBook")
-      .get(s"/dav/api/addressbooks/$${$UserId}/collected/$${$ContactUuid}.vcf")
-      .check(status in (200, 304))
+  def listContactsInDefaultAddressBook(): ChainBuilder = {
+    group("listContactsInDefaultAddressBook") {
+      exec(
+        listContactsFromAddressBook(s"/addressbooks/$${$UserId}/contacts.json")
+          .check(jsonPath("$._embedded['dav:item']").count.gt(0))
+          .check(jsonPath("$._embedded['dav:item'][0]._links.self.href").saveAs(ContactLink))
+      )
+    }
+  }
+
+  def getOneContactInDefaultAddressBook(): HttpRequestBuilder =
+    withAuth(http("getOneCreatedContactInDefaultAddressBook")
+      .get(s"/dav/api$${$ContactLink}")
+      .check(status in (200, 304)))
 
   def provisionContacts(): ChainBuilder = {
     val contactUuidFeeder = Iterator.continually(Map("contactUuid" -> randomUuidString))

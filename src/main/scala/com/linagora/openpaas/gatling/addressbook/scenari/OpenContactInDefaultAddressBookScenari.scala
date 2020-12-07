@@ -7,9 +7,13 @@ import io.gatling.core.structure.ScenarioBuilder
 
 import scala.concurrent.duration.DurationInt
 
-object OpenContactInCollectedAddressBookScenari {
+object OpenContactInDefaultAddressBookScenari {
   def generate(): ScenarioBuilder =
-    scenario("OpenContactInCollectedAddressBookScenari")
+    scenario("OpenContactInDefaultAddressBookScenari")
       .pause(RandomHumanActionDelay.humanActionDelay() second)
-      .exec(ContactSteps.getOneCreatedContactInCollectedAddressBook())
+      .exec(ContactSteps.createContactInDefaultAddressBook())
+      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .exec(ContactSteps.listContactsInDefaultAddressBook())
+      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .exec(ContactSteps.getOneContactInDefaultAddressBook())
 }

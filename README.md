@@ -323,7 +323,7 @@ $ sbt
 
 ## Scenarios for Contacts
 
-### Open a contact in the collected address book
+### Open a contact in the default address book
 
 #### Scenario
 
@@ -331,7 +331,7 @@ In this scenario, each user will:
 
 - Login to OpenPaaS
 - Go to Contacts
-- Open the collected address book
+- Open the default address book
 - Open a contact
 - Log out
 
@@ -351,7 +351,7 @@ $ sbt
 - Execute the 3 following scenarios randomly (each has a 33% chance to be executed):
   - Scenario 1: Calendar's mixed scenario
   - Scenario 2: Send an email
-  - Scenario 3: Open a contact in the collected address book
+  - Scenario 3: Open a contact in the default address book
 - Pause between scenarios from 7.5 to 15 seconds
 - Number of users: 20000
 - Injection duration: 2000 seconds (10 users/sec)
@@ -373,7 +373,7 @@ In this simulation, each user will:
 
 - Execute one of the following scenarios randomly:
   - Scenario 1 (80% chance): Calendar's mixed scenario
-  - Scenario 2 (20% chance): Open a contact in the collected address book
+  - Scenario 2 (20% chance): Open a contact in the default address book
 - Pause between 5 and 10 seconds between scenarios
 - Number of users: `USER_COUNT`
 - Injection duration: `INJECT_DURATION`
