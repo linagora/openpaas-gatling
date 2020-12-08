@@ -36,6 +36,11 @@ object Configuration {
 
   val PkceCodeChallengeMethod = "S256"
 
+  val CasHostName = Properties.envOrElse("CAS_HOSTNAME", OpenPaaSHostName)
+  val CasPort = Properties.envOrElse("CAS_PORT", "443").toInt
+  val CasProtocol = Properties.envOrElse("CAS_PROTOCOL", OpenPaaSProtocol)
+  val CasBaseUrl = s"$CasProtocol://$CasHostName:$CasPort"
+
   val InboxSpaPath= Properties.envOrElse("INBOX_SPA_PATH", "inbox")
   val CalendarSpaPath = Properties.envOrElse("CALENDAR_SPA_PATH", "calendar")
   val ContactsSpaPath = Properties.envOrElse("CONTACTS_SPA_PATH", "contacts")
