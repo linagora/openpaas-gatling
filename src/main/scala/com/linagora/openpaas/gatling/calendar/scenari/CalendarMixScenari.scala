@@ -11,9 +11,9 @@ object CalendarMixScenari {
       .randomSwitch(
         40.0 -> exec(ViewEventDetailsScenari.generate()),
         20.0 -> exec(CreateEventWithAttendeesScenari.generate(eventUuidFeeder, RandomNumber.between(1, 10))),
-        15.0 -> exec(ViewAndUpdateEventScenari.generate()),
+        15.0 -> exec(ViewAndUpdateEventScenari.generate(eventUuidFeeder)),
         10.0 -> exec(CreateEventScenari.generate(eventUuidFeeder)),
-        5.0 -> exec(ViewAndDeleteEventScenari.generate()),
+        5.0 -> exec(ViewAndDeleteEventScenari.generate(eventUuidFeeder)),
         5.0 -> exec(ViewAndUpdateCalendarScenari.generate()),
         3.0 -> exec(CreateCalendarScenari.generate()),
         2.0 -> exec(ViewAndDeleteCalendarScenari.generate())

@@ -6,6 +6,7 @@ import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import com.linagora.openpaas.gatling.Configuration.ContactsSpaPath
+import com.linagora.openpaas.gatling.addressbook.SessionKeys.AddressBookLinks
 import com.linagora.openpaas.gatling.core.{DomainSteps, LoginSteps, StaticAssetsSteps, TokenSteps, UserSteps, WebSocketSteps}
 import com.linagora.openpaas.gatling.provisionning.Authentication
 
@@ -27,9 +28,9 @@ object AddressBookSteps {
         .exec(DomainSteps.getThemeForDomain())
         .exec(DomainSteps.getLogoForDomain)
         .exec(getUserGroupMembershipPrincipals)
-        .exec(getUserAddressBooks)
         .exec(getDomainAddressBooks)
-        .exec(ContactSteps.listContactsFromUserAddressBooks())
+        .exec(getUserAddressBooks)
+        .exec(ContactSteps.listContactsInDefaultAddressBook())
     }
   }
 
@@ -44,7 +45,7 @@ object AddressBookSteps {
       .check(status in(200, 304))
       .check(jsonPath("$._embedded['dav:addressbook'][*]._links.self.href")
         .findAll
-        .saveAs("addressBookLinks")))
+        .saveAs(AddressBookLinks)))
 
   def getDomainAddressBooks: HttpRequestBuilder =
     Authentication.withAuth(http("getDomainAddressBooks")

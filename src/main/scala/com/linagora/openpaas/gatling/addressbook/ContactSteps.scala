@@ -38,7 +38,7 @@ object ContactSteps {
 
   def listContactsFromUserAddressBooks(): ChainBuilder =
     group("listContactsFromUserAddressBooks") {
-      foreach(s"$${$AddressBooksLinks}", s"$${$AddressBookLink}") {
+      foreach(session => session(AddressBookLinks).as[Seq[String]], s"$${$AddressBookLink}") {
         exec(listContactsFromAddressBook(s"$${$AddressBookLink}"))
           .pause(1 second)
       }
@@ -66,7 +66,7 @@ object ContactSteps {
       .check(status in (200, 304)))
 
   def provisionContacts(): ChainBuilder = {
-    val contactUuidFeeder = Iterator.continually(Map("contactUuid" -> randomUuidString))
+    val contactUuidFeeder = Iterator.continually(Map(ContactUuid -> randomUuidString))
 
     group("provisionContacts") {
       repeat(ContactCount) {
