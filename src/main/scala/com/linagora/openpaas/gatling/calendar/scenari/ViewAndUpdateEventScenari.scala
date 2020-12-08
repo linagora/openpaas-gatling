@@ -10,11 +10,13 @@ import io.gatling.core.structure.ScenarioBuilder
 import scala.concurrent.duration.DurationInt
 
 object ViewAndUpdateEventScenari {
-  def generate(): ScenarioBuilder = {
+  def generate(eventUuidFeeder: Iterator[Map[String, String]]): ScenarioBuilder = {
     val start: LocalDate = LocalDate.now.minusMonths(1)
     val end: LocalDate = start.plusMonths(1)
 
     scenario("ViewAndUpdateEventScenari")
+      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .feed(eventUuidFeeder)
       .exec(EventSteps.createEventInDefaultCalendar())
       .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(EventSteps.listEventsAndGetFirstEvent(start, end))
