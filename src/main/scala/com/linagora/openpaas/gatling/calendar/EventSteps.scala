@@ -16,13 +16,14 @@ import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.HttpRequestBuilder
 
 import scala.concurrent.duration.DurationInt
 import scala.util.matching.Regex
 
 object EventSteps {
-  def createEventInDefaultCalendar(): HttpRequestBuilder = {
+  val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYYMMdd")
+
+  def createEventInDefaultCalendar(): ChainBuilder = {
     withAuth(http("createEvent")
       .put(s"${getCalDAVBaseUrl()}/calendars/$${$UserId}/$${$UserId}/$${$EventUuid}.ics")
       .header("Accept", "application/json, text/plain, */*")
@@ -53,7 +54,7 @@ object EventSteps {
       .check(status in (201, 204)))
   }
 
-  def createEventInDefaultCalendarWithAttendees(numberOfAttendees: Int): HttpRequestBuilder= {
+  def createEventInDefaultCalendarWithAttendees(numberOfAttendees: Int): ChainBuilder= {
     val attendeesInIcalFormat: String = generateRandomAttendeesInICalFormat(numberOfAttendees)
 
     withAuth(http("createEventWithAttendees")
@@ -89,26 +90,29 @@ object EventSteps {
       .check(status in (201, 204)))
   }
 
-  def listEvents(start: LocalDate = LocalDate.now, end: LocalDate = LocalDate.now.plusWeeks(1)): HttpRequestBuilder = {
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYYMMdd")
+  def listEvents(start: LocalDate = LocalDate.now, end: LocalDate = LocalDate.now.plusWeeks(1)): ChainBuilder = {
+    withAuth(listEventsRequest(start, end))
+  }
 
-    withAuth(http("listEvents")
+  private def listEventsRequest(start: LocalDate, end: LocalDate) = {
+    http("listEvents")
       .httpRequest("REPORT", s"${getCalDAVBaseUrl()}$${$CalendarLink}")
       .header("Accept", "application/json, text/plain, */*")
       .header(ESNToken, s"$${$Token}")
-      .body(StringBody (s"""{"match":{"start":"${dateTimeFormatter.format(start)}T000000","end":"${dateTimeFormatter.format(end)}T000000"}}""") )
-      .check(status is 200))
+      .body(StringBody(s"""{"match":{"start":"${dateTimeFormatter.format(start)}T000000","end":"${dateTimeFormatter.format(end)}T000000"}}"""))
+      .check(status is 200)
   }
 
-  def listEventsAndGetFirstEvent(start: LocalDate = LocalDate.now, end: LocalDate = LocalDate.now.plusWeeks(1)): HttpRequestBuilder = {
-    listEvents(start, end)
+  def listEventsAndGetFirstEvent(start: LocalDate = LocalDate.now, end: LocalDate = LocalDate.now.plusWeeks(1)): ChainBuilder = {
+
+    withAuth(listEventsRequest(start, end)
       .check(jsonPath("$._embedded['dav:item']").count.gt(0))
       .check(jsonPath("$._embedded['dav:item'][0]").exists)
       .check(jsonPath("$._embedded['dav:item'][0]._links.self.href").saveAs("eventLink"))
-      .check(jsonPath("$._embedded['dav:item'][0].data").saveAs("eventContent"))
+      .check(jsonPath("$._embedded['dav:item'][0].data").saveAs("eventContent")))
   }
 
-  def updateEvent(): HttpRequestBuilder = {
+  def updateEvent(): ChainBuilder = {
     withAuth(http("updateEvent")
       .put(s"${getCalDAVBaseUrl()}$${$EventLink}")
       .header("Accept", "application/json, text/plain, */*")
@@ -126,14 +130,14 @@ object EventSteps {
     session.set(NewEventContent, newEventContent)
   }
 
-  def deleteEvent(): HttpRequestBuilder = {
+  def deleteEvent(): ChainBuilder = {
     withAuth(http("deleteEvent")
       .delete(s"${getCalDAVBaseUrl()}$${$EventLink}")
       .header(ESNToken, s"$${$Token}")
       .check(status is 204))
   }
 
-  def searchEvents(): HttpRequestBuilder =
+  def searchEvents(): ChainBuilder =
     withAuth(http("searchEvents")
       .get(s"/calendar/api$${$CalendarLink}/events.json?limit=30&offset=0&query=event")
       .check(status in(200, 304)))
@@ -148,7 +152,6 @@ object EventSteps {
             .doIfOrElse(session => session("eventCountBeforeRenewToken").as[Int] == 0)
               {
                 exec(session => session.set("eventCountBeforeRenewToken", 5))
-                  .exec(LoginSteps.renewToken())
                   .exec(TokenSteps.retrieveAuthenticationToken)
               }
               {

@@ -148,32 +148,6 @@ object PKCEWithCasSteps {
           .transform(extractAuthorizationCodeFromLocation _)
           .saveAs("authorization_code"))
 
-  def getToken: ChainBuilder = HttpQueryBuilderUtils.execWithoutCookie(http("get token")
-      .post(LemonLDAPPortalUrl + "/oauth2/token")
-      .formParam("client_id", OidcClient)
-      .header("Content-Type", "application/x-www-form-urlencoded")
-      .formParam("code", "${authorization_code}")
-      .formParam("redirect_uri", OidcCallback)
-      .formParam("code_verifier", "${pkce_code_verifier}")
-      .formParam("grant_type", "authorization_code")
-      .check(status.is(200),
-        jsonPath("$.access_token").find.saveAs("access_token"),
-        jsonPath("$.refresh_token").find.saveAs("refresh_token"),
-        jsonPath("$.id_token").find.saveAs("id_token")
-      ))
-
-  def renewAccessToken: HttpRequestBuilder =
-    http("get token")
-      .post(LemonLDAPPortalUrl + "/oauth2/token")
-      .formParam("client_id", OidcClient)
-      .header("Content-Type", "application/x-www-form-urlencoded")
-      .formParam("refresh_token", "${refresh_token}")
-      .formParam("request_type", "si:s")
-      .formParam("grant_type", "refresh_token")
-      .check(status.is(200),
-        jsonPath("$.access_token").find.saveAs("access_token")
-      )
-
   private def extractAuthorizationCodeFromLocation(locationUrl: String): String = {
     Uri.create(locationUrl.replace("/#/","/"))
       .getEncodedQueryParams.asScala.find(_.getName == "code").get.getValue

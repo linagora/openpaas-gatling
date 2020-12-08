@@ -4,7 +4,7 @@ import java.security.MessageDigest
 import java.util.{Base64, UUID}
 import com.google.common.base.Charsets
 import com.linagora.openpaas.gatling.Configuration._
-import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy
+import com.linagora.openpaas.gatling.core.authentication.{AuthenticationStrategy, PKCEToken}
 import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy.{PKCE, PKCE_WITH_CAS}
 import com.linagora.openpaas.gatling.core.authentication.basiclogin.BasicLoginSteps
 import com.linagora.openpaas.gatling.core.authentication.lemonldap.LemonLdapSteps
@@ -53,7 +53,7 @@ object LoginSteps {
       })
         .exec(PKCESteps.getPage)
         .exec(PKCESteps.login)
-        .exec(PKCESteps.getToken)
+        .exec(PKCEToken.getToken)
         .exec(PKCESteps.goToOpenPaaSApplication)
 
     case AuthenticationStrategy.PKCE_WITH_CAS =>
@@ -77,15 +77,10 @@ object LoginSteps {
         .exec(PKCEWithCasSteps.casProfile)
         .exec(PKCEWithCasSteps.casProxySSO)
         .exec(PKCEWithCasSteps.obtainAuthorizationCode)
-        .exec(PKCEWithCasSteps.getToken)
+        .exec(PKCEToken.getToken)
         .exec(PKCEWithCasSteps.goToOpenPaaSApplication)
 
     case AuthenticationStrategy.Basic => exec(BasicLoginSteps.login)
-  }
-
-  def renewToken(): ChainBuilder = AuthenticationStrategyToUse match {
-    case AuthenticationStrategy.PKCE => exec(PKCESteps.renewAccessToken)
-    case AuthenticationStrategy.PKCE_WITH_CAS => exec(PKCEWithCasSteps.renewAccessToken)
   }
 
   def logout: ChainBuilder = {
