@@ -344,27 +344,6 @@ $ sbt
 > gatling:testOnly com.linagora.openpaas.gatling.addressbook.OpenContactInCollectedAddressBookSimulation
 ```
 
-## OpenPaaS Mixed Scenario
-
-### Scenario
-
-- Execute the 3 following scenarios randomly (each has a 33% chance to be executed):
-  - Scenario 1: Calendar's mixed scenario
-  - Scenario 2: Send an email
-  - Scenario 3: Open a contact in the default address book
-- Pause between scenarios from 7.5 to 15 seconds
-- Number of users: 20000
-- Injection duration: 2000 seconds (10 users/sec)
-- Scenario duration is 3 hours
-
-### Run
-
-```
-$ export INJECT_DURATION="2000" SCENARIO_DURATION="10800" USER_COUNT="20000"
-$ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.OpenPaaSMixSimulation
-```
-
 ## Platform Test Simulations
 
 ### Calendar & Contacts
