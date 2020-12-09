@@ -5,7 +5,7 @@ import java.util.{Base64, UUID}
 import com.google.common.base.Charsets
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy
-import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy.PKCE
+import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy.{PKCE, PKCE_WITH_CAS}
 import com.linagora.openpaas.gatling.core.authentication.basiclogin.BasicLoginSteps
 import com.linagora.openpaas.gatling.core.authentication.lemonldap.LemonLdapSteps
 import com.linagora.openpaas.gatling.core.authentication.oidc.OIDCSteps
@@ -13,7 +13,6 @@ import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
 import com.linagora.openpaas.gatling.core.authentication.pkceWithCas.PKCEWithCasSteps
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.HttpRequestBuilder
 import io.gatling.core.structure.ChainBuilder
 
 object LoginSteps {
@@ -78,7 +77,6 @@ object LoginSteps {
         .exec(PKCEWithCasSteps.casProfile)
         .exec(PKCEWithCasSteps.casProxySSO)
         .exec(PKCEWithCasSteps.obtainAuthorizationCode)
-        .exec(flushCookieJar)
         .exec(PKCEWithCasSteps.getToken)
         .exec(PKCEWithCasSteps.goToOpenPaaSApplication)
 
@@ -90,18 +88,19 @@ object LoginSteps {
     case AuthenticationStrategy.PKCE_WITH_CAS => exec(PKCEWithCasSteps.renewAccessToken)
   }
 
-  def logout: HttpRequestBuilder = {
+  def logout: ChainBuilder = {
     AuthenticationStrategyToUse match {
       case PKCE =>
-        http("Logout")
+        exec(http("Logout")
           .get(LemonLDAPPortalUrl+"/oauth2/logout")
           .queryParam("id_token_hint", "${id_token}")
           .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
-          .check(status in(200, 302))
+          .check(status in(200, 302)))
+      case PKCE_WITH_CAS => PKCEWithCasSteps.logout
       case _ =>
-        http("Logout")
+        exec(http("Logout")
           .get("/logout")
-          .check(status in(200, 302))
+          .check(status in(200, 302)))
     }
   }
 }

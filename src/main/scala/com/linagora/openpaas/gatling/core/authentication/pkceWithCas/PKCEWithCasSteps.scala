@@ -1,8 +1,6 @@
 package com.linagora.openpaas.gatling.core.authentication.pkceWithCas
 
 import java.net.URLEncoder
-import java.util.Base64
-
 import com.google.common.base.Charsets
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
@@ -12,6 +10,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import com.linagora.openpaas.gatling.core.authentication.lemonldap.LemonLdapTemplateRequestsList._
 import io.gatling.http.client.ahc.uri.Uri
+import io.gatling.http.cookie.{CookieJar, CookieSupport}
 
 import scala.collection.JavaConverters._
 
@@ -108,8 +107,14 @@ object PKCEWithCasSteps {
           .transform(extractAuthorizationCodeFromLocation _)
           .saveAs("authorization_code"))
 
-  def getToken: HttpRequestBuilder =
-    http("get token")
+  private val CookieBackup = CookieSupport.CookieJarAttributeName + "_backup"
+
+  def getToken: ChainBuilder = exec(session => {
+    session
+      .set(CookieBackup, CookieSupport.cookieJar(session).get)
+      .remove(CookieSupport.CookieJarAttributeName)}
+  )
+    .exec(http("get token")
       .post(LemonLDAPPortalUrl + "/oauth2/token")
       .formParam("client_id", OidcClient)
       .header("Content-Type", "application/x-www-form-urlencoded")
@@ -121,7 +126,12 @@ object PKCEWithCasSteps {
         jsonPath("$.access_token").find.saveAs("access_token"),
         jsonPath("$.refresh_token").find.saveAs("refresh_token"),
         jsonPath("$.id_token").find.saveAs("id_token")
-      )
+      ))
+    .exec(exec(session => {
+      session
+        .set(CookieSupport.CookieJarAttributeName, session(CookieBackup).asOption[CookieJar].get)
+        .remove(CookieBackup)}
+    ))
 
   def renewAccessToken: HttpRequestBuilder =
     http("get token")
@@ -144,4 +154,66 @@ object PKCEWithCasSteps {
     http("Go to OpenPaaS application")
       .get("/")
       .check(status in (200, 304))
+
+  def logout: ChainBuilder = {
+    exec(logoutGoToConfirmationPage)
+      .exec(logoutConfirmation)
+      .exec(logoutCasSLO)
+      .exec(logoutCasLandingPage)
+  }
+
+  private def logoutCasLandingPage = {
+    http("logout CAS landing page")
+      .get(CasBaseUrl + "/logout")
+      .headers(Map(
+        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "upgrade-insecure-requests" -> "1"
+      ))
+      .formParam("SAMLRequest", "${cas_logout_saml_request}")
+      .disableFollowRedirect
+      .check(status.is(200))
+  }
+
+  private def logoutCasSLO = {
+    http("logout CAS SLO")
+      .post(CasBaseUrl + "/idp/profile/SAML2/POST/SLO")
+      .headers(Map(
+        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "upgrade-insecure-requests" -> "1",
+        "Content-Type" -> "application/x-www-form-urlencoded"
+      ))
+      .formParam("SAMLRequest", "${cas_logout_saml_request}")
+      .disableFollowRedirect
+      .check(status.is(302), header("Location")
+        .saveAs("cas_login_page"))
+  }
+
+  private def logoutConfirmation = {
+    http("Logout confirmation")
+      .post(LemonLDAPPortalUrl + "/oauth2/logout")
+      .headers(Map(
+        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "upgrade-insecure-requests" -> "1",
+        "Content-Type" -> "application/x-www-form-urlencoded"))
+      .queryParam("id_token_hint", "${id_token}")
+      .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
+      .disableFollowRedirect
+      .formParam("id_token_hint", "${id_token}")
+      .formParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
+      .formParam("confirm", "${logout_confirm}")
+      .formParam("skin", "bootstrap")
+      .check(status is 200, css("input[name='SAMLRequest']", "value").saveAs("cas_logout_saml_request"))
+  }
+
+  private def logoutGoToConfirmationPage = {
+    http("Logout go to confirmation page")
+      .get(LemonLDAPPortalUrl + "/oauth2/logout")
+      .queryParam("id_token_hint", "${id_token}")
+      .headers(Map(
+        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "upgrade-insecure-requests" -> "1"))
+      .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
+      .disableFollowRedirect
+      .check(status is 200, css("input[name='confirm']", "value").saveAs("logout_confirm"))
+  }
 }
