@@ -211,7 +211,6 @@ object PKCEWithCasSteps {
         "upgrade-insecure-requests" -> "1"
       ))
       .formParam("SAMLRequest", "${cas_logout_saml_request}")
-      .disableFollowRedirect
       .check(status.is(200))
   }
 
@@ -238,7 +237,6 @@ object PKCEWithCasSteps {
         "Content-Type" -> "application/x-www-form-urlencoded"))
       .queryParam("id_token_hint", "${id_token}")
       .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
-      .disableFollowRedirect
       .formParam("id_token_hint", "${id_token}")
       .formParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
       .formParam("confirm", "${logout_confirm}")
@@ -254,7 +252,6 @@ object PKCEWithCasSteps {
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         "upgrade-insecure-requests" -> "1"))
       .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
-      .disableFollowRedirect
       .check(status is 200, css("input[name='confirm']", "value").saveAs("logout_confirm"))
   }
 }
