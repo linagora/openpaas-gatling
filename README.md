@@ -25,6 +25,7 @@ Available settings:
  - Number of emails per virtual user
  - Authentication strategy
  - Base URL for LemonLDAP portal page
+ - Base URL for CAS portal page
 
 Environment variables:
  - `OPENPAAS_HOSTNAME` which is set to `localhost` by default
@@ -43,10 +44,13 @@ Environment variables:
  - `USER_COUNT` which is set to `1` by default
  - `HUMAN_ACTION_MIN_DELAY` which is set to `7` by default. The minimum amount of seconds between 2 human actions.
  - `HUMAN_ACTION_MAX_DELAY` which is set to `15` by default. The maximum amount of seconds between 2 human actions.
- - `AUTHENTICATION_STRATEGY` which is set to `basic` by default (you can use `lemonldap`, `oidc` or `pkce` instead)
+ - `AUTHENTICATION_STRATEGY` which is set to `basic` by default (you can use `lemonldap`, `oidc`, `pkce`, `pkce_with_cas` instead)
  - `OIDC_CLIENT` oidc client to use for `oidc` and `pkce` authentication strategies
  - `OIDC_CALLBACK` url to redirect to after a successful login with `oidc` and `pkce` authentication strategies. Make sure to add redirect URL with explicit port in the lemonLDAP manager
  - `LEMONLDAP_PORTAL_HOSTNAME` which is set to `auth.latest.integration-open-paas.org` by default.
+ - `CAS_HOSTNAME` which is set to `OPENPAAS_HOSTNAME` by default. used with `pkce_with_cas` authentication strategy.
+ - `CAS_PORT` which is set to `443` by default
+ - `CAS_PROTOCOL` which is set to `https` by default
  - `PLATFORM_ADMIN_USER` is the user name of the platform administrator.
  - `PLATFORM_ADMIN_PWD` is the password of the platform administrator.
  - `INBOX_SPA_PATH` is the path to access the Inbox SPA. which is set to `inbox` by default

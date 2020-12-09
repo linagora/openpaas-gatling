@@ -38,7 +38,7 @@ object Configuration {
 
   val CasHostName = Properties.envOrElse("CAS_HOSTNAME", OpenPaaSHostName)
   val CasPort = Properties.envOrElse("CAS_PORT", "443").toInt
-  val CasProtocol = Properties.envOrElse("CAS_PROTOCOL", OpenPaaSProtocol)
+  val CasProtocol = Properties.envOrElse("CAS_PROTOCOL", "https")
   val CasBaseUrl = s"$CasProtocol://$CasHostName:$CasPort"
 
   val InboxSpaPath= Properties.envOrElse("INBOX_SPA_PATH", "inbox")
