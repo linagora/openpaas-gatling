@@ -73,6 +73,7 @@ object LoginSteps {
         .exec(PKCEWithCasSteps.getLemonPage)
         .exec(PKCEWithCasSteps.casSSO)
         .exec(PKCEWithCasSteps.casLoginPage)
+        .exec(PKCEWithCasSteps.loadLoginCasTemplates)
         .exec(PKCEWithCasSteps.login)
         .exec(PKCEWithCasSteps.casProfile)
         .exec(PKCEWithCasSteps.casProxySSO)

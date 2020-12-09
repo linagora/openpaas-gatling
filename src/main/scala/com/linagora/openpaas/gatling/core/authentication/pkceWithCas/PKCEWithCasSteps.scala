@@ -12,22 +12,62 @@ import com.linagora.openpaas.gatling.core.authentication.lemonldap.LemonLdapTemp
 import io.gatling.http.client.ahc.uri.Uri
 import io.gatling.http.cookie.{CookieJar, CookieSupport}
 
+import java.util.UUID
 import scala.collection.JavaConverters._
 
 object PKCEWithCasSteps {
+
+  private val loginCasAssets = List(
+    "/webjars/jquery/3.3.1-1/jquery.min.js",
+    "/webjars/zxcvbn/4.3.0/zxcvbn.js",
+    "/webjars/jquery-ui/1.12.1/jquery-ui.min.js",
+    "/webjars/jquery-cookie/1.4.1-1/jquery.cookie.js",
+    "/webjars/bootstrap/4.1.3/js/bootstrap.bundle.min.js",
+    "/webjars/headjs/1.0.3/head.min.js",
+    "/js/cas.js",
+    "/images/cas-logo.png",
+    "/images/cas_cas.png",
+    "/images/logo2.png",
+    "/favicon.ico",
+  )
+  private val logoutCasAssets = List(
+    "/webjars/headjs/1.0.3/head.min.js",
+    "/js/cas.js",
+    "/webjars/jquery/3.3.1-1/jquery.min.js",
+    "/images/cas-logo.png",
+    "/images/cas_cas.png",
+    "/images/logo2.png",
+    "/webjars/zxcvbn/4.3.0/zxcvbn.js",
+    "/webjars/jquery-ui/1.12.1/jquery-ui.min.js",
+    "/webjars/jquery-cookie/1.4.1-1/jquery.cookie.js",
+    "/webjars/bootstrap/4.1.3/js/bootstrap.bundle.min.js",
+    "/favicon.ico"
+  )
+
   def loadLoginTemplates: ChainBuilder =
-    group("Load LemonLDAP authentication portal") {
-      repeat(authLoginPageTemplates.length, "index") {
+    loadAssets("Load LemonLDAP authentication portal", authLoginPageTemplates.toList, LemonLDAPPortalUrl)
+
+  def loadLoginCasTemplates: ChainBuilder =
+    loadAssets("Load CAS authentication portal", logoutCasAssets, CasBaseUrl)
+
+  def loadLogoutCasTemplates: ChainBuilder =
+    loadAssets("Load CAS disconnected portal", loginCasAssets, CasBaseUrl)
+
+  private def loadAssets(groupName: String, assets: List[String], baseUrl: String): ChainBuilder = {
+    val counterName = "counter_"  + UUID.randomUUID().toString
+    group(groupName) {
+      repeat(assets.length, counterName) {
         exec(session => {
-          val index = session("index").as[Int]
-          val resourceURL = authLoginPageTemplates(index)
+          val index = session(counterName).as[Int]
+          val resourceURL = assets(index)
           session.set("resourceURL", resourceURL)
         })
           .exec(http(s"Load $${resourceURL}")
-            .get(s"${LemonLDAPPortalUrl}$${resourceURL}")
+            .get(s"${baseUrl}$${resourceURL}")
             .check(status in(200, 304)))
-      }
+      }.exec(session => session.remove(counterName))
     }
+  }
 
   def getLemonPage: HttpRequestBuilder =
     http("Get LemonLDAP login page")
@@ -160,6 +200,7 @@ object PKCEWithCasSteps {
       .exec(logoutConfirmation)
       .exec(logoutCasSLO)
       .exec(logoutCasLandingPage)
+      .exec(loadLogoutCasTemplates)
   }
 
   private def logoutCasLandingPage = {
