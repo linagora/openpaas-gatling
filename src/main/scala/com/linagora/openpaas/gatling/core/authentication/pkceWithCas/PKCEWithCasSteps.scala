@@ -9,6 +9,7 @@ import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import com.linagora.openpaas.gatling.core.authentication.lemonldap.LemonLdapTemplateRequestsList._
+import com.linagora.openpaas.gatling.utils.HttpQueryBuilderUtils
 import io.gatling.http.client.ahc.uri.Uri
 import io.gatling.http.cookie.{CookieJar, CookieSupport}
 
@@ -147,14 +148,7 @@ object PKCEWithCasSteps {
           .transform(extractAuthorizationCodeFromLocation _)
           .saveAs("authorization_code"))
 
-  private val CookieBackup = CookieSupport.CookieJarAttributeName + "_backup"
-
-  def getToken: ChainBuilder = exec(session => {
-    session
-      .set(CookieBackup, CookieSupport.cookieJar(session).get)
-      .remove(CookieSupport.CookieJarAttributeName)}
-  )
-    .exec(http("get token")
+  def getToken: ChainBuilder = HttpQueryBuilderUtils.execWithoutCookie(http("get token")
       .post(LemonLDAPPortalUrl + "/oauth2/token")
       .formParam("client_id", OidcClient)
       .header("Content-Type", "application/x-www-form-urlencoded")
@@ -167,11 +161,6 @@ object PKCEWithCasSteps {
         jsonPath("$.refresh_token").find.saveAs("refresh_token"),
         jsonPath("$.id_token").find.saveAs("id_token")
       ))
-    .exec(exec(session => {
-      session
-        .set(CookieSupport.CookieJarAttributeName, session(CookieBackup).asOption[CookieJar].get)
-        .remove(CookieBackup)}
-    ))
 
   def renewAccessToken: HttpRequestBuilder =
     http("get token")
