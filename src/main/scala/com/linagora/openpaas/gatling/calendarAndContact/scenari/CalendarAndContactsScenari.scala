@@ -19,9 +19,6 @@ object CalendarAndContactsScenari {
   def generate(eventUuidFeeder: Iterator[Map[String, String]], contactUuidFeeder: Iterator[Map[String, String]], userFeeder: SourceFeederBuilder[String]): ScenarioBuilder = {
     scenario("CalendarAndContactsPlatformTestScenario")
       .feed(userFeeder.circular)
-      .exec(login)
-      .exec(getProfile())
-      .exec(logout)
       .randomSwitch(
         80.0 -> {
           exec(CalendarSteps.openCalendarSPA())
