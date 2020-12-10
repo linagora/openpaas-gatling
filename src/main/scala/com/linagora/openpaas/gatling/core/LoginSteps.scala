@@ -53,7 +53,6 @@ object LoginSteps {
       })
         .exec(PKCESteps.getPage)
         .exec(PKCESteps.login)
-        .exec(flushCookieJar)
         .exec(PKCESteps.getToken)
         .exec(PKCESteps.goToOpenPaaSApplication)
 
