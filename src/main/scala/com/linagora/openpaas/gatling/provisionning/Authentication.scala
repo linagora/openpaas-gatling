@@ -12,14 +12,16 @@ object Authentication {
     Configuration.AuthenticationStrategyToUse match {
       case AuthenticationStrategy.Basic =>
         request.basicAuth(s"$${$UsernameSessionParam}", s"$${$PasswordSessionParam}")
-      case AuthenticationStrategy.OIDC => request
-        .header("Origin", Configuration.OpenPaaSBaseUrl)
-        .header("Authorization", "Bearer ${access_token}")
-      case AuthenticationStrategy.PKCE => request
-        .header("Origin", Configuration.OpenPaaSBaseUrl)
-        .header("Authorization", "Bearer ${access_token}")
+      case AuthenticationStrategy.OIDC => withBearer(request)
+      case AuthenticationStrategy.PKCE => withBearer(request)
+      case AuthenticationStrategy.PKCE_WITH_CAS => withBearer(request)
       case _ => request
     }
   }
 
+  private def withBearer(request: HttpRequestBuilder) = {
+    request
+      .header("Origin", Configuration.OpenPaaSBaseUrl)
+      .header("Authorization", "Bearer ${access_token}")
+  }
 }

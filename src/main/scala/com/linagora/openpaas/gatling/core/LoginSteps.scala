@@ -2,18 +2,17 @@ package com.linagora.openpaas.gatling.core
 
 import java.security.MessageDigest
 import java.util.{Base64, UUID}
-
 import com.google.common.base.Charsets
 import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy
-import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy.PKCE
+import com.linagora.openpaas.gatling.core.authentication.AuthenticationStrategy.{PKCE, PKCE_WITH_CAS}
 import com.linagora.openpaas.gatling.core.authentication.basiclogin.BasicLoginSteps
 import com.linagora.openpaas.gatling.core.authentication.lemonldap.LemonLdapSteps
 import com.linagora.openpaas.gatling.core.authentication.oidc.OIDCSteps
 import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
+import com.linagora.openpaas.gatling.core.authentication.pkceWithCas.PKCEWithCasSteps
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.HttpRequestBuilder
 import io.gatling.core.structure.ChainBuilder
 
 object LoginSteps {
@@ -23,6 +22,7 @@ object LoginSteps {
     case AuthenticationStrategy.Basic => BasicLoginSteps.loadLoginTemplates
     case AuthenticationStrategy.OIDC => OIDCSteps.loadLoginTemplates
     case AuthenticationStrategy.PKCE => PKCESteps.loadLoginTemplates
+    case AuthenticationStrategy.PKCE_WITH_CAS => PKCEWithCasSteps.loadLoginTemplates
   }
 
   def login(): ChainBuilder = AuthenticationStrategyToUse match {
@@ -57,25 +57,51 @@ object LoginSteps {
         .exec(PKCESteps.getToken)
         .exec(PKCESteps.goToOpenPaaSApplication)
 
+    case AuthenticationStrategy.PKCE_WITH_CAS =>
+      exec(session => {
+        val codeChallengeVerifier = UUID.randomUUID().toString + UUID.randomUUID().toString + UUID.randomUUID().toString
+        val codeChallenge = Base64.getUrlEncoder
+          .encodeToString(MessageDigest.getInstance("SHA-256").digest(codeChallengeVerifier.getBytes(Charsets.US_ASCII)))
+          .split("=")(0)
+          .replace("+", "-")
+          .replace("/", "_")
+
+        session.set("oidc_state", UUID.randomUUID().toString + UUID.randomUUID().toString)
+          .set("pkce_code_challenge",	codeChallenge)
+          .set("pkce_code_verifier",	codeChallengeVerifier)
+      })
+        .exec(PKCEWithCasSteps.getLemonPage)
+        .exec(PKCEWithCasSteps.casSSO)
+        .exec(PKCEWithCasSteps.casLoginPage)
+        .exec(PKCEWithCasSteps.loadLoginCasTemplates)
+        .exec(PKCEWithCasSteps.login)
+        .exec(PKCEWithCasSteps.casProfile)
+        .exec(PKCEWithCasSteps.casProxySSO)
+        .exec(PKCEWithCasSteps.obtainAuthorizationCode)
+        .exec(PKCEWithCasSteps.getToken)
+        .exec(PKCEWithCasSteps.goToOpenPaaSApplication)
+
     case AuthenticationStrategy.Basic => exec(BasicLoginSteps.login)
   }
 
   def renewToken(): ChainBuilder = AuthenticationStrategyToUse match {
     case AuthenticationStrategy.PKCE => exec(PKCESteps.renewAccessToken)
+    case AuthenticationStrategy.PKCE_WITH_CAS => exec(PKCEWithCasSteps.renewAccessToken)
   }
 
-  def logout: HttpRequestBuilder = {
+  def logout: ChainBuilder = {
     AuthenticationStrategyToUse match {
       case PKCE =>
-        http("Logout")
+        exec(http("Logout")
           .get(LemonLDAPPortalUrl+"/oauth2/logout")
           .queryParam("id_token_hint", "${id_token}")
           .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
-          .check(status in(200, 302))
+          .check(status in(200, 302)))
+      case PKCE_WITH_CAS => PKCEWithCasSteps.logout
       case _ =>
-        http("Logout")
+        exec(http("Logout")
           .get("/logout")
-          .check(status in(200, 302))
+          .check(status in(200, 302)))
     }
   }
 }

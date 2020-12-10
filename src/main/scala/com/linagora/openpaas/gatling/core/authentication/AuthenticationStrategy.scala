@@ -25,12 +25,14 @@ object AuthenticationStrategy {
   case object LemonLDAP extends AuthenticationStrategy
   case object OIDC extends AuthenticationStrategy
   case object PKCE extends AuthenticationStrategy
+  case object PKCE_WITH_CAS extends AuthenticationStrategy
 
   def fromConfiguration(key: String): Option[AuthenticationStrategy] = key match {
     case "basic" => Some(Basic)
     case "lemonldap" => Some(LemonLDAP)
     case "oidc" => Some(OIDC)
     case "pkce" => Some(PKCE)
+    case "pkce_with_cas" => Some(PKCE_WITH_CAS)
     case _ => None
   }
 }
