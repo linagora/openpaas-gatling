@@ -90,12 +90,7 @@ object LoginSteps {
 
   def logout: ChainBuilder = {
     AuthenticationStrategyToUse match {
-      case PKCE =>
-        exec(http("Logout")
-          .get(LemonLDAPPortalUrl+"/oauth2/logout")
-          .queryParam("id_token_hint", "${id_token}")
-          .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
-          .check(status in(200, 302)))
+      case PKCE => PKCESteps.logout
       case PKCE_WITH_CAS => PKCEWithCasSteps.logout
       case _ =>
         exec(http("Logout")

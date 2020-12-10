@@ -89,6 +89,31 @@ object PKCESteps {
       .getEncodedQueryParams.asScala.find(_.getName == "code").get.getValue
   }
 
+  private def logoutGoToConfirmationPage = {
+    http("Logout go to confirmation page")
+      .get(LemonLDAPPortalUrl + "/oauth2/logout")
+      .queryParam("id_token_hint", "${id_token}")
+      .headers(Map(
+        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "upgrade-insecure-requests" -> "1"))
+      .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
+      .check(status is 200, css("input[name='confirm']", "value").saveAs("logout_confirm"))
+  }
+
+  private def logoutConfirm = {
+    exec(http("Logout")
+      .get(LemonLDAPPortalUrl+"/oauth2/logout")
+      .queryParam("id_token_hint", "${id_token}")
+      .queryParam("confirm", "${logout_confirm}")
+      .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
+      .check(status in(200, 302)))
+  }
+
+  def logout: ChainBuilder = {
+    exec(logoutGoToConfirmationPage)
+      .exec(logoutConfirm)
+  }
+
   def goToOpenPaaSApplication: HttpRequestBuilder =
     http("Go to OpenPaaS application")
       .get("/")
