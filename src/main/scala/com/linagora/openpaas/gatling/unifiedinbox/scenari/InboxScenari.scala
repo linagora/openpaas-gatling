@@ -5,15 +5,14 @@ import com.linagora.openpaas.gatling.Configuration.ScenarioDuration
 import com.linagora.openpaas.gatling.unifiedinbox.TemplatesSteps._
 import com.linagora.openpaas.gatling.unifiedinbox.JmapSteps._
 import com.linagora.openpaas.gatling.core.LoginSteps._
-import com.linagora.openpaas.gatling.core.{AvatarsSteps, PeopleSteps, StaticAssetsSteps}
+import com.linagora.openpaas.gatling.core.{AvatarsSteps, LoginSteps, PeopleSteps, StaticAssetsSteps}
 import com.linagora.openpaas.gatling.core.TokenSteps.{generateJwtTokenWithAuth, retrieveAuthenticationToken}
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import com.linagora.openpaas.gatling.core.WebSocketSteps._
-import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
 import com.linagora.openpaas.gatling.provisionning.SessionKeys.UsernameSessionParam
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay._
 import io.gatling.core.Predef._
-import io.gatling.core.feeder.{FeederBuilder, SourceFeederBuilder}
+import io.gatling.core.feeder.SourceFeederBuilder
 
 import scala.concurrent.duration.DurationInt
 
@@ -28,8 +27,7 @@ object InboxScenari {
         group("INBOX")(
           exec(InboxScenari.userLogin())
             .exec(repeat(20) {
-              exec(PKCESteps.renewAccessToken)
-                .randomSwitch(
+                randomSwitch(
                   10.0 -> exec(InboxScenari.generateOnceAlreadyLogged()),
                   90.0 -> exec(InboxScenari.idle())
                 )

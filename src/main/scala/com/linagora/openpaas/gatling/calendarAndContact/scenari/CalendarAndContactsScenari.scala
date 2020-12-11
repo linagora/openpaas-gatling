@@ -5,10 +5,7 @@ import com.linagora.openpaas.gatling.addressbook.AddressBookSteps
 import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInDefaultAddressBookScenari
 import com.linagora.openpaas.gatling.calendar.CalendarSteps
 import com.linagora.openpaas.gatling.calendar.scenari.CalendarMixScenari
-import com.linagora.openpaas.gatling.core.LoginSteps.{login, logout}
-import com.linagora.openpaas.gatling.core.UserSteps.getProfile
 import com.linagora.openpaas.gatling.core.WebSocketSteps
-import com.linagora.openpaas.gatling.core.authentication.pkce.PKCESteps
 import com.linagora.openpaas.gatling.core.{LoginSteps, TokenSteps}
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
 import io.gatling.core.Predef._
@@ -23,8 +20,7 @@ object CalendarAndContactsScenari {
         80.0 -> {
           exec(CalendarSteps.openCalendarSPA())
             .during(ScenarioDuration) {
-              exec(PKCESteps.renewAccessToken)
-                .exec(TokenSteps.retrieveAuthenticationToken)
+              exec(TokenSteps.retrieveAuthenticationToken)
                 .randomSwitch(
                   20.0 -> exec(CalendarMixScenari.generate(eventUuidFeeder)),
                   80.0 -> exec(CalendarSteps.idle())
@@ -37,8 +33,7 @@ object CalendarAndContactsScenari {
         20.0 -> {
           exec(AddressBookSteps.openContactsSpa())
             .during(ScenarioDuration) {
-              exec(PKCESteps.renewAccessToken)
-                .randomSwitch(
+                randomSwitch(
                   10.0 -> exec(OpenContactInDefaultAddressBookScenari.generate(contactUuidFeeder)),
                   90.0 -> exec(AddressBookSteps.idle())
                 )

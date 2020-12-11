@@ -13,7 +13,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 import scala.concurrent.duration.DurationInt
 
 object ContactSteps {
-  def createContactInDefaultAddressBook(): HttpRequestBuilder = {
+  def createContactInDefaultAddressBook(): ChainBuilder = {
     withAuth(http("createContactsInDefaultAddressBook")
       .put(s"/dav/api/addressbooks/$${$UserId}/contacts/$${$ContactUuid}.vcf")
       .body(StringBody(s"""
@@ -31,10 +31,13 @@ object ContactSteps {
       .check(status is 201))
   }
 
-  def listContactsFromAddressBook(addressBookLink: String): HttpRequestBuilder =
-    withAuth(http(s"listContactsFromAddressBook")
-      .get(s"/dav/api$addressBookLink?limit=20&offset=0&sort=fn")
-      .check(status in (200, 304)))
+  private def listContactFromAddressBookQuery(addressBookLink: String): HttpRequestBuilder = http(s"listContactsFromAddressBook")
+    .get(s"/dav/api$addressBookLink?limit=20&offset=0&sort=fn")
+    .check(status in(200, 304))
+
+  def listContactsFromAddressBook(addressBookLink: String): ChainBuilder = {
+    withAuth(listContactFromAddressBookQuery(addressBookLink))
+  }
 
   def listContactsFromUserAddressBooks(): ChainBuilder =
     group("listContactsFromUserAddressBooks") {
@@ -52,15 +55,15 @@ object ContactSteps {
 
   def listContactsInDefaultAddressBook(): ChainBuilder = {
     group("listContactsInDefaultAddressBook") {
-      exec(
-        listContactsFromAddressBook(s"/addressbooks/$${$UserId}/contacts.json")
+      withAuth(
+        listContactFromAddressBookQuery(s"/addressbooks/$${$UserId}/contacts.json")
           .check(jsonPath("$._embedded['dav:item']").count.gt(0))
           .check(jsonPath("$._embedded['dav:item'][0]._links.self.href").saveAs(ContactLink))
       )
     }
   }
 
-  def getOneContactInDefaultAddressBook(): HttpRequestBuilder =
+  def getOneContactInDefaultAddressBook(): ChainBuilder =
     withAuth(http("getOneCreatedContactInDefaultAddressBook")
       .get(s"/dav/api$${$ContactLink}")
       .check(status in (200, 304)))

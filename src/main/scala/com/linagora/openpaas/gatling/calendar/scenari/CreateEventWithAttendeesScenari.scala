@@ -25,7 +25,6 @@ object CreateEventWithAttendeesScenari {
         }
       }
       .pause(RandomHumanActionDelay.humanActionDelay() second)
-      .exec(LoginSteps.renewToken())
       .exec(TokenSteps.retrieveAuthenticationToken)
       .exec(EventSteps.createEventInDefaultCalendarWithAttendees(eventAttendeeCount))
 }

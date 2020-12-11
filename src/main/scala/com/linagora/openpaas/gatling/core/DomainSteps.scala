@@ -11,7 +11,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 import scala.concurrent.duration.DurationInt
 
 object DomainSteps {
-  def listDomains: HttpRequestBuilder =
+  def listDomains: ChainBuilder =
     Authentication.withAuth(http("list ESN domains")
       .get("/api/domains")
       .basicAuth(PlatformAdminLogin, PlatformAdminPassword)
@@ -27,17 +27,17 @@ object DomainSteps {
       .check(status is 201)
       .check(jsonPath("$.id").saveAs(DomainId))
 
-  def getDomain: HttpRequestBuilder =
+  def getDomain: ChainBuilder =
     Authentication.withAuth(http("get domain by ID")
       .get(s"/api/domains/$${$DomainId}")
       .check(status in (200, 304)))
 
-  def getThemeForDomain(): HttpRequestBuilder =
+  def getThemeForDomain(): ChainBuilder =
     Authentication.withAuth(http("getThemeForDomain")
       .get(s"/api/themes/$${$DomainId}")
       .check(status in (200, 304)))
 
-  def getLogoForDomain: HttpRequestBuilder =
+  def getLogoForDomain: ChainBuilder =
     Authentication.withAuth(http("getLogoForDomain")
       .get(s"/api/themes/$${$DomainId}/logo")
       .disableFollowRedirect

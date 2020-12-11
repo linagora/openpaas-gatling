@@ -34,12 +34,12 @@ object AddressBookSteps {
     }
   }
 
-  def getUserGroupMembershipPrincipals: HttpRequestBuilder =
+  def getUserGroupMembershipPrincipals: ChainBuilder =
     Authentication.withAuth(http("getUserGroupMembershipPrincipals")
       .httpRequest("PROPFIND", s"/dav/api/principals/users/$${$UserId}")
       .check(status in(200, 304)))
 
-  def getUserAddressBooks: HttpRequestBuilder =
+  def getUserAddressBooks: ChainBuilder =
     Authentication.withAuth(http("getUserAddressBooks")
       .get(s"/dav/api/addressbooks/$${$UserId}.json?contactsCount=true&inviteStatus=2&personal=true&shared=true&subscribed=true")
       .check(status in(200, 304))
@@ -47,13 +47,13 @@ object AddressBookSteps {
         .findAll
         .saveAs(AddressBookLinks)))
 
-  def getDomainAddressBooks: HttpRequestBuilder =
+  def getDomainAddressBooks: ChainBuilder =
     Authentication.withAuth(http("getDomainAddressBooks")
       .get(s"/dav/api/addressbooks/$${$DomainId}.json?contactsCount=true&inviteStatus=2&personal=true&shared=true&subscribed=true")
       .check(status in(200, 304))
       .check(jsonPath("$._embedded['dav:addressbook']")))
 
-  def getCollectedAddressBookProperty: HttpRequestBuilder =
+  def getCollectedAddressBookProperty: ChainBuilder =
     Authentication.withAuth(http("getCollectedAddressBookProperty")
       .httpRequest("PROPFIND", s"/dav/api/addressbooks/$${$UserId}/collected.json")
       .check(status in(200, 304)))
