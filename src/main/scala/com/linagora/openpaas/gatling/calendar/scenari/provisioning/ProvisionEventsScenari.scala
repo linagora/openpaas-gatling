@@ -14,6 +14,5 @@ object ProvisionEventsScenari {
       .pause(5 seconds)
       .exec(LoginSteps.login())
       .exec(UserSteps.getProfile())
-      .exec(TokenSteps.retrieveAuthenticationToken)
       .exec(EventSteps.provisionEvents())
 }
