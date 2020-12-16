@@ -48,7 +48,7 @@ object PKCESteps {
       .formParam("url", Base64.getEncoder.encodeToString((LemonLDAPPortalUrl + "//oauth2").getBytes(Charsets.UTF_8)))
       .formParam("timezone", "1")
       .formParam("skin", "bootstrap")
-      .formParam("user", s"$${$UsernameSessionParam}")
+      .formParam("user", s"$${$UsernameForLoginSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
       .disableFollowRedirect
       .check(status.is(302),

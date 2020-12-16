@@ -49,7 +49,7 @@ object OIDCSteps {
       .formParam("url", "")
       .formParam("timezone", "1")
       .formParam("skin", "bootstrap")
-      .formParam("user", s"$${$UsernameSessionParam}")
+      .formParam("user", s"$${$UsernameForLoginSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
       .check(status.is(302),
         header("Location")

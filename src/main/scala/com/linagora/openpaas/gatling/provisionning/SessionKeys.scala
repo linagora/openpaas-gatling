@@ -1,6 +1,7 @@
 package com.linagora.openpaas.gatling.provisionning
 
 object SessionKeys {
+  val UsernameForLoginSessionParam = "login"
   val UsernameSessionParam = "username"
   val PasswordSessionParam = "password"
   val OtherUsername = "otherUsername"
