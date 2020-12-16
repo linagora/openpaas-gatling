@@ -1,21 +1,21 @@
 package com.linagora.openpaas.gatling.core
 
+import com.linagora.openpaas.gatling.core.TokenSteps.withTokenAuth
 import com.linagora.openpaas.gatling.provisionning.SessionKeys.{Token, UserId}
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import play.api.libs.json.Json
 
 object WebSocketSteps {
-  def getSocketId =
-    exec(
+ private def getSocketId =
+    withTokenAuth(
       http("get sid")
       .get("/socket.io/")
-      .queryParam("token", s"$${$Token}")
       .queryParam("EIO", "3")
       .queryParam("transport", "polling")
       .queryParam("user", s"$${$UserId}")
       .check(status in (200, 304))
-      .check(regex("""\{(.*?)\}""").saveAs("socketResponse"))
+      .check(regex("""\{(.*?)\}""").saveAs("socketResponse")), tokenName = "token"
     )
     .exec(session => {
       // format follow this: https://socket.io/docs/internals/#Dependency-graph
@@ -28,7 +28,7 @@ object WebSocketSteps {
       session.set("sid", parsed.sid)
     })
 
-  def registerSocketNamespaces =
+  private def registerSocketNamespaces = withTokenAuth(
     http("get sid")
       .post("/socket.io/")
       .queryParam("token", s"$${$Token}")
@@ -37,16 +37,21 @@ object WebSocketSteps {
       .queryParam("user", s"$${$UserId}")
       .check(status is 200)
       .queryParam("sid", "${sid}")
-      .body(StringBody("""17:40/collaboration,15:40/graceperiod,13:40/calendars,14:40/userstatus,18:40/contact-import,19:40/videoconference,8:40/chat,17:40/notifications,"""))
+      .body(StringBody("""17:40/collaboration,15:40/graceperiod,13:40/calendars,14:40/userstatus,18:40/contact-import,19:40/videoconference,8:40/chat,17:40/notifications,""")),
+     tokenName = "token")
 
-  def openWsConnection(url: String = "/", transport: String = "websocket") =
-    ws("WsOpen")
-      .connect(url)
-      .queryParam("token", s"$${$Token}")
-      .queryParam("EIO", "3")
-      .queryParam("transport", transport)
-      .queryParam("user", s"$${$UserId}")
-    .queryParam("sid", "${sid}")
+  def openWsConnection(url: String = "/", transport: String = "websocket") = {
+    getSocketId
+      .exec(registerSocketNamespaces)
+      .exec(
+        ws("WsOpen")
+          .connect(url)
+          .queryParam("token", s"$${$Token}")
+          .queryParam("EIO", "3")
+          .queryParam("transport", transport)
+          .queryParam("user", s"$${$UserId}")
+          .queryParam("sid", "${sid}"))
+  }
 
   def closeWsConnection =
     ws("Ws close").close

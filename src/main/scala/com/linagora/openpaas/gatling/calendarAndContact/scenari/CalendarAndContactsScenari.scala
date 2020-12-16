@@ -20,8 +20,7 @@ object CalendarAndContactsScenari {
         80.0 -> {
           exec(CalendarSteps.openCalendarSPA())
             .during(ScenarioDuration) {
-              exec(TokenSteps.retrieveAuthenticationToken)
-                .randomSwitch(
+                randomSwitch(
                   20.0 -> exec(CalendarMixScenari.generate(eventUuidFeeder)),
                   80.0 -> exec(CalendarSteps.idle())
                 )

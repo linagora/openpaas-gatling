@@ -18,10 +18,6 @@ class WebSocketSimulation extends Simulation {
     .exec(login)
     .exec(getProfile())
     .pause(1 second)
-    .exec(retrieveAuthenticationToken)
-    .pause(1 second)
-    .exec(getSocketId)
-    .exec(registerSocketNamespaces)
     .exec(openWsConnection())
 
   setUp(scn.inject(rampUsers(UserCount) during(InjectDuration))).protocols(HttpProtocol)

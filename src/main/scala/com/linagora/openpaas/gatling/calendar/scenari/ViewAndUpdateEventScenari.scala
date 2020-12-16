@@ -21,7 +21,6 @@ object ViewAndUpdateEventScenari {
       .exec(EventSteps.createEventInDefaultCalendar())
       .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(EventSteps.listEventsAndGetFirstEvent(start, end))
-      .exec(TokenSteps.retrieveAuthenticationToken)
       .pause(RandomHumanActionDelay.humanActionDelay() second)
       .exec(CalendarSteps.listUsableCalendarsForUser()) // When opening the event dialog, this is the only request that is sent if there are no attendees
       .pause(RandomHumanActionDelay.humanActionDelay() second)

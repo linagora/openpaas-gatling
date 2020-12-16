@@ -14,6 +14,5 @@ object ProvisionCalendarsScenari {
       .pause(5 seconds)
       .exec(LoginSteps.login())
       .exec(UserSteps.getProfile())
-      .exec(TokenSteps.retrieveAuthenticationToken)
       .exec(CalendarSteps.provisionCalendars())
 }
