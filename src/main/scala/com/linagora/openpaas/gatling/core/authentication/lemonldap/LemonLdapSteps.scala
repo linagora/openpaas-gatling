@@ -43,7 +43,7 @@ object LemonLdapSteps {
       .formParam("url", "")
       .formParam("timezone", "1")
       .formParam("skin", "bootstrap")
-      .formParam("user", s"$${$UsernameSessionParam}")
+      .formParam("user", s"$${$UsernameForLoginSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
       .check(status is 200)
 

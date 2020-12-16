@@ -25,7 +25,7 @@ object BasicLoginSteps {
   def login: HttpRequestBuilder =
     http("Login")
       .post("/api/login")
-      .body(StringBody(s"""{"username":"$${$UsernameSessionParam}","password":"$${$PasswordSessionParam}","rememberme":false,"recaptcha":{"needed":false,"data":null}}"""))
+      .body(StringBody(s"""{"username":"$${$UsernameForLoginSessionParam}","password":"$${$PasswordSessionParam}","rememberme":false,"recaptcha":{"needed":false,"data":null}}"""))
       .check(status.is(200))
       .check(jsonPath("$._id").saveAs(UserId))
 

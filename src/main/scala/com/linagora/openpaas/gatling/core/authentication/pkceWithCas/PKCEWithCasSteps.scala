@@ -112,7 +112,7 @@ object PKCEWithCasSteps {
       .formParam("execution", "${cas_execution}")
       .formParam("geolocation", "")
       .formParam("_eventId", "submit")
-      .formParam("username", s"$${$UsernameSessionParam}")
+      .formParam("username", s"$${$UsernameForLoginSessionParam}")
       .formParam("password", s"$${$PasswordSessionParam}")
       .disableFollowRedirect
       .check(status.is(302),
