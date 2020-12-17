@@ -162,7 +162,7 @@ object PKCEWithCasSteps {
     exec(logoutGoToConfirmationPage)
       .exec(logoutConfirmation)
       .exec(logoutCasSLO)
-      .exec(logoutCasLandingPage)
+      .exec(logoutCasLandingPage).doIf(session => session("logout_status").value.asOption[Int].contains(500))(exec(flushCookieJar))
       .exec(loadLogoutCasTemplates)
   }
 
@@ -173,8 +173,7 @@ object PKCEWithCasSteps {
         "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "upgrade-insecure-requests" -> "1"
       ))
-      .formParam("SAMLRequest", "${cas_logout_saml_request}")
-      .check(status.is(200))
+      .check(status.saveAs("logout_status"))
   }
 
   private def logoutCasSLO = {
