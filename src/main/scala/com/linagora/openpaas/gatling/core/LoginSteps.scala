@@ -75,7 +75,7 @@ object LoginSteps {
         .exec(PKCEWithCasSteps.loadLoginCasTemplates)
         .exec(PKCEWithCasSteps.login)
         .exec(PKCEWithCasSteps.casProfile)
-        .exec(PKCEWithCasSteps.casProxySSO)
+        .exec(PKCEWithCasSteps.casProxySSO).exitHereIfFailed
         .exec(PKCEWithCasSteps.obtainAuthorizationCode)
         .exec(PKCEToken.getToken)
         .exec(PKCEWithCasSteps.goToOpenPaaSApplication)
