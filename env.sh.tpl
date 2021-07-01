@@ -26,6 +26,9 @@ export HUMAN_ACTION_MAX_DELAY="15" # seconds
 export AUTHENTICATION_STRATEGY="lemonldap"
 export LEMONLDAP_PORTAL_HOSTNAME="auth.sandbox.integration-open-paas.org"
 
+export KEYCLOAK_PORTAL_HOSTNAME="auth.sandbox.integration-open-paas.org"
+export KEYCLOAK_REALM="openpaas"
+
 export PLATFORM_ADMIN_USER="admin@open-paas.org"
 export PLATFORM_ADMIN_PWD="ah! ah!"
 

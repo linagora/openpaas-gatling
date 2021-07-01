@@ -69,14 +69,15 @@ object LoginSteps {
           .set("pkce_code_challenge",	codeChallenge)
           .set("pkce_code_verifier",	codeChallengeVerifier)
       })
-        .exec(PKCEWithCasSteps.getLemonPage)
+        .exec(PKCEWithCasSteps.getKeycloakPage)
+        .exec(PKCEWithCasSteps.keycloakSamlLogin)
         .exec(PKCEWithCasSteps.casSSO)
         .exec(PKCEWithCasSteps.casLoginPage)
         .exec(PKCEWithCasSteps.loadLoginCasTemplates)
         .exec(PKCEWithCasSteps.login)
         .exec(PKCEWithCasSteps.casProfile)
-        .exec(PKCEWithCasSteps.casProxySSO).exitHereIfFailed
-        .exec(PKCEWithCasSteps.obtainAuthorizationCode)
+        .exec(PKCEWithCasSteps.casBrokerEndpoint)
+        .exec(PKCEWithCasSteps.obtainAuthorizationCode).exitHereIfFailed
         .exec(PKCEToken.getToken)
         .exec(PKCEWithCasSteps.goToOpenPaaSApplication)
 

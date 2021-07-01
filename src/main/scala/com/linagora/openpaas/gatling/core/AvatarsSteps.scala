@@ -30,7 +30,7 @@ object AvatarsSteps {
   def search(queryKey: String, withRandomDisplayName: Boolean = false): HttpRequestBuilder = {
     val query = http("load avatar for user" + (if(withRandomDisplayName) " with random display name" else ""))
       .get(s"/api/avatars")
-      .queryParam("objectType", "user")
+      .queryParam("objectType", "email")
       .queryParam("email", s"$${$queryKey}")
 
     (if (withRandomDisplayName) {

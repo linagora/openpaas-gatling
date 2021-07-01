@@ -48,7 +48,7 @@ object StaticAssetsSteps {
 
   def extractMainJsUrl(spaName: String)(session: Session): Session = {
     val indexHtmlContent: String = session(IndexHtmlContent).as[String]
-    val matchMainJsUrlRegex: Regex = raw""""\/${spaName.toLowerCase()}\/?main(.*?)"""".r
+    val matchMainJsUrlRegex: Regex = raw""""\/${spaName.toLowerCase()}\/?assets\/main(.*?)"""".r
     val mainJsUrl: String = matchMainJsUrlRegex.findFirstIn(indexHtmlContent).mkString.drop(1).dropRight(1)
 
     session.set(MainJsUrl, mainJsUrl)

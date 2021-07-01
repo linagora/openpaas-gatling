@@ -368,3 +368,10 @@ $ sbt
 ```
 
 ### Inbox
+
+// TODO
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.InboxWithRefreshTokenSimulation
+```

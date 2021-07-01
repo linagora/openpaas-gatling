@@ -31,6 +31,11 @@ object Configuration {
   val LemonLDAPPortalHostName = Properties.envOrElse("LEMONLDAP_PORTAL_HOSTNAME", "auth.latest.integration-open-paas.org")
   val LemonLDAPPortalUrl = s"$LemonLDAPPortalProtocol://$LemonLDAPPortalHostName"
 
+  val KeycloakPortalProtocol = Properties.envOrElse("KEYCLOAK_PORTAL_PROTOCOL", OpenPaaSProtocol)
+  val KeycloakPortalHostName = Properties.envOrElse("KEYCLOAK_PORTAL_HOSTNAME", "auth.latest.integration-open-paas.org")
+  val KeycloakPortalUrl = s"$KeycloakPortalProtocol://$KeycloakPortalHostName"
+  val KeycloakRealm = Properties.envOrElse("KEYCLOAK_REALM", "openpaas")
+
   val OidcClient = Properties.envOrElse("OIDC_CLIENT", "openpaas")
   val OidcCallback = OpenPaaSBaseUrl + Properties.envOrElse("OIDC_CALLBACK", "/inbox/#/auth/oidc/callback")
 
@@ -39,7 +44,8 @@ object Configuration {
   val CasHostName = Properties.envOrElse("CAS_HOSTNAME", OpenPaaSHostName)
   val CasPort = Properties.envOrElse("CAS_PORT", "443").toInt
   val CasProtocol = Properties.envOrElse("CAS_PROTOCOL", "https")
-  val CasBaseUrl = s"$CasProtocol://$CasHostName:$CasPort"
+  private val usePortInCasUrl = Properties.envOrElse("CAS_PORT_IN_URL", "false").toBoolean
+  val CasBaseUrl = if (usePortInCasUrl) s"$CasProtocol://$CasHostName:$CasPort" else s"$CasProtocol://$CasHostName"
 
   val InboxSpaPath= Properties.envOrElse("INBOX_SPA_PATH", "inbox")
   val CalendarSpaPath = Properties.envOrElse("CALENDAR_SPA_PATH", "calendar")
