@@ -4,7 +4,7 @@ import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.unifiedinbox.scenari.InboxScenari
 import io.gatling.core.Predef._
 
-class InboxWithRefreshTokenSimulation extends Simulation {
+class InboxPlatformSimulation extends Simulation {
   private val feeder = csv("users.csv")
 
   val scn = InboxScenari.platform(feeder)

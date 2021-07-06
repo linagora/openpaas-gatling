@@ -373,5 +373,5 @@ $ sbt
 
 ```
 $ sbt
-> gatling:testOnly com.linagora.openpaas.gatling.InboxWithRefreshTokenSimulation
+> gatling:testOnly com.linagora.openpaas.gatling.InboxPlatformSimulation
 ```
