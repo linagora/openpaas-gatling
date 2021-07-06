@@ -1,18 +1,18 @@
 package com.linagora.openpaas.gatling.unifiedinbox
 
+import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.TokenSteps._
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.unifiedinbox.SessionKeys._
-import com.linagora.openpaas.gatling.Configuration._
+import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import io.gatling.core.Predef._
+import io.gatling.core.json.Json
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import org.apache.james.gatling.jmap.draft.JmapMailbox.{getSystemMailboxesChecks}
-import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, messageIdSessionParam, openpaasListMessageParameters}
+import org.apache.james.gatling.jmap.draft.JmapMailbox.getSystemMailboxesChecks
+import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, getRandomMessageChecks, messageIdSessionParam, nonEmptyListMessagesChecks, openpaasListMessageParameters, previewMessageProperties}
 import org.apache.james.gatling.jmap.draft.{JmapChecks, JmapHttp, JmapMailbox}
-import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
-import io.gatling.core.json.Json
 
 import scala.concurrent.duration.DurationInt
 
@@ -49,8 +49,24 @@ object JmapSteps {
 
   def getMessageList: ChainBuilder =
     exec(listMessages(openpaasListMessageParameters("inboxID"))
-      .check(status in(200, 304))
-      .check(JmapChecks.noError))
+      .check(nonEmptyListMessagesChecks: _*))
+
+  def getMessages(): HttpRequestBuilder =
+    getMessages(previewMessageProperties)
+      .check(getRandomMessageChecks: _*)
+
+  def getMessages(properties: List[String], messageIdsKey: String = "messageIds"): HttpRequestBuilder =
+    authenticatedQueryWithJwtToken("getMessages", "/jmap")
+      .body(StringBody(
+        s"""[[
+          "getMessages",
+          {
+            "ids": $${$messageIdsKey.jsonStringify()},
+            "properties": ${Json.stringify(properties)}
+          },
+          "#0"
+          ]]"""))
+
 
   def sendMessages() =
     authenticatedQueryWithJwtToken("sendMessages", "/jmap")

@@ -58,9 +58,8 @@ object InboxScenari {
       .exec(logout)
 
   def openMailbox() = group("open mailbox")(
-    exec(getMailboxes)
-      .exec(getMessageList)
-      // TODO: missing getMessages???
+    exec(getMessageList)
+      .exec(getMessages())
       .repeat(5)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true))))
 
   def readEmail() = group("read email")(
@@ -83,7 +82,7 @@ object InboxScenari {
       .exec(getVacationResponse)
       .exec(getMailboxes)
       .exec(getMessageList)
-      // TODO: missing getMessages??? and maybe get some avatars as well???
+      .exec(getMessages())
       .repeat(5)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true))))
 
   def userLogout() = group("logout")(exec(closeWsConnection)
@@ -91,8 +90,9 @@ object InboxScenari {
     .exec(logout))
 
   def idle() = group("idle")(
-    exec(getMessageList)) // when idle we only fetch the messages from the date of the most recent one... not the all list, should change
-      // TODO: missing getMessages???
+    exec(getMessageList)
+      .exec(getMessages()))
+  // TODO: when idle we only fetch the messages from the date of the most recent one... not the all list, should change
 
   private def sendEmailSteps = {
     //exec(loadOpeningComposerTemplates) // static assets delivered by nginx
