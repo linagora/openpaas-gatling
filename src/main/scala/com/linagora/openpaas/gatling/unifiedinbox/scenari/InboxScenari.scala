@@ -74,9 +74,9 @@ object InboxScenari {
   def userLogin() = group("login")(
     exec(loadLoginTemplates)
       .exec(login)
-      .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(Configuration.InboxSpaPath))
+      .exec(StaticAssetsSteps.loadIndexHtml(Configuration.InboxSpaPath))
       .exec(openWsConnection())
-      .exec(loadOpeningEventTemplates)
+      //.exec(loadOpeningEventTemplates) // static assets delivered by nginx
       .exec(generateJwtTokenWithAuth)
       .exec(getVacationResponse)
       .exec(getMailboxes)
@@ -95,9 +95,9 @@ object InboxScenari {
       .pause(60.seconds))
 
   private def sendEmailSteps = {
-//    exec(loadOpeningComposerTemplates)
-//      .pause(humanActionDelay() second)
-    exec(PeopleSteps.simulatePeopleSearch())
+    //exec(loadOpeningComposerTemplates) // static assets delivered by nginx
+    pause(humanActionDelay() second)
+      .exec(PeopleSteps.simulatePeopleSearch())
       .pause(humanActionDelay() second)
       .exec(uploadAttachment)
       .pause(humanActionDelay() second)
