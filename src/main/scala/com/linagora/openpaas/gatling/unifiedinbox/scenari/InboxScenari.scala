@@ -20,21 +20,18 @@ object InboxScenari {
 
   def platform(feederBuilder: SourceFeederBuilder[String]) = scenario("Inbox platform scenario")
     .feed(feederBuilder.circular)
-      .exec(login)
+      .exec(InboxScenari.userLogin())
       .exec(getProfile())
-      .exec(logout)
       .during(ScenarioDuration) {
         group("INBOX")(
-          exec(InboxScenari.userLogin())
-            .exec(repeat(20) {
-                randomSwitch(
-                  10.0 -> exec(InboxScenari.generateOnceAlreadyLogged()),
-                  90.0 -> exec(InboxScenari.idle()) // I think there is a misconception here...
-                  // idle should mean inbox open but no input... which is only a getMessagesList + getMessages now with after param placed on most recent message
-                )
-            }.exec(InboxScenari.userLogout()))
-        ).pause(7500 milliseconds, 15 seconds)
+          randomSwitch(
+            10.0 -> exec(InboxScenari.generateOnceAlreadyLogged()),
+            90.0 -> exec(InboxScenari.idle()) // I think there is a misconception here...
+            // idle should mean inbox open but no input... which is only a getMessagesList + getMessages now with after param placed on most recent message
+          ).pause(60.seconds) // interval time in which we got jmap polling requests when idle
+        )
       }
+      .exec(InboxScenari.userLogout())
 
   def generateOnceWithLogin() =
     exec(loadLoginTemplates)
@@ -74,6 +71,7 @@ object InboxScenari {
   def userLogin() = group("login")(
     exec(loadLoginTemplates)
       .exec(login)
+      .exec(getProfile())
       .exec(StaticAssetsSteps.loadIndexHtml(Configuration.InboxSpaPath))
       .exec(openWsConnection())
       //.exec(loadOpeningEventTemplates) // static assets delivered by nginx
@@ -91,8 +89,7 @@ object InboxScenari {
     exec(getMailboxes) // that's not what I see
       .exec(getMessageList) // when idle we only fetch the messages from the date of the most recent one... not the all list, should change
       // TODO: missing getMessages???
-      .repeat(3)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true))) // if user is idle, the hell is that search coming from???
-      .pause(60.seconds))
+      .repeat(3)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true)))) // if user is idle, the hell is that search coming from???
 
   private def sendEmailSteps = {
     //exec(loadOpeningComposerTemplates) // static assets delivered by nginx
