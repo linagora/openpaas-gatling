@@ -22,12 +22,14 @@ object InboxScenari {
     .feed(feederBuilder.circular)
       .exec(InboxScenari.userLogin())
       .exec(getProfile())
+      .exec(generateJwtTokenWithAuth)
       .during(ScenarioDuration) {
         group("INBOX")(
           randomSwitch(
-            10.0 -> exec(InboxScenari.generateOnceAlreadyLogged()),
-            90.0 -> exec(InboxScenari.idle()) // I think there is a misconception here...
-            // idle should mean inbox open but no input... which is only a getMessagesList + getMessages now with after param placed on most recent message
+            5.0 -> exec(InboxScenari.sendEmail()),
+            15.0 -> exec(InboxScenari.openMailbox()),
+            10.0 -> exec(InboxScenari.readEmail()),
+            70.0 -> exec(InboxScenari.idle())
           ).pause(60.seconds) // interval time in which we got jmap polling requests when idle
         )
       }
@@ -55,17 +57,19 @@ object InboxScenari {
       .pause(humanActionDelay() second)
       .exec(logout)
 
-  def generateOnceAlreadyLogged() = group("send")(
-    exec(generateJwtTokenWithAuth)
-      .pause(humanActionDelay() second)
-      .exec(getMailboxes)
+  def openMailbox() = group("open mailbox")(
+    exec(getMailboxes)
       .exec(getMessageList)
       // TODO: missing getMessages???
-      .repeat(10)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true)))
-      .pause(humanActionDelay() second)
-      .group("do send email")(sendEmailSteps))
-  // it feels like the user here is checking an other mailbox before sending a mail...
-  // we should separate that into two distinct steps and add it into the random switch of the scenario
+      .repeat(5)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true))))
+
+  def readEmail() = group("read email")(
+    exec()
+    // TODO: getMessages()
+    // TODO: setMessages(unread: false)
+  )
+
+  def sendEmail() = group("do send email")(sendEmailSteps)
 
 
   def userLogin() = group("login")(
@@ -78,18 +82,17 @@ object InboxScenari {
       .exec(generateJwtTokenWithAuth)
       .exec(getVacationResponse)
       .exec(getMailboxes)
-      .exec(getMessageList))
+      .exec(getMessageList)
       // TODO: missing getMessages??? and maybe get some avatars as well???
+      .repeat(5)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true))))
 
   def userLogout() = group("logout")(exec(closeWsConnection)
     .pause(humanActionDelay() second)
     .exec(logout))
 
   def idle() = group("idle")(
-    exec(getMailboxes) // that's not what I see
-      .exec(getMessageList) // when idle we only fetch the messages from the date of the most recent one... not the all list, should change
+    exec(getMessageList)) // when idle we only fetch the messages from the date of the most recent one... not the all list, should change
       // TODO: missing getMessages???
-      .repeat(3)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true)))) // if user is idle, the hell is that search coming from???
 
   private def sendEmailSteps = {
     //exec(loadOpeningComposerTemplates) // static assets delivered by nginx
