@@ -78,4 +78,6 @@ object Configuration {
   val DomainName = "sandbox.integration-open-paas.org"
   val DomainAdminEmail = s"admin@${DomainName}"
   val DomainAdminPassword = "secret"
+
+  val LoadStaticAssets = Properties.envOrElse("LOAD_STATIC_ASSETS", "false").toBoolean
 }

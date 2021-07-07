@@ -36,3 +36,5 @@ export OIDC_CLIENT="openpaas"
 export INBOX_SPA_PATH="inbox"
 #callback for oidc/pkce authentication. Make sure to add redirect URL with explicit port in the lemonLDAP manager
 export OIDC_CALLBACK="/inbox-oidc/#/auth/oidc/callback"
+
+export LOAD_STATIC_ASSETS="false"

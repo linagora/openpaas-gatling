@@ -1,7 +1,7 @@
 package com.linagora.openpaas.gatling.unifiedinbox.scenari
 
 import com.linagora.openpaas.gatling.Configuration
-import com.linagora.openpaas.gatling.Configuration.ScenarioDuration
+import com.linagora.openpaas.gatling.Configuration.{LoadStaticAssets, ScenarioDuration}
 import com.linagora.openpaas.gatling.core.LoginSteps._
 import com.linagora.openpaas.gatling.core.TokenSteps.generateJwtTokenWithAuth
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
@@ -74,9 +74,11 @@ object InboxScenari {
     exec(loadLoginTemplates)
       .exec(login)
       .exec(getProfile())
-      .exec(StaticAssetsSteps.loadIndexHtml(Configuration.InboxSpaPath))
+      .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(Configuration.InboxSpaPath))
       .exec(openWsConnection())
-      //.exec(loadOpeningEventTemplates) // static assets delivered by nginx
+      .doIfEquals(LoadStaticAssets, true) {
+        exec(loadOpeningEventTemplates) // static assets delivered by nginx
+      }
       .exec(generateJwtTokenWithAuth)
       .exec(getVacationResponse)
       .exec(getMailboxes)
@@ -94,8 +96,9 @@ object InboxScenari {
       .exec(getMessages))
 
   private def sendEmailSteps = {
-    //exec(loadOpeningComposerTemplates) // static assets delivered by nginx
-    pause(humanActionDelay() second)
+    doIfEquals(LoadStaticAssets, true) {
+      exec(loadOpeningComposerTemplates) // static assets delivered by nginx
+    }.pause(humanActionDelay() second)
       .exec(PeopleSteps.simulatePeopleSearch())
       .pause(humanActionDelay() second)
       .exec(uploadAttachment)

@@ -60,6 +60,7 @@ Environment variables:
  - `KEYCLOAK_PORTAL_PROTOCOL` which is set to `OPENPAAS_PROTOCOL` by default
  - `KEYCLOAK_PORTAL_HOSTNAME` which is set to `auth.latest.integration-open-paas.org` by default
  - `KEYCLOAK_REALM` which is set to `openpaas` by default
+ - `LOAD_STATIC_ASSETS` which is set to `false` by default, if set to `true` the simulation will load static assets delivered by nginx
 
 For example, to run with OpenPaaS port `8000`:
 
