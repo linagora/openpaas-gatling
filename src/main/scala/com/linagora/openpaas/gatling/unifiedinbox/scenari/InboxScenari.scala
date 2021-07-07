@@ -63,9 +63,8 @@ object InboxScenari {
       .repeat(5)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true))))
 
   def readEmail() = group("read email")(
-    exec()
-    // TODO: getMessages()
-    // TODO: setMessages(unread: false)
+    exec(readMessage())
+      .exec(markAsRead())
   )
 
   def sendEmail() = group("do send email")(sendEmailSteps)

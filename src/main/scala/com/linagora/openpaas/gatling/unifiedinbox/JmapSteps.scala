@@ -11,7 +11,7 @@ import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import org.apache.james.gatling.jmap.draft.JmapMailbox.getSystemMailboxesChecks
-import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, getRandomMessageChecks, messageIdSessionParam, nonEmptyListMessagesChecks, openpaasListMessageParameters, previewMessageProperties}
+import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, getRandomMessageChecks, messageIdSessionParam, nonEmptyListMessagesChecks, openpaasInboxOpenMessageProperties, openpaasListMessageParameters, previewMessageProperties}
 import org.apache.james.gatling.jmap.draft.{JmapChecks, JmapHttp, JmapMailbox}
 
 import scala.concurrent.duration.DurationInt
@@ -50,12 +50,23 @@ object JmapSteps {
   def getMessageList: ChainBuilder =
     exec(listMessages(openpaasListMessageParameters("inboxID"))
       .check(nonEmptyListMessagesChecks: _*))
+      .exec { session => session.set("messageIdRead", {
+          Vector(session("messageIds").as[Vector[String]].head)
+        })
+      }.exec { session => session.set("messageIdReadUpdate", {
+          session("messageIdRead").as[Vector[String]].head
+        })
+      }
 
   def getMessages(): HttpRequestBuilder =
     getMessages(previewMessageProperties)
       .check(getRandomMessageChecks: _*)
 
-  def getMessages(properties: List[String], messageIdsKey: String = "messageIds"): HttpRequestBuilder =
+  def readMessage(): HttpRequestBuilder =
+    getMessages(openpaasInboxOpenMessageProperties, "messageIdRead")
+      .check(getRandomMessageChecks: _*)
+
+  def getMessages(properties: List[String], messageIdsKey: String = "messageIds"): HttpRequestBuilder = {
     authenticatedQueryWithJwtToken("getMessages", "/jmap")
       .body(StringBody(
         s"""[[
@@ -66,7 +77,23 @@ object JmapSteps {
           },
           "#0"
           ]]"""))
+  }
 
+  def markAsRead(messageIdKey: String = "messageIdReadUpdate") = {
+    authenticatedQueryWithJwtToken("setMessages", "/jmap")
+      .body(StringBody(
+        s"""[[
+          "setMessages",
+          {
+            "update": {
+              "${messageIdKey}" : {
+                "isUnread": false
+              }
+            }
+          },
+          "#0"
+          ]]"""))
+  }
 
   def sendMessages() =
     authenticatedQueryWithJwtToken("sendMessages", "/jmap")
