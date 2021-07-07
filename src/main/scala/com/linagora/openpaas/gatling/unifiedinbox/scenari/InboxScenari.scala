@@ -64,7 +64,10 @@ object InboxScenari {
 
   def readEmail() = group("read email")(
     exec(readMessage())
-      .exec(markAsRead())
+      .randomSwitch(
+        90.0 -> exec(markAsRead()), // if message was unread
+        10.0 -> exec()
+      )
   )
 
   def sendEmail() = group("do send email")(sendEmailSteps)
