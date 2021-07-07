@@ -27,8 +27,8 @@ object InboxScenari {
         group("INBOX")(
           randomSwitch(
             5.0 -> exec(InboxScenari.sendEmail()),
-            15.0 -> exec(InboxScenari.openMailbox()),
-            10.0 -> exec(InboxScenari.readEmail()),
+            10.0 -> exec(InboxScenari.openMailbox()),
+            15.0 -> exec(InboxScenari.readEmail()),
             70.0 -> exec(InboxScenari.idle())
           ).pause(60.seconds) // interval time in which we got jmap polling requests when idle
         )

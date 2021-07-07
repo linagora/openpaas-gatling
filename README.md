@@ -378,8 +378,8 @@ In this simulation, each user will:
 - Login
 - Execute one of these actions randomly:
   - 5%: send email
-  - 15%: open mailbox
-  - 10%: read email
+  - 10%: open mailbox
+  - 15%: read email
   - 70%: idle
 - Pause 60 seconds between each case (it's the time for the idle sync to happen)
 
