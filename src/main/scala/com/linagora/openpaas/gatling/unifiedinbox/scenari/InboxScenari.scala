@@ -89,9 +89,9 @@ object InboxScenari {
     .exec(logout))
 
   def idle() = group("idle")(
-    exec(getMessageList)
-      .exec(getMessages()))
-  // TODO: when idle we only fetch the messages from the date of the most recent one... not the all list, should change
+    exec(getMailboxes) // Not exactly true here, it seems isolated with a longer time gap... But that would be too complicated to simulate
+      .exec(getIdleMessageList)
+      .exec(getMessages))
 
   private def sendEmailSteps = {
     //exec(loadOpeningComposerTemplates) // static assets delivered by nginx

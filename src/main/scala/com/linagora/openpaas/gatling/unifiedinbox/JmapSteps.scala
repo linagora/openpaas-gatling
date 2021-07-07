@@ -58,9 +58,28 @@ object JmapSteps {
         })
       }
 
+  def getIdleMessageList: ChainBuilder =
+    exec(listMessages(idleFetchParameters())
+      .check(nonEmptyListMessagesChecks: _*))
+
+  def idleFetchParameters(mailboxKey: String = "inboxID", afterDate: String = "afterDate"): JmapParameters = {
+    val mailboxes = List(mailboxKey).map(key => s"$${$key}")
+    Map("filter" -> Map(
+        "inMailboxes" -> mailboxes,
+        "text" -> null,
+        "after" -> s"$${afterDate}"),
+      "sort" -> Seq("date desc"),
+      "collapseThreads" -> false,
+      "fetchMessages" -> false,
+      "position" -> 0,
+      "limit" -> 30
+    )
+  }
+
   def getMessages(): HttpRequestBuilder =
     getMessages(previewMessageProperties)
       .check(getRandomMessageChecks: _*)
+      .check(jsonPath("$[0][1].list[0].date").saveAs("afterDate"))
 
   def readMessage(): HttpRequestBuilder =
     getMessages(openpaasInboxOpenMessageProperties, "messageIdRead")
