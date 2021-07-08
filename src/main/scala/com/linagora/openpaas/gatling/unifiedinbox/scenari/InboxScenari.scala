@@ -22,7 +22,6 @@ object InboxScenari {
     .feed(feederBuilder.circular)
       .exec(InboxScenari.userLogin())
       .exec(getProfile())
-      .exec(generateJwtTokenWithAuth)
       .during(ScenarioDuration) {
         group("INBOX")(
           randomSwitch(

@@ -38,15 +38,17 @@ object TokenSteps {
 
 
   def generateJwtTokenWithAuth =
-    exec(withAuth(http("Generate jwt token")
-      .post("/api/jwt/generate")
-      .check(status is 200)
-      .check(bodyString.saveAs(JwtToken))
-    ))
-    .exec(session => {
-      val denormalizedJwtToken = session(JwtToken).as[String].replaceAll("\"", "")
-      session.set(JwtToken, denormalizedJwtToken)
-    })
+    doWhile(session => !session.attributes.contains(JwtToken)) {
+      exec(withAuth(http("Generate jwt token")
+        .post("/api/jwt/generate")
+        .check(status is 200)
+        .check(checkIf((response: Response, _: Session) => response.status.code() == 200)(bodyString.saveAs(JwtToken)))
+      ))
+    }
+      .exec(session => {
+        val denormalizedJwtToken = session(JwtToken).as[String].replaceAll("\"", "")
+        session.set(JwtToken, denormalizedJwtToken)
+      })
 
   private def timeInMillis(): Long = System.nanoTime() / 1000000
 }
