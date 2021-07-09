@@ -62,11 +62,10 @@ object PKCEToken {
 
   private def doRenewAccessToken: HttpRequestBuilder =
     http("get token")
-      .post(LemonLDAPPortalUrl + "/oauth2/token")
-      .formParam("client_id", OidcClient)
+      .post(KeycloakPortalUrl + s"/auth/realms/${KeycloakRealm}/protocol/openid-connect/token")
       .header("Content-Type", "application/x-www-form-urlencoded")
+      .formParam("client_id", OidcClient)
       .formParam("refresh_token", "${refresh_token}")
-      .formParam("request_type", "si:s")
       .formParam("grant_type", "refresh_token")
       .check(status.is(200),
         jsonPath("$.access_token").find.saveAs("access_token")
