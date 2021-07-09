@@ -49,19 +49,19 @@ object PKCEToken {
 
   def renewTokenIfNeeded: ChainBuilder =
     doIf(session => {
-      val expiresInInSeconds: Int = session("expires_in").validate[Int].toOption.getOrElse(3601)
+      val expiresInSeconds: Int = session("expires_in").validate[Int].toOption.getOrElse(3601)
       val tokenAcquisitionTime = session("token_acquisition_time").validate[Long].toOption
       val lastRenewTime: Option[Long] = session("last_renew").validate[Long].toOption
       lastRenewTime.orElse(tokenAcquisitionTime) match {
         case None => false //token never acquired should not happen
-        case Some(last) if timeInMillis() >= (last + expiresInInSeconds * 1000) => true
+        case Some(last) if timeInMillis() >= (last + expiresInSeconds * 1000) => true
         case Some(_) => false
       }
     })(exec(doRenewAccessToken)
       .exec(session => session.set("last_renew", timeInMillis())))
 
   private def doRenewAccessToken: HttpRequestBuilder =
-    http("get token")
+    http("refresh token")
       .post(KeycloakPortalUrl + s"/auth/realms/${KeycloakRealm}/protocol/openid-connect/token")
       .header("Content-Type", "application/x-www-form-urlencoded")
       .formParam("client_id", OidcClient)
