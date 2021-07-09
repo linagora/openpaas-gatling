@@ -239,6 +239,7 @@ object PKCEWithCasSteps {
         "upgrade-insecure-requests" -> "1"))
       .queryParam("id_token_hint", "${id_token}")
       .queryParam("post_logout_redirect_uri", s"${OpenPaaSBaseUrl}/${InboxSpaPath}")
+      .disableFollowRedirect
       .check(status is 200, //css("input[name='confirm']", "value").saveAs("logout_confirm"))
         css("input[name='RelayState']", "value").saveAs("cas_logout_relay_state"),
         css("input[name='SAMLRequest']", "value").saveAs("cas_logout_saml_request"))
