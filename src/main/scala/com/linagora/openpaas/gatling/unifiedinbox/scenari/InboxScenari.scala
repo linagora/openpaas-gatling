@@ -21,7 +21,6 @@ object InboxScenari {
   def platform(feederBuilder: SourceFeederBuilder[String]) = scenario("Inbox platform scenario")
     .feed(feederBuilder.circular)
       .exec(InboxScenari.userLogin())
-      .exec(getProfile())
       .during(ScenarioDuration) {
         group("INBOX")(
           randomSwitch(
