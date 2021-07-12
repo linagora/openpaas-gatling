@@ -1,0 +1,29 @@
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%cyan(%d{HH:mm:ss.SSS}) %green([%thread]) %highlight(%level) %logger{36} %n%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>/tmp/log.html</file>
+		<append>true</append>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="ch.qos.logback.classic.html.HTMLLayout">
+				<pattern>%d{HH:mm:ss.SSS}%thread%level%logger%msg</pattern>
+			</layout>
+		</encoder>
+	</appender>
+
+    <logger name="io.gatling.http.engine.response" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+	<root level="warn">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+</configuration>
