@@ -20,7 +20,7 @@ object CalendarSteps {
   def openCalendarSPA(): ChainBuilder = {
     group("openCalendarSPA") {
       exec(LoginSteps.loadLoginTemplates)
-        .exec(LoginSteps.login())
+        .exec(LoginSteps.login(CalendarSpaPath))
         .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(CalendarSpaPath))
         .exec(StaticAssetsSteps.loadStaticAssets(CalendarStaticAssets.OpeningCalendarAssets))
         .exec(UserSteps.getProfile())

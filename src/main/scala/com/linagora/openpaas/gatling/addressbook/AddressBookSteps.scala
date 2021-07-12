@@ -16,7 +16,7 @@ object AddressBookSteps {
   def openContactsSpa(): ChainBuilder = {
     group("openContactsSPA") {
       exec(LoginSteps.loadLoginTemplates)
-        .exec(LoginSteps.login())
+        .exec(LoginSteps.login(ContactsSpaPath))
         .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(ContactsSpaPath))
         .exec(StaticAssetsSteps.loadStaticAssets(ContactsStaticAssets.OpeningContactsAssets))
         .exec(UserSteps.getProfile())

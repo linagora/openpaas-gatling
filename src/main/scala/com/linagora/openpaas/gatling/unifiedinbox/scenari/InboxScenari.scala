@@ -1,7 +1,7 @@
 package com.linagora.openpaas.gatling.unifiedinbox.scenari
 
 import com.linagora.openpaas.gatling.Configuration
-import com.linagora.openpaas.gatling.Configuration.{LoadStaticAssets, ScenarioDuration}
+import com.linagora.openpaas.gatling.Configuration.{InboxSpaPath, LoadStaticAssets, ScenarioDuration}
 import com.linagora.openpaas.gatling.core.LoginSteps._
 import com.linagora.openpaas.gatling.core.TokenSteps.generateJwtTokenWithAuth
 import com.linagora.openpaas.gatling.core.UserSteps.getProfile
@@ -35,7 +35,7 @@ object InboxScenari {
 
   def generateOnceWithLogin() =
     exec(loadLoginTemplates)
-      .exec(login)
+      .exec(login(InboxSpaPath))
       .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(Configuration.InboxSpaPath))
       .exec(openWsConnection())
       .exec(loadOpeningEventTemplates)
@@ -75,9 +75,9 @@ object InboxScenari {
     doIfEquals(LoadStaticAssets, true) {
       exec(loadLoginTemplates)
     }
-      .exec(login)
+      .exec(login(InboxSpaPath))
       .exec(getProfile())
-      .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(Configuration.InboxSpaPath))
+      .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(InboxSpaPath))
       .exec(openWsConnection())
       .doIfEquals(LoadStaticAssets, true) {
         exec(loadOpeningEventTemplates) // static assets delivered by nginx
