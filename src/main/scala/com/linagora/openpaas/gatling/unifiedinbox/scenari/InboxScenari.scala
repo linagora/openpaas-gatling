@@ -93,7 +93,9 @@ object InboxScenari {
     .exec(logout))
 
   def idle() = group("idle")(
-    exec(getMailboxes) // Not exactly true here, it seems isolated with a longer time gap... But that would be too complicated to simulate
+    randomSwitch(
+      10.0 -> exec(getMailboxes),
+      90.0 -> exec())
       .exec(getIdleMessageList)
       .exec(getMessages))
 
