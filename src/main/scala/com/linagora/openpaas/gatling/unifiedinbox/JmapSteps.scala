@@ -1,18 +1,18 @@
 package com.linagora.openpaas.gatling.unifiedinbox
 
+import com.linagora.openpaas.gatling.Configuration._
 import com.linagora.openpaas.gatling.core.TokenSteps._
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.unifiedinbox.SessionKeys._
-import com.linagora.openpaas.gatling.Configuration._
+import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import io.gatling.core.Predef._
+import io.gatling.core.json.Json
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import org.apache.james.gatling.jmap.draft.JmapMailbox.{getSystemMailboxesChecks}
-import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, messageIdSessionParam, openpaasListMessageParameters}
+import org.apache.james.gatling.jmap.draft.JmapMailbox.getSystemMailboxesChecks
+import org.apache.james.gatling.jmap.draft.JmapMessages.{JmapParameters, NO_PARAMETERS, getRandomMessageChecks, messageIdSessionParam, nonEmptyListMessagesChecks, openpaasInboxOpenMessageProperties, openpaasListMessageParameters, previewMessageProperties}
 import org.apache.james.gatling.jmap.draft.{JmapChecks, JmapHttp, JmapMailbox}
-import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
-import io.gatling.core.json.Json
 
 import scala.concurrent.duration.DurationInt
 
@@ -49,8 +49,70 @@ object JmapSteps {
 
   def getMessageList: ChainBuilder =
     exec(listMessages(openpaasListMessageParameters("inboxID"))
-      .check(status in(200, 304))
-      .check(JmapChecks.noError))
+      .check(nonEmptyListMessagesChecks: _*))
+      .exec { session => session.set("messageIdRead", {
+          Vector(session("messageIds").as[Vector[String]].head)
+        })
+      }.exec { session => session.set("messageIdReadUpdate", {
+          session("messageIdRead").as[Vector[String]].head
+        })
+      }
+
+  def getIdleMessageList: ChainBuilder =
+    exec(listMessages(idleFetchParameters())
+      .check(nonEmptyListMessagesChecks: _*))
+
+  def idleFetchParameters(mailboxKey: String = "inboxID", afterDate: String = "afterDate"): JmapParameters = {
+    val mailboxes = List(mailboxKey).map(key => s"$${$key}")
+    Map("filter" -> Map(
+        "inMailboxes" -> mailboxes,
+        "text" -> null,
+        "after" -> s"$${afterDate}"),
+      "sort" -> Seq("date desc"),
+      "collapseThreads" -> false,
+      "fetchMessages" -> false,
+      "position" -> 0,
+      "limit" -> 30
+    )
+  }
+
+  def getMessages(): HttpRequestBuilder =
+    getMessages(previewMessageProperties)
+      .check(getRandomMessageChecks: _*)
+      .check(jsonPath("$[0][1].list[0].date").saveAs("afterDate"))
+
+  def readMessage(): HttpRequestBuilder =
+    getMessages(openpaasInboxOpenMessageProperties, "messageIdRead")
+      .check(getRandomMessageChecks: _*)
+
+  def getMessages(properties: List[String], messageIdsKey: String = "messageIds"): HttpRequestBuilder = {
+    authenticatedQueryWithJwtToken("getMessages", "/jmap")
+      .body(StringBody(
+        s"""[[
+          "getMessages",
+          {
+            "ids": $${$messageIdsKey.jsonStringify()},
+            "properties": ${Json.stringify(properties)}
+          },
+          "#0"
+          ]]"""))
+  }
+
+  def markAsRead(messageIdKey: String = "messageIdReadUpdate") = {
+    authenticatedQueryWithJwtToken("setMessages", "/jmap")
+      .body(StringBody(
+        s"""[[
+          "setMessages",
+          {
+            "update": {
+              "${messageIdKey}" : {
+                "isUnread": false
+              }
+            }
+          },
+          "#0"
+          ]]"""))
+  }
 
   def sendMessages() =
     authenticatedQueryWithJwtToken("sendMessages", "/jmap")

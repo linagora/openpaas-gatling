@@ -18,22 +18,25 @@
  * ************************************************************** */
 package com.linagora.openpaas.gatling.core.authentication
 
-import com.linagora.openpaas.gatling.Configuration.{LemonLDAPPortalUrl, OidcCallback, OidcClient}
+import com.google.common.base.Charsets
+import com.linagora.openpaas.gatling.Configuration.{KeycloakPortalUrl, KeycloakRealm, LemonLDAPPortalUrl, OidcCallback, OidcClient}
 import com.linagora.openpaas.gatling.utils.HttpQueryBuilderUtils
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 
+import java.net.URLEncoder
+
 object PKCEToken {
 
   def getToken: ChainBuilder = HttpQueryBuilderUtils.execWithoutCookie(
     http("get token")
-      .post(LemonLDAPPortalUrl + "/oauth2/token")
-      .formParam("client_id", OidcClient)
+      .post(KeycloakPortalUrl + s"/auth/realms/${KeycloakRealm}/protocol/openid-connect/token")
       .header("Content-Type", "application/x-www-form-urlencoded")
+      .formParam("client_id", OidcClient)
       .formParam("code", "${authorization_code}")
-      .formParam("redirect_uri", OidcCallback)
+      .formParam("redirect_uri", s"${URLEncoder.encode(OidcCallback, Charsets.UTF_8)}")
       .formParam("code_verifier", "${pkce_code_verifier}")
       .formParam("grant_type", "authorization_code")
       .check(status.is(200),
@@ -46,24 +49,23 @@ object PKCEToken {
 
   def renewTokenIfNeeded: ChainBuilder =
     doIf(session => {
-      val expiresInInSeconds: Int = session("expires_in").validate[Int].toOption.getOrElse(3601)
+      val expiresInSeconds: Int = session("expires_in").validate[Int].toOption.getOrElse(3601)
       val tokenAcquisitionTime = session("token_acquisition_time").validate[Long].toOption
       val lastRenewTime: Option[Long] = session("last_renew").validate[Long].toOption
       lastRenewTime.orElse(tokenAcquisitionTime) match {
         case None => false //token never acquired should not happen
-        case Some(last) if timeInMillis() >= (last + expiresInInSeconds * 1000) => true
+        case Some(last) if timeInMillis() >= (last + expiresInSeconds * 1000) => true
         case Some(_) => false
       }
     })(exec(doRenewAccessToken)
       .exec(session => session.set("last_renew", timeInMillis())))
 
   private def doRenewAccessToken: HttpRequestBuilder =
-    http("get token")
-      .post(LemonLDAPPortalUrl + "/oauth2/token")
-      .formParam("client_id", OidcClient)
+    http("refresh token")
+      .post(KeycloakPortalUrl + s"/auth/realms/${KeycloakRealm}/protocol/openid-connect/token")
       .header("Content-Type", "application/x-www-form-urlencoded")
+      .formParam("client_id", OidcClient)
       .formParam("refresh_token", "${refresh_token}")
-      .formParam("request_type", "si:s")
       .formParam("grant_type", "refresh_token")
       .check(status.is(200),
         jsonPath("$.access_token").find.saveAs("access_token")

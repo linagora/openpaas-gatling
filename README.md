@@ -51,11 +51,16 @@ Environment variables:
  - `CAS_HOSTNAME` which is set to `OPENPAAS_HOSTNAME` by default. used with `pkce_with_cas` authentication strategy.
  - `CAS_PORT` which is set to `443` by default
  - `CAS_PROTOCOL` which is set to `https` by default
+ - `CAS_PORT_IN_URL` which is set to `false` by default, if set to `true` the value of `CAS_PORT` will be appended to `CAS_HOSTNAME` when generating the url.
  - `PLATFORM_ADMIN_USER` is the user name of the platform administrator.
  - `PLATFORM_ADMIN_PWD` is the password of the platform administrator.
  - `INBOX_SPA_PATH` is the path to access the Inbox SPA. which is set to `inbox` by default
  - `CALENDAR_SPA_PATH` is the path to access the Calendar SPA, which is set to `calendar` by default
  - `CONTACTS_SPA_PATH` is the path to access the Contacts SPA, which is set to `contacts` by default 
+ - `KEYCLOAK_PORTAL_PROTOCOL` which is set to `OPENPAAS_PROTOCOL` by default
+ - `KEYCLOAK_PORTAL_HOSTNAME` which is set to `auth.latest.integration-open-paas.org` by default
+ - `KEYCLOAK_REALM` which is set to `openpaas` by default
+ - `LOAD_STATIC_ASSETS` which is set to `false` by default, if set to `true` the simulation will load static assets delivered by nginx
 
 For example, to run with OpenPaaS port `8000`:
 
@@ -368,3 +373,20 @@ $ sbt
 ```
 
 ### Inbox
+
+In this simulation, each user will:
+
+- Login
+- Execute one of these actions randomly:
+  - 5%: send email
+  - 10%: open mailbox
+  - 15%: read email
+  - 70%: idle
+- Pause 60 seconds between each case (it's the time for the idle sync to happen)
+
+The equivalent simulation will ramp `USER_COUNT` users over `INJECT_DURATION` with `SCENARIO_DURATION` as the scenario duration for a user.
+
+```
+$ sbt
+> gatling:testOnly com.linagora.openpaas.gatling.InboxPlatformSimulation
+```

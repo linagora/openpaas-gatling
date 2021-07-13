@@ -1,5 +1,6 @@
 package com.linagora.openpaas.gatling.core
 
+import com.linagora.openpaas.gatling.Configuration.LoadStaticAssets
 import com.linagora.openpaas.gatling.core.SessionKeys._
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
@@ -25,8 +26,10 @@ object StaticAssetsSteps {
   def loadIndexHtmlAndMainJs(spaName: String): ChainBuilder = {
     group("loadIndexHtmlAndMainJs") {
       exec(loadIndexHtml(spaName))
-        .exec(session => extractMainJsUrl(spaName)(session))
-        .exec(loadMainJs())
+        .doIfEquals(LoadStaticAssets, true) {
+          exec(session => extractMainJsUrl(spaName)(session))
+            .exec(loadMainJs())
+        }
     }
   }
 
@@ -48,7 +51,7 @@ object StaticAssetsSteps {
 
   def extractMainJsUrl(spaName: String)(session: Session): Session = {
     val indexHtmlContent: String = session(IndexHtmlContent).as[String]
-    val matchMainJsUrlRegex: Regex = raw""""\/${spaName.toLowerCase()}\/?main(.*?)"""".r
+    val matchMainJsUrlRegex: Regex = raw""""\/${spaName.toLowerCase()}\/?assets\/main(.*?)"""".r
     val mainJsUrl: String = matchMainJsUrlRegex.findFirstIn(indexHtmlContent).mkString.drop(1).dropRight(1)
 
     session.set(MainJsUrl, mainJsUrl)
