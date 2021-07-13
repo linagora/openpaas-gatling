@@ -203,7 +203,9 @@ object PKCEWithCasSteps {
     exec(logoutGoToConfirmationPage)
       .exec(logoutCasSLO)
       .exec(logoutCasLandingPage).doIf(session => session("logout_status").value.asOption[Int].contains(500))(exec(flushCookieJar))
-      .exec(loadLogoutCasTemplates)
+      .doIfEquals(LoadStaticAssets, true) {
+        exec(loadLogoutCasTemplates)
+      }
   }
 
   private def logoutCasLandingPage = {

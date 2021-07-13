@@ -72,7 +72,9 @@ object InboxScenari {
 
 
   def userLogin() = group("login")(
-    exec(loadLoginTemplates)
+    doIfEquals(LoadStaticAssets, true) {
+      exec(loadLoginTemplates)
+    }
       .exec(login)
       .exec(getProfile())
       .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(Configuration.InboxSpaPath))

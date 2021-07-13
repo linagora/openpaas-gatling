@@ -73,7 +73,9 @@ object LoginSteps {
         .exec(PKCEWithCasSteps.keycloakSamlLogin)
         .exec(PKCEWithCasSteps.casSSO)
         .exec(PKCEWithCasSteps.casLoginPage)
-        .exec(PKCEWithCasSteps.loadLoginCasTemplates)
+        .doIfEquals(LoadStaticAssets, true) {
+          exec(PKCEWithCasSteps.loadLoginCasTemplates)
+        }
         .exec(PKCEWithCasSteps.login)
         .exec(PKCEWithCasSteps.casProfile)
         .exec(PKCEWithCasSteps.casBrokerEndpoint)
