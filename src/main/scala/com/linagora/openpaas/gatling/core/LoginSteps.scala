@@ -25,7 +25,7 @@ object LoginSteps {
     case AuthenticationStrategy.PKCE_WITH_CAS => PKCEWithCasSteps.loadLoginTemplates
   }
 
-  def login(spaName: String): ChainBuilder = AuthenticationStrategyToUse match {
+  def login(spaName: String = ""): ChainBuilder = AuthenticationStrategyToUse match {
     case AuthenticationStrategy.LemonLDAP  =>
       exec(LemonLdapSteps.getPage)
         .exec(LemonLdapSteps.login)
