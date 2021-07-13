@@ -1,6 +1,6 @@
 package com.linagora.openpaas.gatling.calendar
 
-import com.linagora.openpaas.gatling.Configuration.{CalendarCount, CalendarSpaPath, SabreBaseUrl}
+import com.linagora.openpaas.gatling.Configuration.{CalendarCount, CalendarSpaPath, LoadStaticAssets, SabreBaseUrl}
 import com.linagora.openpaas.gatling.utils.RandomUuidGenerator.randomUuidString
 import com.linagora.openpaas.gatling.provisionning.SessionKeys._
 import com.linagora.openpaas.gatling.calendar.SessionKeys._
@@ -19,10 +19,14 @@ import scala.util.matching.Regex
 object CalendarSteps {
   def openCalendarSPA(): ChainBuilder = {
     group("openCalendarSPA") {
-      exec(LoginSteps.loadLoginTemplates)
+      doIfEquals(LoadStaticAssets, true) {
+        exec(LoginSteps.loadLoginTemplates)
+      }
         .exec(LoginSteps.login(CalendarSpaPath))
         .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(CalendarSpaPath))
-        .exec(StaticAssetsSteps.loadStaticAssets(CalendarStaticAssets.OpeningCalendarAssets))
+        .doIfEquals(LoadStaticAssets, true) {
+          exec(StaticAssetsSteps.loadStaticAssets(CalendarStaticAssets.OpeningCalendarAssets))
+        }
         .exec(UserSteps.getProfile())
         .exec(WebSocketSteps.openWsConnection())
         .exec(DomainSteps.getDomain)
