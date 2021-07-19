@@ -25,7 +25,7 @@ object LoginSteps {
     case AuthenticationStrategy.PKCE_WITH_CAS => PKCEWithCasSteps.loadLoginTemplates
   }
 
-  def login(): ChainBuilder = AuthenticationStrategyToUse match {
+  def login(spaName: String = ""): ChainBuilder = AuthenticationStrategyToUse match {
     case AuthenticationStrategy.LemonLDAP  =>
       exec(LemonLdapSteps.getPage)
         .exec(LemonLdapSteps.login)
@@ -81,7 +81,7 @@ object LoginSteps {
         .exec(PKCEWithCasSteps.casBrokerEndpoint)
         .exec(PKCEWithCasSteps.obtainAuthorizationCode).exitHereIfFailed
         .exec(PKCEToken.getToken)
-        .exec(PKCEWithCasSteps.goToOpenPaaSApplication)
+        .exec(PKCEWithCasSteps.goToOpenPaaSApplication(spaName))
 
     case AuthenticationStrategy.Basic => exec(BasicLoginSteps.login)
   }

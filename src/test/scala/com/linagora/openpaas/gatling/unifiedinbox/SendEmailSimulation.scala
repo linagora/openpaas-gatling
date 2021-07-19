@@ -14,7 +14,7 @@ class SendEmailSimulation extends Simulation {
 
   val scn = scenario("Testing OpenPaaS send email")
     .feed(feeder.circular())
-    .exec(login)
+    .exec(login(InboxSpaPath))
     .exec(getProfile())
     .pause(1 second)
     .exec(provisionMessages)

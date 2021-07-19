@@ -15,7 +15,7 @@ class WebSocketSimulation extends Simulation {
   val scn = scenario("Testing OpenPaaS token retrieval")
     .feed(feeder.circular())
     .pause(1 second)
-    .exec(login)
+    .exec(login())
     .exec(getProfile())
     .pause(1 second)
     .exec(openWsConnection())

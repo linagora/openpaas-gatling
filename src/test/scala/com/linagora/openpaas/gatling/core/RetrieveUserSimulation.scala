@@ -18,7 +18,7 @@ class RetrieveUserSimulation extends Simulation {
   val scn = scenario("Testing OpenPaaS chat channel creation")
     .exec(createGatlingTestDomainIfNotExist)
     .feed(feeder.circular())
-    .exec(login)
+    .exec(login())
     .exec(getProfile())
     .during(ScenarioDuration) {
       exec(OtherUserSelector.selectFrom(randomFeeder))

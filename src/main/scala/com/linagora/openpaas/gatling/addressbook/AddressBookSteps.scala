@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import com.linagora.openpaas.gatling.Configuration.ContactsSpaPath
+import com.linagora.openpaas.gatling.Configuration.{ContactsSpaPath, LoadStaticAssets}
 import com.linagora.openpaas.gatling.addressbook.SessionKeys.AddressBookLinks
 import com.linagora.openpaas.gatling.core.{DomainSteps, LoginSteps, StaticAssetsSteps, TokenSteps, UserSteps, WebSocketSteps}
 import com.linagora.openpaas.gatling.provisionning.Authentication
@@ -15,10 +15,14 @@ import scala.concurrent.duration.DurationInt
 object AddressBookSteps {
   def openContactsSpa(): ChainBuilder = {
     group("openContactsSPA") {
-      exec(LoginSteps.loadLoginTemplates)
-        .exec(LoginSteps.login())
+      doIfEquals(LoadStaticAssets, true) {
+        exec(LoginSteps.loadLoginTemplates)
+      }
+        .exec(LoginSteps.login(ContactsSpaPath))
         .exec(StaticAssetsSteps.loadIndexHtmlAndMainJs(ContactsSpaPath))
-        .exec(StaticAssetsSteps.loadStaticAssets(ContactsStaticAssets.OpeningContactsAssets))
+        .doIfEquals(LoadStaticAssets, true) {
+          exec(StaticAssetsSteps.loadStaticAssets(ContactsStaticAssets.OpeningContactsAssets))
+        }
         .exec(UserSteps.getProfile())
         .exec(WebSocketSteps.openWsConnection())
         .exec(DomainSteps.getDomain)

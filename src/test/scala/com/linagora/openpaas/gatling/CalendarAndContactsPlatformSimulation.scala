@@ -7,7 +7,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.feeder.SourceFeederBuilder
 import io.gatling.core.structure.ScenarioBuilder
 
-class CalendarAndContactsWithRefreshTokenSimulation extends Simulation {
+class CalendarAndContactsPlatformSimulation extends Simulation {
   val userFeeder: SourceFeederBuilder[String] = csv("users.csv").queue
   val eventUuidFeeder: Iterator[Map[String, String]] = Iterator.continually(Map("eventUuid" -> randomUuidString))
   val contactUuidFeeder = Iterator.continually(Map("contactUuid" -> randomUuidString))

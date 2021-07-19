@@ -194,9 +194,9 @@ object PKCEWithCasSteps {
       .getEncodedQueryParams.asScala.find(_.getName == "code").get.getValue
   }
 
-  def goToOpenPaaSApplication: HttpRequestBuilder =
+  def goToOpenPaaSApplication(spaName: String): HttpRequestBuilder =
     http("Go to OpenPaaS application")
-      .get("/inbox")
+      .get(s"/${spaName.toLowerCase()}")
       .check(status is 200)
 
   def logout: ChainBuilder = {

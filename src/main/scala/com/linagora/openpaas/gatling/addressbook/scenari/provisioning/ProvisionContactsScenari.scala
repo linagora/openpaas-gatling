@@ -1,5 +1,6 @@
 package com.linagora.openpaas.gatling.addressbook.scenari.provisioning
 
+import com.linagora.openpaas.gatling.Configuration.ContactsSpaPath
 import com.linagora.openpaas.gatling.addressbook.ContactSteps
 import com.linagora.openpaas.gatling.core.{LoginSteps, UserSteps}
 import io.gatling.core.Predef._
@@ -10,7 +11,7 @@ object ProvisionContactsScenari {
   def generate(userFeeder: SourceFeederBuilder[String]): ScenarioBuilder =
     scenario(s"ProvisionContactsScenari")
       .feed(userFeeder)
-      .exec(LoginSteps.login())
+      .exec(LoginSteps.login(ContactsSpaPath))
       .exec(UserSteps.getProfile())
       .exec(ContactSteps.provisionContacts())
 }
