@@ -5,12 +5,10 @@ import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
 
-import scala.concurrent.duration.DurationInt
-
 object CreateCalendarScenari {
   def generate(): ScenarioBuilder =
     scenario("CreateCalendarScenari")
-      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .pause(RandomHumanActionDelay.humanActionDelay())
       .exec(CalendarSteps.getCalendarConfiguration())
       .exec(CalendarSteps.createCalendar())
 }

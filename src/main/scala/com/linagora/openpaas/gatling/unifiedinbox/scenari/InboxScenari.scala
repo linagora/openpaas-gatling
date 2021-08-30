@@ -43,16 +43,16 @@ object InboxScenari {
       .exec(getVacationResponse)
       .exec(getMailboxes)
       .exec(getMailboxes)
-      .pause(humanActionDelay() second)
+      .pause(humanActionDelay())
       .exec(getVacationResponse)
       .exec(getMailboxes)
-      .pause(humanActionDelay() second)
+      .pause(humanActionDelay())
       .exec(getMessageList)
       .repeat(10)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName=true)))
-      .pause(humanActionDelay() second)
+      .pause(humanActionDelay())
       .group("send email")(sendEmailSteps)
       .exec(closeWsConnection)
-      .pause(humanActionDelay() second)
+      .pause(humanActionDelay())
       .exec(logout)
 
   def openMailbox() = group("open mailbox")(
@@ -90,7 +90,7 @@ object InboxScenari {
       .repeat(5)(exec(AvatarsSteps.search(UsernameSessionParam, withRandomDisplayName = true))))
 
   def userLogout() = group("logout")(exec(closeWsConnection)
-    .pause(humanActionDelay() second)
+    .pause(humanActionDelay())
     .exec(logout))
 
   def idle() = group("idle")(
@@ -103,11 +103,11 @@ object InboxScenari {
   private def sendEmailSteps = {
     doIfEquals(LoadStaticAssets, true) {
       exec(loadOpeningComposerTemplates) // static assets delivered by nginx
-    }.pause(humanActionDelay() second)
+    }.pause(humanActionDelay())
       .exec(PeopleSteps.simulatePeopleSearch())
-      .pause(humanActionDelay() second)
+      .pause(humanActionDelay())
       .exec(uploadAttachment)
-      .pause(humanActionDelay() second)
+      .pause(humanActionDelay())
       .exec(sendMessageWithAttachment)
   }
 }

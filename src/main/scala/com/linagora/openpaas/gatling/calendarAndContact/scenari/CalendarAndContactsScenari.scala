@@ -6,7 +6,7 @@ import com.linagora.openpaas.gatling.addressbook.scenari.OpenContactInDefaultAdd
 import com.linagora.openpaas.gatling.calendar.CalendarSteps
 import com.linagora.openpaas.gatling.calendar.scenari.CalendarMixScenari
 import com.linagora.openpaas.gatling.core.WebSocketSteps
-import com.linagora.openpaas.gatling.core.{LoginSteps, TokenSteps}
+import com.linagora.openpaas.gatling.core.{LoginSteps}
 import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
 import io.gatling.core.Predef._
 import io.gatling.core.feeder.SourceFeederBuilder

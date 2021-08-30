@@ -7,8 +7,6 @@ import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
 
-import scala.concurrent.duration.DurationInt
-
 object ViewEventDetailsScenari {
   def generate(): ScenarioBuilder = {
     val start: LocalDate = LocalDate.now.minusMonths(1)
@@ -17,7 +15,7 @@ object ViewEventDetailsScenari {
     scenario("ViewEventDetailsScenari")
       .exec(CalendarSteps.listUsableCalendarsForUser())
       .exec(EventSteps.listEvents(start, end))
-      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .pause(RandomHumanActionDelay.humanActionDelay())
       .exec(CalendarSteps.listUsableCalendarsForUser()) // When opening the event dialog, this is the only request that is sent if there are no attendees
   }
 }
