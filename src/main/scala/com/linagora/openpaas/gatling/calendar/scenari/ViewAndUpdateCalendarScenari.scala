@@ -5,17 +5,15 @@ import com.linagora.openpaas.gatling.utils.RandomHumanActionDelay
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
 
-import scala.concurrent.duration.DurationInt
-
 object ViewAndUpdateCalendarScenari {
   def generate(): ScenarioBuilder =
     scenario("ViewAndUpdateCalendarScenari")
-      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .pause(RandomHumanActionDelay.humanActionDelay())
       .exec(CalendarSteps.getCalendarConfiguration())
       .exec(CalendarSteps.getDefaultCalendar())
-      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .pause(RandomHumanActionDelay.humanActionDelay())
       .exec(CalendarSteps.createCalendar())
-      .pause(RandomHumanActionDelay.humanActionDelay() second)
+      .pause(RandomHumanActionDelay.humanActionDelay())
       .exec(session => CalendarSteps.setCalendarIdFromCalendarLinkInSession(session))
       .exec(session => CalendarSteps.updateCalendarInSession(session))
       .exec(CalendarSteps.updateCalendar())
